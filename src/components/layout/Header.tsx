@@ -52,11 +52,11 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
       }`}
     >
       {/* Hanging brass lamps on the edges, dropping from the top of the announcement bar (wide screens only) */}
-      <HangingLamp className="pointer-events-none hidden min-[1400px]:block absolute left-5 -top-11 w-11 h-auto" />
-      <HangingLamp className="pointer-events-none hidden min-[1400px]:block absolute right-5 -top-11 w-11 h-auto" />
+      <HangingLamp className="pointer-events-none hidden min-[1600px]:block absolute left-5 -top-11 w-11 h-auto" />
+      <HangingLamp className="pointer-events-none hidden min-[1600px]:block absolute right-5 -top-11 w-11 h-auto" />
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 min-[1400px]:px-24">
-        <div className="flex items-center justify-between gap-6">
+        <div className="flex items-center justify-between gap-3 sm:gap-6">
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 xl:hidden">
             <button
@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             </button>
             <button
               onClick={onOpenSearch}
-              className="p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
+              className="hidden lg:block p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="Search catalog"
             >
               <Search className="w-5 h-5" />
@@ -78,18 +78,18 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
           {/* Zone 1: Emblem + Wordmark */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-2 sm:gap-3 shrink-0 whitespace-nowrap text-left cursor-pointer focus-visible:outline-none"
+            className="flex items-center gap-1.5 sm:gap-3 min-w-0 sm:shrink-0 whitespace-nowrap text-left cursor-pointer focus-visible:outline-none"
             aria-label="Daivisha Vastra Home"
           >
             <img
               src="/images/daivisha_emblem.png"
               alt=""
               className={`shrink-0 w-auto object-contain transition-all duration-300 ${
-                isScrolled ? 'h-11 sm:h-14' : 'h-14 sm:h-20'
+                isScrolled ? 'h-9 sm:h-14' : 'h-11 sm:h-20'
               }`}
             />
-            <span className="flex flex-col items-center">
-              <span className="font-serif text-2xl sm:text-[32px] font-semibold text-burgundy-800 leading-none tracking-wide [font-variant:small-caps]">
+            <span className="flex flex-col items-center min-w-0">
+              <span className="font-serif text-[19px] min-[400px]:text-[22px] sm:text-[32px] font-semibold text-burgundy-800 leading-none tracking-wide [font-variant:small-caps] truncate">
                 Daivisha Vastra<sup className="text-[10px] sm:text-xs font-sans font-medium ml-0.5 align-super">™</sup>
               </span>
               <span className="hidden sm:flex items-center gap-1.5 mt-1 font-serif text-sm text-stone-700">
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             {/* Wishlist */}
             <button
               onClick={() => onNavigate('wishlist')}
-              className="relative p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
+              className="hidden lg:block relative p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="View Wishlist"
             >
               <Heart className="w-6 h-6" strokeWidth={1.6} />
@@ -161,7 +161,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                   openAuthModal();
                 }
               }}
-              className="p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
+              className="hidden lg:block p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label={user ? `Account: ${user.name}` : 'Login to Account'}
             >
               <User className="w-6 h-6" strokeWidth={1.6} />

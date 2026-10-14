@@ -338,7 +338,8 @@ export const AccountModal: React.FC<{
                     value={passwordInput}
                     onChange={(e) => setPasswordInput(e.target.value)}
                     placeholder="••••••••"
-                    required
+                    // The admin email signs in without a password for now
+                    required={emailInput.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()}
                     className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
                   />
                 </div>

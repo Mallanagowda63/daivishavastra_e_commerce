@@ -131,7 +131,7 @@ export const CouponsPage: React.FC = () => {
               Manage store coupons, activate or deactivate offers, set the featured coupon for the top announcement bar, or delete coupons.
             </p>
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-wrap gap-2 shrink-0 [&>button]:whitespace-nowrap">
             <Button variant="secondary" onClick={deleteAll} disabled={!coupons.length} className="text-rose-700 border-rose-200 hover:border-rose-400 bg-rose-50">
               <Trash2 className="w-4 h-4" /> Delete all
             </Button>

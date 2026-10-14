@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowRight, ChevronLeft, ChevronRight, MessageCircle, Sun, Truck } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { openWhatsApp } from '../common/WhatsAppGate';
@@ -86,6 +86,7 @@ const AUTOPLAY_MS = 7000;
 export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onExploreCollections, onExploreStory }) => {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const touchX = useRef<number | null>(null);
 
   const go = useCallback((i: number) => setIndex((i + SLIDES.length) % SLIDES.length), []);
 
@@ -105,6 +106,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
         aria-label="Featured collections"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
+        // Swipe between slides on touch screens
+        onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          if (touchX.current === null) return;
+          const dx = e.changedTouches[0].clientX - touchX.current;
+          if (Math.abs(dx) > 45) go(index + (dx < 0 ? 1 : -1));
+          touchX.current = null;
+        }}
       >
         {/* Warm temple-light backdrop for the text side */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,#5a3418_0%,#3a1d0e_45%,#24110a_100%)]" />
@@ -188,14 +197,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
         {/* Arrows */}
         <button
           onClick={() => go(index - 1)}
-          className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-ivory/70 text-ivory grid place-items-center hover:bg-white/15 transition-colors cursor-pointer"
+          className="hidden md:grid absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-ivory/70 text-ivory grid place-items-center hover:bg-white/15 transition-colors cursor-pointer"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={() => go(index + 1)}
-          className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ivory/70 text-charcoal grid place-items-center hover:bg-ivory transition-colors cursor-pointer"
+          className="hidden md:grid absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ivory/70 text-charcoal grid place-items-center hover:bg-ivory transition-colors cursor-pointer"
           aria-label="Next slide"
         >
           <ChevronRight className="w-5 h-5" />
@@ -217,27 +226,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
 
       {/* Feature strip */}
       <section className="bg-[#faf3e8] border-b border-gold-500/30">
-        <ul className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-24 py-6 grid grid-cols-2 lg:grid-cols-4 gap-y-6">
+        <ul className="max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-24 py-5 sm:py-6 grid grid-cols-2 lg:grid-cols-4 gap-y-5 sm:gap-y-6">
           {FEATURES.map(({ icon: Icon, title, text, whatsapp }, i) => {
             const body = (
               <>
-                <span className="shrink-0 w-12 h-12 rounded-full border border-gold-500/60 text-gold-700 grid place-items-center">
-                  <Icon className="w-6 h-6" />
+                <span className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gold-500/60 text-gold-700 grid place-items-center">
+                  <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 </span>
                 <span className="text-left">
-                  <span className="block font-serif text-lg text-charcoal leading-tight">{title}</span>
-                  <span className="block font-serif text-sm text-stone-600">{text}</span>
+                  <span className="block font-serif text-[15px] sm:text-lg text-charcoal leading-tight">{title}</span>
+                  <span className="block font-serif text-xs sm:text-sm text-stone-600">{text}</span>
                 </span>
               </>
             );
             return (
               <li key={title} className={`flex justify-center ${i > 0 ? 'lg:border-l lg:border-gold-500/40' : ''} ${i % 2 === 1 ? 'max-lg:border-l max-lg:border-gold-500/40' : ''}`}>
                 {whatsapp ? (
-                  <button onClick={() => openWhatsApp()} className="flex items-center gap-3 sm:gap-4 cursor-pointer hover:opacity-80 transition-opacity">
+                  <button onClick={() => openWhatsApp()} className="flex items-center gap-2.5 sm:gap-4 px-2 cursor-pointer hover:opacity-80 transition-opacity">
                     {body}
                   </button>
                 ) : (
-                  <div className="flex items-center gap-3 sm:gap-4">{body}</div>
+                  <div className="flex items-center gap-2.5 sm:gap-4 px-2">{body}</div>
                 )}
               </li>
             );

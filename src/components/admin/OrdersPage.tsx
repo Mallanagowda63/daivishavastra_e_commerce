@@ -263,7 +263,7 @@ export const OrdersPage: React.FC = () => {
         ))}
       </Card>
 
-      <div className="flex items-end gap-4">
+      <div className="flex flex-col-reverse sm:flex-row sm:items-end gap-3 sm:gap-4">
         <div className="flex-1 min-w-0">
         <Tabs<TabId>
           active={tab}
@@ -276,7 +276,7 @@ export const OrdersPage: React.FC = () => {
           ]}
         />
         </div>
-        <Button variant="secondary" onClick={exportCSV} className="mb-2 hidden sm:inline-flex shrink-0">
+        <Button variant="secondary" onClick={exportCSV} className="self-end sm:mb-2 shrink-0">
           <Download className="w-4 h-4" /> Export orders
         </Button>
       </div>

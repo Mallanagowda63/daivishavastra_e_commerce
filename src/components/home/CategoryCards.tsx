@@ -108,7 +108,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory, 
                 onClick={() =>
                   card.collection ? onSelectCollection(card.collection) : onSelectCategory(card.category!)
                 }
-                className="group relative text-left cursor-pointer drop-shadow-sm hover:drop-shadow-lg transition-[filter]"
+                className="group relative text-left cursor-pointer drop-shadow-sm hover:drop-shadow-lg transition-[filter] max-sm:last:col-span-2 max-sm:last:w-1/2 max-sm:last:mx-auto max-sm:last:px-1"
               >
                 {/* One arch mask shapes the whole card, so photo top and gold outline always line up */}
                 <div className="relative aspect-[5/7] bg-[#fffaf3] flex flex-col" style={archMaskStyle}>
