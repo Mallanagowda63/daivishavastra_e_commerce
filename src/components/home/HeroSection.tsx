@@ -23,8 +23,8 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    image: '/src/assets/images/hero_temple_saree.jpg',
-    banner: '/src/assets/images/hero_banner_tradition.jpg',
+    image: '/images/hero_temple_saree.jpg',
+    banner: '/images/hero_banner_tradition.jpg',
     alt: 'Woman in a maroon and gold silk saree holding jasmine at a temple',
     position: 'object-[30%_25%]',
     title: (
@@ -41,7 +41,7 @@ const SLIDES: Slide[] = [
     action: 'story',
   },
   {
-    image: '/src/assets/images/hero_saree_model_1791372718962.jpg',
+    image: '/images/hero_saree_model_1791372718962.jpg',
     alt: 'Model in a maroon Kanjivaram silk saree with heirloom jewellery',
     position: 'object-[50%_15%]',
     title: (
@@ -58,7 +58,7 @@ const SLIDES: Slide[] = [
     action: 'new',
   },
   {
-    image: '/src/assets/images/wedding_edit_banner_1791372730952.jpg',
+    image: '/images/wedding_edit_banner_1791372730952.jpg',
     alt: 'Bride in a red zardozi saree in a candle-lit palace courtyard',
     position: 'object-[50%_35%]',
     title: (

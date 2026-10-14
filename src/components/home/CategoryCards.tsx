@@ -9,7 +9,7 @@ interface CategoryCardsProps {
   onLearnMore: () => void;
 }
 
-const IMG = '/src/assets/images';
+const IMG = '/images';
 
 const COLLECTION_CARDS: { title: string; image: string; category?: string; collection?: string }[] = [
   { title: 'Silk Sarees', image: `${IMG}/swatch_silk.jpg`, category: 'Silk Sarees' },

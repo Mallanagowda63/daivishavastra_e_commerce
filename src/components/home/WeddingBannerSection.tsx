@@ -12,7 +12,7 @@ export const WeddingBannerSection: React.FC<WeddingBannerSectionProps> = ({ onEx
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <ImageWithFallback
-          src="/src/assets/images/wedding_edit_banner_1791372730952.jpg"
+          src="/images/wedding_edit_banner_1791372730952.jpg"
           alt="The Royal Wedding Edit by Daivisha Vastra"
           className="w-full h-full object-cover object-center opacity-45 scale-100 hover:scale-105 transition-transform duration-1000 ease-out"
         />

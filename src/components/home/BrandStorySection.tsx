@@ -15,7 +15,7 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({ onLearnMor
           <div className="lg:col-span-6 relative">
             <div className="relative aspect-[4/5] max-w-md mx-auto lg:max-w-none bg-white p-3 shadow-xl border border-sand">
               <ImageWithFallback
-                src="/src/assets/images/hero_saree_model_1791372718962.jpg"
+                src="/images/hero_saree_model_1791372718962.jpg"
                 alt="Daivisha Vastra Artisan Weaving Lineage"
                 className="w-full h-full object-cover"
               />

@@ -39,7 +39,7 @@ const INITIAL_ORDERS: Order[] = [
       {
         id: 'dv-kanjivaram-royal-crimson',
         name: 'Royal Kanjivaram Pure Mulberry Silk Saree',
-        image: '/src/assets/images/kanjivaram_silk_saree_1791372743617.jpg',
+        image: '/images/kanjivaram_silk_saree_1791372743617.jpg',
         price: 28999,
         quantity: 1,
         color: 'Crimson Red',
@@ -71,7 +71,7 @@ const INITIAL_ORDERS: Order[] = [
       {
         id: 'dv-banarasi-emerald-katan',
         name: 'Imperial Emerald Banarasi Katan Silk Saree',
-        image: '/src/assets/images/banarasi_heritage_saree_1791372753729.jpg',
+        image: '/images/banarasi_heritage_saree_1791372753729.jpg',
         price: 24500,
         quantity: 1,
         color: 'Emerald Green',

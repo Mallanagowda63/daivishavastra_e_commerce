@@ -13,7 +13,7 @@ export const HeritageFeatureSection: React.FC<HeritageFeatureSectionProps> = ({ 
         {/* Left Side: Large Editorial Product Image */}
         <div className="relative aspect-[3/4] overflow-hidden bg-[#e8ded3] shadow-2xl">
           <ImageWithFallback
-            src="/src/assets/images/banarasi_heritage_saree_1791372753729.jpg"
+            src="/images/banarasi_heritage_saree_1791372753729.jpg"
             alt="The Heritage Collection by Daivisha Vastra"
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 ease-out"
           />

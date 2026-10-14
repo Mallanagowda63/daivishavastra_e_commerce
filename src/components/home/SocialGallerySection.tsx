@@ -5,22 +5,22 @@ import { ImageWithFallback } from '../common/ImageWithFallback';
 export const SocialGallerySection: React.FC = () => {
   const galleryItems = [
     {
-      image: '/src/assets/images/kanjivaram_silk_saree_1791372743617.jpg',
+      image: '/images/kanjivaram_silk_saree_1791372743617.jpg',
       handle: '@radhika_wedding',
       caption: 'Felt like royalty draped in this crimson Kanjivaram for my phera ceremony.',
     },
     {
-      image: '/src/assets/images/banarasi_heritage_saree_1791372753729.jpg',
+      image: '/images/banarasi_heritage_saree_1791372753729.jpg',
       handle: '@sneha.couture',
       caption: 'The emerald shine in the evening light is simply out of this world.',
     },
     {
-      image: '/src/assets/images/hero_saree_model_1791372718962.jpg',
+      image: '/images/hero_saree_model_1791372718962.jpg',
       handle: '@divya_drapes',
       caption: 'Heirloom packaging arrived with handwritten silk care notes from the atelier.',
     },
     {
-      image: '/src/assets/images/organza_pastel_saree_1791372764937.jpg',
+      image: '/images/organza_pastel_saree_1791372764937.jpg',
       handle: '@ananya_delhi',
       caption: 'Daytime cocktail reception look in Daivisha Vastra blush organza!',
     },

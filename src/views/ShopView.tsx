@@ -154,13 +154,13 @@ export const ShopView: React.FC<ShopViewProps> = ({
         {/* Model in a temple arch — pinned to the right edge, full banner height */}
         <div className="hidden md:block absolute right-4 lg:right-[5%] top-5 h-[calc(100%-1.25rem)] aspect-[4/5]">
           <img
-            src="/src/assets/images/story_temple.jpg"
+            src="/images/story_temple.jpg"
             alt=""
             className="absolute right-full bottom-0 h-[85%] w-auto -mr-10 mix-blend-multiply opacity-50 pointer-events-none [mask-image:radial-gradient(ellipse_at_center,black_50%,transparent_78%)]"
           />
           <div className="absolute inset-0 bg-[#fffaf3] p-1.5 drop-shadow-lg" style={archMaskStyle}>
             <img
-              src="/src/assets/images/kanjivaram_silk_saree_1791372743617.jpg"
+              src="/images/kanjivaram_silk_saree_1791372743617.jpg"
               alt="Model seated in a red Kanjivaram silk saree"
               className="w-full h-full object-cover object-[50%_20%]"
               style={archMaskStyle}

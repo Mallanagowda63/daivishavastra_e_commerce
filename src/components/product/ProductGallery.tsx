@@ -11,7 +11,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const displayImages = images.length > 0 ? images : ['/src/assets/images/hero_saree_model_1791372718962.jpg'];
+  const displayImages = images.length > 0 ? images : ['/images/hero_saree_model_1791372718962.jpg'];
 
   const nextImage = () => {
     setActiveImageIndex((prev) => (prev + 1) % displayImages.length);

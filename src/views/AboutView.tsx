@@ -26,7 +26,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onExploreCatalog }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="relative aspect-[4/3] bg-cream overflow-hidden shadow-2xl">
           <ImageWithFallback
-            src="/src/assets/images/wedding_edit_banner_1791372730952.jpg"
+            src="/images/wedding_edit_banner_1791372730952.jpg"
             alt="Handloom pit loom weaving process"
             className="w-full h-full object-cover"
           />

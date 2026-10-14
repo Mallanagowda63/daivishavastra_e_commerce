@@ -74,7 +74,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
             <div className="col-span-4 bg-cream/40 p-4 border border-sand flex flex-col justify-between">
               <div className="relative aspect-[4/3] overflow-hidden mb-3">
                 <ImageWithFallback
-                  src="/src/assets/images/kanjivaram_silk_saree_1791372743617.jpg"
+                  src="/images/kanjivaram_silk_saree_1791372743617.jpg"
                   alt="The Kanchipuram Weaving Legacy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
@@ -133,7 +133,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
             <div className="col-span-4 bg-cream/40 p-4 border border-sand flex flex-col justify-between">
               <div className="relative aspect-[4/3] overflow-hidden mb-3">
                 <ImageWithFallback
-                  src="/src/assets/images/wedding_edit_banner_1791372730952.jpg"
+                  src="/images/wedding_edit_banner_1791372730952.jpg"
                   alt="The Wedding Edit"
                   className="w-full h-full object-cover"
                 />

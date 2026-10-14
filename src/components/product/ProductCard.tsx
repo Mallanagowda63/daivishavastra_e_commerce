@@ -27,7 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const currentDisplayImage =
     isHovered && product.secondaryImage
       ? product.secondaryImage
-      : product.images[0] || '/src/assets/images/hero_saree_model_1791372718962.jpg';
+      : product.images[0] || '/images/hero_saree_model_1791372718962.jpg';
 
   const formatPrice = (amount: number) => {
     return `₹${amount.toLocaleString('en-IN')}`;

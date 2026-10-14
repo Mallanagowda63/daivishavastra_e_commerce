@@ -1,6 +1,6 @@
 import { Booking, Order, OrderStatus, PaymentStatus } from '../types';
 
-const IMG = '/src/assets/images';
+const IMG = '/images';
 
 const SAREES = {
   kanjivaram: { id: 'dv-kanjivaram-royal-crimson', name: 'Royal Kanjivaram Pure Mulberry Silk Saree', price: 28999, image: `${IMG}/kanjivaram_silk_saree_1791372743617.jpg` },
