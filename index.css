@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  
+  --color-burgundy-950: #260a11;
+  --color-burgundy-900: #3b0f19;
+  --color-burgundy-800: #541424;
+  --color-burgundy-700: #6f1b31;
+  --color-burgundy-600: #8c233f;
+  
+  --color-gold-300: #f5e7b2;
+  --color-gold-400: #e5cb6e;
+  --color-gold-500: #c5a059;
+  --color-gold-600: #b08d46;
+  --color-gold-700: #8f6e2b;
+
+  --color-ivory: #faf7f2;
+  --color-cream: #f4eee5;
+  --color-sand: #e8ded3;
+  --color-charcoal: #1f1b1c;
+}
+
+/* Base styles live in the base layer so Tailwind utilities (e.g. font-sans on a heading) can override them. */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-ivory);
+    color: var(--color-charcoal);
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: var(--font-serif);
+  }
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f4eee5;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5a059;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8f6e2b;
+}
+
+/* Selection */
+::selection {
+  background: #541424;
+  color: #faf7f2;
+}
+
+/* Horizontal tab rows: scroll on small screens without showing a scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
