@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
           </button>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 whitespace-nowrap font-serif text-base font-medium">
+          <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 whitespace-nowrap font-helvetica text-[15px] font-bold">
             <button onClick={() => onNavigate('home')} className={navLinkClass(currentView === 'home')}>
               Home
             </button>
@@ -195,7 +195,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                   onNavigate('home');
                   setIsMobileMenuOpen(false);
                 }}
-                className="block w-full text-left font-serif text-2xl text-burgundy-950"
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
               >
                 Home
               </button>
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                   onNavigate('shop', 'New Arrivals');
                   setIsMobileMenuOpen(false);
                 }}
-                className="block w-full text-left font-serif text-2xl text-burgundy-950"
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
               >
                 New Arrivals
               </button>
@@ -213,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                   onNavigate('shop');
                   setIsMobileMenuOpen(false);
                 }}
-                className="block w-full text-left font-serif text-2xl text-burgundy-950"
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
               >
                 All Sarees
               </button>
