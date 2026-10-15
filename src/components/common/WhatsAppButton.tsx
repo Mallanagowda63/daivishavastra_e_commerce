@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import { SareeProduct } from '../../types';
 import { openWhatsApp } from './WhatsAppGate';
@@ -12,6 +12,16 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   product,
   variant = 'floating',
 }) => {
+  // On phones the floating bubble waits until the visitor scrolls past the hero, so it never covers its button.
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
+  useEffect(() => {
+    if (variant !== 'floating') return;
+    const onScroll = () => setScrolledPastHero(window.scrollY > 420);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [variant]);
+
   const handleClick = () => {
     const message = product
       ? `Hi Daivisha Vastra, I am inquiring about the "${product.name}" (SKU: ${product.sku}, ₹${product.sellingPrice.toLocaleString('en-IN')}). Could you please share more details or drape videos?`
@@ -35,7 +45,9 @@ export const WhatsAppButton: React.FC<WhatsAppButtonProps> = ({
   return (
     <aside
       aria-label="WhatsApp Concierge"
-      className="fixed bottom-24 md:bottom-8 right-5 z-40"
+      className={`fixed bottom-24 md:bottom-8 right-4 sm:right-5 z-40 transition-all duration-300 ${
+        scrolledPastHero ? 'opacity-100 translate-y-0' : 'max-md:opacity-0 max-md:translate-y-4 max-md:pointer-events-none'
+      }`}
     >
       <button
         type="button"

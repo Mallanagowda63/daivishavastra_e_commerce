@@ -58,17 +58,17 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 min-[1400px]:px-24">
         <div className="flex items-center justify-between gap-3 sm:gap-6">
           {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 xl:hidden">
+          <div className="flex flex-1 basis-0 items-center gap-0.5 sm:gap-2 xl:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="Toggle navigation menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
             <button
               onClick={onOpenSearch}
-              className="hidden lg:block p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
+              className="p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="Search catalog"
             >
               <Search className="w-5 h-5" />
@@ -78,19 +78,19 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
           {/* Zone 1: Emblem + Wordmark */}
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-1.5 sm:gap-3 min-w-0 sm:shrink-0 whitespace-nowrap text-left cursor-pointer focus-visible:outline-none"
+            className="flex flex-col sm:flex-row items-center gap-0.5 sm:gap-3 min-w-0 shrink-0 whitespace-nowrap text-center sm:text-left cursor-pointer focus-visible:outline-none"
             aria-label="Daivisha Vastra Home"
           >
             <img
               src="/images/daivisha_emblem.png"
               alt=""
               className={`shrink-0 w-auto object-contain transition-all duration-300 ${
-                isScrolled ? 'h-9 sm:h-14' : 'h-11 sm:h-20'
+                isScrolled ? 'h-7 sm:h-14' : 'h-9 sm:h-20'
               }`}
             />
             <span className="flex flex-col items-center min-w-0">
-              <span className="font-serif text-[19px] min-[400px]:text-[22px] sm:text-[32px] font-semibold text-burgundy-800 leading-none tracking-wide [font-variant:small-caps] truncate">
-                Daivisha Vastra<sup className="text-[10px] sm:text-xs font-sans font-medium ml-0.5 align-super">™</sup>
+              <span className="font-serif text-[15px] min-[400px]:text-[17px] sm:text-[32px] font-semibold text-burgundy-800 leading-none tracking-[0.14em] sm:tracking-wide [font-variant:small-caps]">
+                Daivisha Vastra<sup className="hidden sm:inline text-xs font-sans font-medium ml-0.5 align-super">™</sup>
               </span>
               <span className="hidden sm:flex items-center gap-1.5 mt-1 font-serif text-sm text-stone-700">
                 <span className="w-1.5 h-1.5 rotate-45 bg-gold-500" />
@@ -129,7 +129,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
           </nav>
 
           {/* Zone 3: Actions (Search, Wishlist, Account, Cart) */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          <div className="flex flex-1 basis-0 xl:flex-none justify-end items-center gap-0.5 sm:gap-2 shrink-0">
             <button
               onClick={onOpenSearch}
               className="hidden xl:block p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
@@ -141,10 +141,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             {/* Wishlist */}
             <button
               onClick={() => onNavigate('wishlist')}
-              className="hidden lg:block relative p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
+              className="relative p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="View Wishlist"
             >
-              <Heart className="w-6 h-6" strokeWidth={1.6} />
+              <Heart className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.6} />
               {wishlist.length > 0 && (
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-burgundy-800 text-ivory text-[10px] font-semibold rounded-full flex items-center justify-center">
                   {wishlist.length}
@@ -173,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
               className="relative p-1.5 text-charcoal hover:text-burgundy-800 transition-colors"
               aria-label="Open Shopping Bag"
             >
-              <ShoppingBag className="w-6 h-6" strokeWidth={1.6} />
+              <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.6} />
               {totalItemsCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-burgundy-800 text-ivory text-[10px] font-semibold rounded-full flex items-center justify-center">
                   {totalItemsCount}
