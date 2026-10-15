@@ -6,6 +6,7 @@
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   /* Menu links. Helvetica on Mac/iPhone; Arial (same shape) on Windows/Android. */
   --font-helvetica: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-arial: Arial, "Helvetica Neue", Helvetica, sans-serif;
   
   --color-burgundy-950: #260a11;
   --color-burgundy-900: #3b0f19;

@@ -11,27 +11,33 @@ interface HeroSectionProps {
 
 type Slide = {
   image: string;
-  /** Finished banner artwork (text included) shown on large screens instead of the photo + HTML text. */
-  banner?: string;
   alt: string;
+  /** Full-width photo with the text over its dark left side (otherwise photo sits on the right). */
+  fullBleed?: boolean;
+  /** object-position per breakpoint, so the subject stays in frame on phones. */
   position: string;
+  /** Width / offset of this slide's text block. */
+  textPlacement: string;
   title: React.ReactNode;
   text: string;
   cta: string;
   action: 'story' | 'new' | 'collections';
+  /** Small vertical tagline on the left (large screens). */
+  tagline?: boolean;
 };
 
 const SLIDES: Slide[] = [
   {
-    image: '/images/hero_temple_saree.jpg',
-    banner: '/images/hero_banner_tradition.jpg',
-    alt: 'Woman in a maroon and gold silk saree holding jasmine at a temple',
-    position: 'object-[30%_25%]',
+    image: '/images/hero_temple_clean.jpg',
+    alt: 'Woman in a maroon and gold silk saree holding jasmine in a temple courtyard lit by brass lamps',
+    fullBleed: true,
+    position: 'object-[74%_center] md:object-[62%_center] lg:object-center',
+    textPlacement: 'w-full md:w-[52%] lg:w-[36%] lg:ml-[13%] xl:ml-[15%]',
     title: (
       <>
         Tradition
         <br />
-        Woven <em className="font-serif italic font-normal">for</em>
+        Woven <em className="italic font-normal">for</em>
         <br />
         Today
       </>
@@ -39,18 +45,20 @@ const SLIDES: Slide[] = [
     text: "At Daivisha Vastra, we celebrate India's rich textile heritage through sarees that blend timeless craftsmanship with contemporary elegance.",
     cta: 'Explore our story',
     action: 'story',
+    tagline: true,
   },
   {
     image: '/images/hero_saree_model_1791372718962.jpg',
     alt: 'Model in a maroon Kanjivaram silk saree with heirloom jewellery',
     position: 'object-[50%_15%]',
+    textPlacement: 'w-full md:w-[46%] lg:w-[44%]',
     title: (
       <>
         Timeless
         <br />
         Elegance, Woven
         <br />
-        <em className="font-serif italic font-normal">for</em> You
+        <em className="italic font-normal">for</em> You
       </>
     ),
     text: 'Handwoven pure Kanjivaram and Banarasi heirlooms, crafted with tradition and artistry to be treasured for generations.',
@@ -61,11 +69,12 @@ const SLIDES: Slide[] = [
     image: '/images/wedding_edit_banner_1791372730952.jpg',
     alt: 'Bride in a red zardozi saree in a candle-lit palace courtyard',
     position: 'object-[50%_35%]',
+    textPlacement: 'w-full md:w-[46%] lg:w-[44%]',
     title: (
       <>
         The Royal
         <br />
-        Wedding <em className="font-serif italic font-normal">Edit</em>
+        Wedding <em className="italic font-normal">Edit</em>
       </>
     ),
     text: 'Bridal silks woven with real gold and silver zari for the most auspicious days of your life.',
@@ -101,7 +110,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
   return (
     <>
       <section
-        className="relative w-full h-[560px] sm:h-[600px] lg:h-[620px] xl:h-[max(480px,calc(100vw/3.03))] overflow-hidden bg-[#2a140b] text-ivory"
+        className="relative w-full h-[620px] sm:h-[640px] lg:h-[620px] xl:h-[clamp(560px,calc(100vw/2.83),760px)] overflow-hidden bg-[#2a140b] text-ivory font-arial"
         aria-roledescription="carousel"
         aria-label="Featured collections"
         onMouseEnter={() => setPaused(true)}
@@ -115,56 +124,72 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
           touchX.current = null;
         }}
       >
-        {/* Warm temple-light backdrop for the text side */}
+        {/* Warm temple-light backdrop (behind the half-width photos) */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,#5a3418_0%,#3a1d0e_45%,#24110a_100%)]" />
 
-        {/* Slide photos, right side, faded into the backdrop */}
-        {SLIDES.map((s, i) => (
-          <div
-            key={s.image}
-            className={`absolute inset-y-0 right-0 w-full md:w-[62%] ${s.banner ? 'xl:w-full' : ''} overflow-hidden transition-opacity duration-[1600ms] ease-in-out motion-reduce:transition-none ${
-              i === index ? 'opacity-100' : 'opacity-0'
-            }`}
-            aria-hidden={i !== index}
-          >
-            {/* Slow zoom while the slide is showing */}
-            <img
-              src={s.image}
-              alt={s.alt}
-              className={`w-full h-full object-cover ${s.position} ${s.banner ? 'xl:hidden' : ''} [mask-image:linear-gradient(to_right,transparent,black_28%)] max-md:[mask-image:none] max-md:opacity-45 will-change-transform motion-reduce:transition-none ${
-                i === index ? 'scale-100 transition-transform duration-[8000ms] ease-out' : 'scale-[1.06] transition-transform duration-[1600ms]'
-              }`}
-            />
-            {s.banner && (
-              <>
-                <img
-                  src={s.banner}
-                  alt=""
-                  className={`hidden xl:block w-full h-full object-cover object-center will-change-transform motion-reduce:transition-none ${
-                    i === index ? 'scale-100 transition-transform duration-[8000ms] ease-out' : 'scale-[1.03] transition-transform duration-[1600ms]'
-                  }`}
-                />
-                {/* The banner's button is part of the artwork, so the whole banner acts as the link */}
-                <button
-                  onClick={() => runAction(s.action)}
-                  tabIndex={i === index ? 0 : -1}
-                  className={`hidden xl:block absolute inset-0 z-10 cursor-pointer ${i === index ? '' : 'pointer-events-none'}`}
-                  aria-label={s.cta}
-                />
-              </>
-            )}
-          </div>
-        ))}
+        {/* Slide photos */}
+        {SLIDES.map((s, i) => {
+          const active = i === index;
+          const zoom = active
+            ? 'scale-100 transition-transform duration-[8000ms] ease-out'
+            : 'scale-[1.05] transition-transform duration-[1600ms]';
+          return (
+            <div
+              key={s.image}
+              className={`absolute inset-y-0 right-0 overflow-hidden transition-opacity duration-[1600ms] ease-in-out motion-reduce:transition-none ${
+                s.fullBleed ? 'w-full' : 'w-full md:w-[62%]'
+              } ${active ? 'opacity-100' : 'opacity-0'}`}
+              aria-hidden={!active}
+            >
+              <img
+                src={s.image}
+                alt={s.alt}
+                className={`w-full h-full object-cover ${s.position} will-change-transform motion-reduce:transition-none ${zoom} ${
+                  s.fullBleed ? '' : '[mask-image:linear-gradient(to_right,transparent,black_28%)] max-md:[mask-image:none] max-md:opacity-45'
+                }`}
+              />
+              {s.fullBleed && (
+                <>
+                  {/* Phones/tablets: shade behind the centred text */}
+                  <div className="lg:hidden absolute inset-0 bg-gradient-to-t from-[#1c0d06]/90 via-[#1c0d06]/55 to-[#1c0d06]/25" />
+                  {/* Desktop: deepen the photo's dark left side under the text */}
+                  <div className="hidden lg:block absolute inset-0 bg-[linear-gradient(90deg,rgba(28,13,6,0.55)_0%,rgba(28,13,6,0.45)_35%,rgba(28,13,6,0)_60%)]" />
+                </>
+              )}
+            </div>
+          );
+        })}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+
+        {/* Left tagline (slide 1, large screens) */}
+        {SLIDES.map((s, i) =>
+          s.tagline ? (
+            <div
+              key={`${s.cta}-tagline`}
+              className={`hidden xl:flex absolute z-10 left-[3%] bottom-[14%] w-44 flex-col items-center text-center text-[#f3dfae] leading-snug [text-shadow:0_2px_10px_rgba(0,0,0,0.6)] transition-opacity duration-1000 ${
+                i === index ? 'opacity-100 delay-500' : 'opacity-0'
+              }`}
+              aria-hidden="true"
+            >
+              <p className="text-[15px] font-bold tracking-[0.22em] uppercase">Sarees</p>
+              <p className="text-sm italic text-[#f3dfae]/85">that carry</p>
+              <p className="text-[15px] font-bold tracking-[0.22em] uppercase">Culture</p>
+              <p className="text-[15px] font-bold tracking-[0.22em] uppercase">Craftsmanship</p>
+              <p className="text-sm italic text-[#f3dfae]/85">and</p>
+              <p className="text-[15px] font-bold tracking-[0.22em] uppercase">Stories</p>
+              <LotusMark className="w-6 h-6 mt-2 text-gold-400" />
+            </div>
+          ) : null
+        )}
 
         {/* Slide copy */}
         <div className="relative z-10 h-full px-6 sm:px-16 lg:px-20 flex items-center pointer-events-none">
           {/* All slides share one grid cell, so text cross-fades in place without the layout jumping */}
-          <div className="w-full md:w-[46%] lg:w-[44%] text-center grid">
+          <div className="w-full grid text-center">
             {SLIDES.map((s, i) => (
               <div
                 key={s.cta}
-                className={`[grid-area:1/1] self-center transition-all ease-out motion-reduce:transition-none ${s.banner ? 'xl:hidden' : ''} ${
+                className={`[grid-area:1/1] self-center ${s.textPlacement} transition-all ease-out motion-reduce:transition-none ${
                   i === index
                     ? 'opacity-100 translate-y-0 duration-[1000ms] delay-300 pointer-events-auto'
                     : 'opacity-0 translate-y-5 duration-500 pointer-events-none'
@@ -172,19 +197,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
                 aria-hidden={i !== index}
                 aria-live={i === index ? 'polite' : undefined}
               >
-                <h1 className="font-serif text-5xl sm:text-6xl 2xl:text-7xl font-medium leading-[1.02] text-[#f3dfae] drop-shadow-[0_2px_12px_rgba(0,0,0,0.35)]">
+                <h1 className="text-[44px] sm:text-6xl xl:text-[68px] font-bold tracking-tight leading-[1.05] text-[#f3dfae] [text-shadow:0_2px_16px_rgba(0,0,0,0.45)]">
                   {s.title}
                 </h1>
-                <div className="flex items-center justify-center gap-3 my-6 text-gold-400" aria-hidden="true">
-                  <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold-400" />
+                <div className="flex items-center justify-center gap-3 my-5 sm:my-6 text-gold-400" aria-hidden="true">
+                  <span className="h-px w-16 sm:w-20 bg-gradient-to-r from-transparent to-gold-400" />
                   <LotusMark className="w-5 h-5" />
-                  <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold-400" />
+                  <span className="h-px w-16 sm:w-20 bg-gradient-to-l from-transparent to-gold-400" />
                 </div>
-                <p className="font-serif text-lg sm:text-xl leading-relaxed text-cream/95 max-w-md mx-auto">{s.text}</p>
+                <p className="text-[15px] sm:text-lg leading-relaxed text-white/90 max-w-md mx-auto [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
+                  {s.text}
+                </p>
                 <button
                   onClick={() => runAction(s.action)}
                   tabIndex={i === index ? 0 : -1}
-                  className="mt-8 inline-flex items-center gap-3 px-7 py-3.5 bg-burgundy-800/90 hover:bg-burgundy-700 border border-gold-500/70 text-ivory font-serif text-base tracking-[0.12em] uppercase shadow-lg transition-colors cursor-pointer"
+                  className="mt-7 sm:mt-8 inline-flex items-center gap-3 px-6 sm:px-7 py-3.5 bg-[#5e1424]/90 hover:bg-[#6f1b31] border border-gold-500/80 text-ivory text-[13px] sm:text-sm font-bold tracking-[0.18em] uppercase shadow-lg transition-colors cursor-pointer"
                 >
                   {s.cta}
                   <ArrowRight className="w-4 h-4" />
@@ -197,14 +224,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onShopNewArrivals, onE
         {/* Arrows */}
         <button
           onClick={() => go(index - 1)}
-          className="hidden md:grid absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-ivory/70 text-ivory grid place-items-center hover:bg-white/15 transition-colors cursor-pointer"
+          className="hidden md:grid absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full border border-ivory/70 text-ivory place-items-center hover:bg-white/15 transition-colors cursor-pointer"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={() => go(index + 1)}
-          className="hidden md:grid absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ivory/70 text-charcoal grid place-items-center hover:bg-ivory transition-colors cursor-pointer"
+          className="hidden md:grid absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-ivory/70 text-charcoal place-items-center hover:bg-ivory transition-colors cursor-pointer"
           aria-label="Next slide"
         >
           <ChevronRight className="w-5 h-5" />
