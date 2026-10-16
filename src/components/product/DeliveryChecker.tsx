@@ -87,7 +87,7 @@ export const DeliveryChecker: React.FC = () => {
           </div>
           <div className="flex items-center gap-2 text-stone-600">
             <Clock className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-            <span>Cash on Delivery &amp; Express White-Glove inspection available</span>
+            <span>Prepaid orders only · UPI, cards &amp; net banking</span>
           </div>
         </div>
       )}

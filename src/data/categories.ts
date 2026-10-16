@@ -95,36 +95,3 @@ export const OCCASIONS_DATA = [
     image: '/images/organza_pastel_saree_1791372764937.jpg',
   },
 ];
-
-export const FABRICS_DATA = [
-  {
-    name: 'Pure Silk',
-    description: '100% natural Mulberry filaments with rich drape and royal sheen.',
-    iconLetter: 'S',
-  },
-  {
-    name: 'Cotton Silk',
-    description: 'Breathable combed cotton interwoven with silk for crisp all-day ease.',
-    iconLetter: 'C',
-  },
-  {
-    name: 'Organza',
-    description: 'Sheer, lightweight handloom weave crafted for contemporary romance.',
-    iconLetter: 'O',
-  },
-  {
-    name: 'Pure Linen',
-    description: 'Handspun European flax that breathes with grace and softens over decades.',
-    iconLetter: 'L',
-  },
-  {
-    name: 'Georgette',
-    description: 'Fluid 60-gram georgette with effortless cascade and delicate movement.',
-    iconLetter: 'G',
-  },
-  {
-    name: 'Chanderi Silk',
-    description: 'Gossamer tissue silk with metallic bootas from Madhya Pradesh looms.',
-    iconLetter: 'T',
-  },
-];

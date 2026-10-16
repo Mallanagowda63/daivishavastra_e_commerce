@@ -1,13 +1,13 @@
 import React from 'react';
-import { SareeProduct } from '../types';
+import { SareeCategory, SareeProduct } from '../types';
+import { TraditionBanner } from '../components/home/TraditionBanner';
+import { scrollToElement } from '../lib/smoothScroll';
 import { HeroSection } from '../components/home/HeroSection';
 import { CategoryCards } from '../components/home/CategoryCards';
 import { NewArrivalsSection } from '../components/home/NewArrivalsSection';
 import { WeddingBannerSection } from '../components/home/WeddingBannerSection';
 import { OccasionsSection } from '../components/home/OccasionsSection';
 import { BestSellersCarousel } from '../components/home/BestSellersCarousel';
-import { BrandStorySection } from '../components/home/BrandStorySection';
-import { FabricsSection } from '../components/home/FabricsSection';
 import { HeritageFeatureSection } from '../components/home/HeritageFeatureSection';
 import { SocialGallerySection } from '../components/home/SocialGallerySection';
 import { ReviewsSection } from '../components/home/ReviewsSection';
@@ -20,6 +20,7 @@ interface HomeViewProps {
   onQuickView: (product: SareeProduct) => void;
   onNavigateToShop: (category?: string, collection?: string, occasion?: string, fabric?: string) => void;
   onNavigateToAbout: () => void;
+  onOpenCollection: (key: SareeCategory) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
@@ -28,24 +29,20 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onQuickView,
   onNavigateToShop,
   onNavigateToAbout,
+  onOpenCollection,
 }) => {
   return (
     <div className="space-y-0">
       {/* 1. Hero */}
-      <HeroSection
-        onShopNewArrivals={() => onNavigateToShop('New Arrivals')}
-        onExploreCollections={() => onNavigateToShop(undefined, 'Wedding Collection')}
-        onExploreStory={onNavigateToAbout}
-      />
+      <HeroSection onExploreCollections={() => scrollToElement('#collections')} />
 
-      {/* 2. Our Story + Explore Our Collections */}
-      <CategoryCards
-        onSelectCategory={(cat) => onNavigateToShop(cat)}
-        onSelectCollection={(col) => onNavigateToShop(undefined, col)}
-        onLearnMore={onNavigateToAbout}
-      />
+      {/* 2. Our Story, feature strip, Explore Our Collections */}
+      <CategoryCards onOpenCollection={onOpenCollection} onLearnMore={onNavigateToAbout} />
 
-      {/* 3. New Arrivals */}
+      {/* 3. Wear Tradition, Live Elegance */}
+      <TraditionBanner onViewNewArrivals={() => onNavigateToShop('New Arrivals')} />
+
+      {/* 4. New Arrivals */}
       <NewArrivalsSection
         products={products}
         onSelectProduct={onSelectProduct}
@@ -53,32 +50,22 @@ export const HomeView: React.FC<HomeViewProps> = ({
         onViewAllNewArrivals={() => onNavigateToShop('New Arrivals')}
       />
 
-      {/* 4. The Wedding Edit Banner */}
+      {/* 5. The Wedding Edit Banner */}
       <WeddingBannerSection
         onExploreWedding={() => onNavigateToShop(undefined, 'Wedding Collection')}
       />
 
-      {/* 5. Shop by Occasion */}
+      {/* 6. Shop by Occasion */}
       <OccasionsSection
         onSelectOccasion={(occ) => onNavigateToShop(undefined, undefined, occ)}
       />
 
-      {/* 6. Best Sellers Carousel */}
+      {/* 7. Best Sellers Carousel */}
       <BestSellersCarousel
         products={products}
         onSelectProduct={onSelectProduct}
         onQuickView={onQuickView}
         onViewAllBestSellers={() => onNavigateToShop('Best Sellers')}
-      />
-
-      {/* 7. Brand Story */}
-      <BrandStorySection
-        onLearnMore={onNavigateToAbout}
-      />
-
-      {/* 8. Shop by Fabric */}
-      <FabricsSection
-        onSelectFabric={(fab) => onNavigateToShop(undefined, undefined, undefined, fab)}
       />
 
       {/* 9. Heritage Feature Collection */}

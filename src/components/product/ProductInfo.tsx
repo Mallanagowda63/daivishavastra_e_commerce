@@ -83,7 +83,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
           )}
         </div>
         <p className="text-[11px] text-stone-500">
-          Inclusive of all Goods and Services Taxes (GST). Free pan-India insured shipping.
+          Inclusive of all taxes. Shipping added at checkout · free above ₹4,999.
         </p>
       </div>
 
@@ -286,39 +286,14 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
           </button>
           {openAccordion === 'shipping' && (
             <div className="pt-3 pb-2 space-y-2 text-stone-600">
-              <p>• Complimentary express shipping across all pin codes in India.</p>
-              <p>• Delivered in our signature gold-embossed archival heirloom preservation box.</p>
-              <p>• 7-day hassle-free doorstep exchange or return policy with full refund.</p>
-              <p>• Tamper-proof security tag must remain intact for return eligibility.</p>
+              <p>• Pan India shipping to all serviceable pin codes.</p>
+              <p>• Packed with care in our signature packaging.</p>
+              <p>• Return, refund or exchange requests accepted within 48 hours of delivery.</p>
+              <p>• The saree must be unused, with all tags intact.</p>
             </div>
           )}
         </div>
 
-        {/* Authenticity Guarantee */}
-        <div className="py-3">
-          <button
-            onClick={() => toggleSection('authenticity')}
-            className="w-full flex items-center justify-between text-left font-semibold uppercase tracking-wider text-charcoal py-1"
-          >
-            <span>Silk Mark &amp; Purity Certification</span>
-            {openAccordion === 'authenticity' ? (
-              <ChevronUp className="w-4 h-4 text-stone-500" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-stone-500" />
-            )}
-          </button>
-          {openAccordion === 'authenticity' && (
-            <div className="pt-3 pb-2 space-y-2 text-stone-600">
-              <div className="flex items-center gap-2 text-gold-700 font-semibold">
-                <ShieldCheck className="w-4 h-4" />
-                <span>100% Certified Authentic Handloom</span>
-              </div>
-              <p>
-                Each saree comes tagged with the Government of India Silk Mark Organization authorization tag and laboratory purity certification of metallic zari.
-              </p>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

@@ -5,8 +5,8 @@ export const TrustFeatures: React.FC = () => {
   const features = [
     {
       icon: ShieldCheck,
-      title: 'Silk Mark Authenticity',
-      desc: '100% certified handloom Mulberry silk with tested real silver & gold zari.',
+      title: 'Authentic Collections',
+      desc: 'Handpicked sarees with traditional weaves, motifs and borders.',
     },
     {
       icon: Lock,
@@ -15,13 +15,13 @@ export const TrustFeatures: React.FC = () => {
     },
     {
       icon: Truck,
-      title: 'Fast Insured Shipping',
-      desc: 'Complimentary insured door-to-door delivery across all PIN codes in India.',
+      title: 'Pan India Shipping',
+      desc: 'Safe and reliable delivery across India.',
     },
     {
       icon: RefreshCw,
-      title: '7-Day Easy Returns',
-      desc: 'Hassle-free doorstep exchanges and returns with full money-back guarantee.',
+      title: '48-Hour Returns',
+      desc: 'Return, refund or exchange requests within 48 hours of delivery.',
     },
   ];
 

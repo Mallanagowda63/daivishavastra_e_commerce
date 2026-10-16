@@ -84,7 +84,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onCheckout, onSelectProd
             ) : (
               <div className="flex items-center gap-1.5 text-gold-300 font-medium">
                 <Sparkles className="w-3.5 h-3.5 text-gold-400" />
-                <span>Complimentary White-Glove Insured Delivery Unlocked!</span>
+                <span>Free shipping unlocked!</span>
               </div>
             )}
           </div>
@@ -285,7 +285,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onCheckout, onSelectProd
 
               <div className="flex items-center justify-center gap-2 text-[10px] text-stone-500 uppercase tracking-wider">
                 <ShieldCheck className="w-3.5 h-3.5 text-gold-600" />
-                <span>Silk Mark Certified · 100% Secure Checkout</span>
+                <span>100% Secure Checkout</span>
               </div>
             </div>
           )}

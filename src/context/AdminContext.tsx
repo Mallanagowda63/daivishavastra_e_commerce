@@ -98,6 +98,8 @@ const INITIAL_ORDERS: Order[] = [
 ];
 
 const ORDERS_KEY = 'daivisha_orders_v2';
+// Catalogue ids this browser has already received, so deleted seed products don't come back.
+const SEEN_SEED_KEY = 'daivisha_seen_seed_products';
 const BOOKINGS_KEY = 'daivisha_bookings';
 const today = () => localISO(new Date());
 
@@ -107,7 +109,16 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [products, setProducts] = useState<SareeProduct[]>(() => {
     try {
       const saved = localStorage.getItem('daivisha_products');
-      return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+      if (!saved) {
+        localStorage.setItem(SEEN_SEED_KEY, JSON.stringify(INITIAL_PRODUCTS.map((p) => p.id)));
+        return INITIAL_PRODUCTS;
+      }
+      const list: SareeProduct[] = JSON.parse(saved);
+      // Add catalogue items introduced after this browser saved its list (once per item).
+      const seen: string[] = JSON.parse(localStorage.getItem(SEEN_SEED_KEY) || '[]');
+      const missing = INITIAL_PRODUCTS.filter((p) => !seen.includes(p.id) && !list.some((x) => x.id === p.id));
+      localStorage.setItem(SEEN_SEED_KEY, JSON.stringify(INITIAL_PRODUCTS.map((p) => p.id)));
+      return missing.length ? [...missing, ...list] : list;
     } catch {
       return INITIAL_PRODUCTS;
     }

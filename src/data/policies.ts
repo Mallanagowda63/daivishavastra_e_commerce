@@ -31,7 +31,7 @@ const contactLine = `Email ${L.email} · Phone ${L.phone} · ${L.address}`;
 export const POLICIES: Record<PolicyId, Policy> = {
   privacy: {
     title: 'Privacy Policy',
-    updated: '15 October 2026',
+    updated: '16 October 2026',
     intro: `${L.businessName} respects your privacy. This policy explains what information we collect when you browse or shop with us, how we use it, and the choices you have. It is written to follow India's Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000.`,
     sections: [
       {
@@ -99,7 +99,7 @@ export const POLICIES: Record<PolicyId, Policy> = {
 
   terms: {
     title: 'Terms & Conditions',
-    updated: '15 October 2026',
+    updated: '16 October 2026',
     intro: `These terms apply when you use the ${L.businessName} website or buy from us. By placing an order you agree to them, so please read them carefully.`,
     sections: [
       {
@@ -114,7 +114,7 @@ export const POLICIES: Record<PolicyId, Policy> = {
         heading: 'Prices and payment',
         points: [
           'All prices are in Indian Rupees (₹) and include applicable GST unless stated otherwise.',
-          'We accept UPI, debit and credit cards, net banking and Cash on Delivery (where available).',
+          'We accept UPI, debit and credit cards and net banking. Cash on Delivery is not available.',
           'Prices and offers may change without notice. The price shown when you place your order is the price you pay.',
           'If a product is listed at an obviously wrong price because of an error, we may cancel the order and refund you in full.',
         ],
@@ -167,14 +167,14 @@ export const POLICIES: Record<PolicyId, Policy> = {
 
   refund: {
     title: 'Refund & Return Policy',
-    updated: '15 October 2026',
+    updated: '16 October 2026',
     intro: 'We want you to love every saree you receive. If something is not right, here is how returns, exchanges, cancellations and refunds work.',
     sections: [
       {
-        heading: '7-day returns',
+        heading: '48-hour returns, refunds & exchanges',
         points: [
-          'You can request a return or exchange within 7 days of delivery.',
-          'The saree must be unused, unwashed and unaltered, with all original tags, the blouse piece, packaging and authenticity certificate included.',
+          'Return, refund or exchange requests are accepted only within 48 hours of delivery.',
+          'The saree must be unused, unwashed and unaltered, with all original tags, the blouse piece and packaging included.',
           'To start a return, contact us on WhatsApp or email with your order number and the reason.',
         ],
       },
@@ -184,13 +184,13 @@ export const POLICIES: Record<PolicyId, Policy> = {
           'Sarees that have been worn, washed, altered, or had fall, pico or blouse stitching done.',
           'Custom, made-to-order or personalised pieces, including stitched blouses.',
           'Items marked as final sale or bought during clearance offers.',
-          'Products returned without tags, the blouse piece or the authenticity certificate.',
+          'Products returned without tags or the blouse piece.',
         ],
       },
       {
         heading: 'Damaged or wrong item',
         paragraphs: [
-          'If your saree arrives damaged, defective or different from what you ordered, tell us within 48 hours of delivery and share photos and, if possible, an unboxing video. We will arrange a free pickup and send a replacement or give you a full refund — your choice.',
+          'If your saree arrives damaged, defective or different from what you ordered, tell us within 48 hours of delivery and share photos and an unboxing video. Once approved, we will send a replacement or a refund.',
         ],
       },
       {
@@ -204,15 +204,7 @@ export const POLICIES: Record<PolicyId, Policy> = {
         heading: 'Refunds',
         points: [
           'Once we receive and check your return, we will confirm by email or WhatsApp — usually within 2–3 working days.',
-          'Prepaid orders (UPI, card, net banking) are refunded to the original payment method within 5–7 working days after approval.',
-          'Cash on Delivery orders are refunded by bank transfer or UPI to the account details you share with us.',
-          'Original shipping charges and COD fees are non-refundable, except when the item was damaged, defective or wrong.',
-        ],
-      },
-      {
-        heading: 'Return shipping',
-        paragraphs: [
-          'Where reverse pickup is available at your pincode, we will arrange it. Otherwise, please ship the item to us with a trackable courier; for damaged or wrong items we will reimburse the shipping cost.',
+          'Approved refunds are made to the original payment method (UPI, card or net banking) within 5–7 working days.',
         ],
       },
       {

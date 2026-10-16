@@ -1,138 +1,132 @@
 import React from 'react';
-import { ArrowRight, Handshake } from 'lucide-react';
+import { ArrowRight, MessageCircle, Sun, Truck } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
+import { openWhatsApp } from '../common/WhatsAppGate';
+import { COLLECTIONS } from '../../data/collections';
+import { SareeCategory } from '../../types';
 
 interface CategoryCardsProps {
-  onSelectCategory: (categoryName: string) => void;
-  onSelectCollection: (collectionName: string) => void;
+  onOpenCollection: (key: SareeCategory) => void;
   onLearnMore: () => void;
 }
 
-const IMG = '/images';
-
-const COLLECTION_CARDS: { title: string; image: string; category?: string; collection?: string }[] = [
-  { title: 'Silk Sarees', image: `${IMG}/swatch_silk.jpg`, category: 'Silk Sarees' },
-  { title: 'Cotton Sarees', image: `${IMG}/swatch_cotton.jpg`, category: 'Cotton Sarees' },
-  { title: 'Tussar Sarees', image: `${IMG}/swatch_tussar.jpg`, category: 'Handloom Sarees' },
-  { title: 'Linen Sarees', image: `${IMG}/swatch_linen.jpg`, category: 'Linen Sarees' },
-  { title: 'Festive Sarees', image: `${IMG}/swatch_festive.jpg`, collection: 'Festive Collection' },
-];
-
-const STORY_PILLARS = [
-  { icon: LotusMark, label: ['Traditional', 'Craftsmanship'] },
-  { icon: Handshake, label: ['Supporting', 'Indian Artisans'] },
-  { icon: LotusMark, label: ['Timeless Pieces', 'for Every You'] },
-];
-
-const OrnamentDivider: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`flex items-center justify-center gap-2 text-gold-600 ${className}`} aria-hidden="true">
+const OrnamentDivider: React.FC<{ className?: string; align?: 'center' | 'start' }> = ({ className = '', align = 'center' }) => (
+  <div className={`flex items-center gap-2 text-gold-600 ${align === 'center' ? 'justify-center' : 'justify-center md:justify-start'} ${className}`} aria-hidden="true">
     <span className="h-px w-16 sm:w-24 bg-gradient-to-r from-transparent to-gold-500" />
     <LotusMark className="w-5 h-5" />
     <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-gold-500" />
   </div>
 );
 
-export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory, onSelectCollection, onLearnMore }) => {
+const FEATURES = [
+  { icon: LotusMark, title: 'Handpicked Sarees', text: 'Curated with care' },
+  { icon: Sun, title: 'Authentic Weaves', text: 'Inspired by heritage' },
+  { icon: Truck, title: 'Pan India Shipping', text: 'Safe & reliable' },
+  { icon: MessageCircle, title: 'Order via WhatsApp', text: 'Quick & personal support', whatsapp: true },
+];
+
+export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, onLearnMore }) => {
   return (
     <>
-      {/* ── Our Story band ── */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-[#fbefdf] via-[#fbf1e3] to-[#f6e6cf] border-b border-gold-500/40">
-        <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,34%)_minmax(0,1fr)] xl:grid-cols-[minmax(0,34%)_minmax(0,31%)_minmax(0,1fr)_150px] items-end">
-          {/* Loom photograph in temple arch */}
-          <img
-            src={`${IMG}/story_loom.jpg`}
-            alt="Artisan weaving a silk saree on a handloom"
-            className="w-full max-w-xl mx-auto lg:mx-0 h-auto block [mask-image:linear-gradient(to_right,transparent,black_10%)]"
-          />
-
-          {/* Story copy */}
-          <div className="px-6 py-12 lg:py-10 text-center self-center">
-            <p className="font-serif text-sm sm:text-base tracking-[0.25em] uppercase text-burgundy-900">Our Story</p>
-            <OrnamentDivider className="mt-2 mb-4" />
-            <h2 className="font-serif text-4xl sm:text-5xl font-medium text-burgundy-800 leading-[1.1]">
-              A Celebration
-              <br />
-              of Indian Heritage
-            </h2>
-            <p className="mt-5 font-serif text-base sm:text-[17px] leading-relaxed text-stone-700 max-w-md mx-auto">
-              Daivisha Vastra was born from a deep love for India's textile traditions — the weaves, the stories, the
-              artisans and the timeless beauty of sarees. We bring together heritage and modern elegance, curating
-              pieces that make you feel connected to your roots, wherever you are.
+      {/* ── Our Story ── */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-[#fbf1e3] via-[#fbefdf] to-[#f3e1c6]">
+        {/* Lotus sketch on the left */}
+        <img
+          src="/images/home_story_lotus.jpg"
+          alt=""
+          className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 h-[95%] w-auto mix-blend-multiply opacity-80 pointer-events-none [mask-image:linear-gradient(to_right,black_60%,transparent)]"
+        />
+        <div className="relative grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,42%)] items-stretch">
+          <div className="px-6 sm:px-10 md:pl-[220px] lg:pl-[290px] md:pr-8 py-12 md:py-14 text-center md:text-left self-center">
+            <h2 className="font-serif text-3xl sm:text-4xl uppercase tracking-[0.06em] text-burgundy-800">Our Story</h2>
+            <OrnamentDivider align="start" className="mt-2 mb-5" />
+            <p className="font-serif text-lg leading-relaxed text-stone-700 max-w-xl mx-auto md:mx-0">
+              Daivisha Vastra was born from a deep love for India&apos;s textile traditions — the weaves, the stories, the artisans
+              and the timeless beauty of sarees. We bring together heritage and modern elegance, curating pieces that make you
+              feel connected to your roots, wherever you are.
             </p>
             <button
               onClick={onLearnMore}
-              className="mt-7 inline-flex items-center gap-3 px-7 py-3 bg-burgundy-800 hover:bg-burgundy-900 text-ivory font-serif text-base tracking-[0.12em] uppercase shadow-md transition-colors cursor-pointer"
+              className="mt-7 inline-flex items-center gap-3 px-7 py-3 bg-burgundy-800 hover:bg-burgundy-900 text-ivory font-serif text-[15px] tracking-[0.12em] uppercase shadow-md transition-colors cursor-pointer"
             >
-              Read Our Story
+              Read our story
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
-
-          {/* Temple & elephant sketch */}
+          {/* Folded sarees, fading into the band */}
           <img
-            src={`${IMG}/story_temple.jpg`}
-            alt=""
-            className="hidden xl:block w-full h-auto mix-blend-multiply opacity-90 [mask-image:radial-gradient(ellipse_at_center,black_60%,transparent_85%)]"
+            src="/images/home_story_sarees.jpg"
+            alt="Folded silk sarees in maroon, green and gold on a brass plate with jasmine"
+            className="w-full h-64 sm:h-80 md:h-full object-cover object-right md:[mask-image:linear-gradient(to_right,transparent,black_30%)]"
           />
-
-          {/* Pillars */}
-          <ul className="flex lg:col-span-2 xl:col-span-1 xl:flex-col justify-center gap-8 xl:gap-10 px-4 pb-10 xl:pb-0 self-center text-center">
-            {STORY_PILLARS.map(({ icon: Icon, label }) => (
-              <li key={label[0]} className="flex flex-col items-center gap-2">
-                <Icon className="w-7 h-7 text-gold-600" />
-                <span className="font-serif text-xs tracking-[0.12em] uppercase text-stone-800 leading-snug">
-                  {label[0]}
-                  <br />
-                  {label[1]}
-                </span>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
-      {/* ── Explore Our Collections ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16">
+      {/* ── Feature strip ── */}
+      <section className="bg-[#fdf7ee] border-y border-gold-500/30">
+        <ul className="max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-16 py-5 sm:py-6 grid grid-cols-2 lg:grid-cols-4 gap-y-5">
+          {FEATURES.map(({ icon: Icon, title, text, whatsapp }, i) => {
+            const body = (
+              <>
+                <Icon className="w-9 h-9 sm:w-10 sm:h-10 text-gold-700 shrink-0" />
+                <span className="text-left">
+                  <span className="block font-serif text-[15px] sm:text-lg text-charcoal leading-tight">{title}</span>
+                  <span className="block font-serif text-xs sm:text-sm text-stone-600">{text}</span>
+                </span>
+              </>
+            );
+            return (
+              <li
+                key={title}
+                className={`flex justify-center ${i > 0 ? 'lg:border-l lg:border-gold-500/40' : ''} ${i % 2 === 1 ? 'max-lg:border-l max-lg:border-gold-500/40' : ''}`}
+              >
+                {whatsapp ? (
+                  <button onClick={() => openWhatsApp()} className="flex items-center gap-3 px-2 cursor-pointer hover:opacity-80 transition-opacity">
+                    {body}
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-3 px-2">{body}</div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 min-[1400px]:px-24">
+      {/* ── Explore Our Collections ── */}
+      <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-28">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-serif text-3xl sm:text-4xl font-semibold tracking-[0.04em] uppercase text-burgundy-800">
             Explore Our Collections
           </h2>
           <OrnamentDivider className="mt-3 mb-10" />
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-            {COLLECTION_CARDS.map((card) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {COLLECTIONS.map((c) => (
               <button
-                key={card.title}
-                onClick={() =>
-                  card.collection ? onSelectCollection(card.collection) : onSelectCategory(card.category!)
-                }
-                className="group relative text-left cursor-pointer drop-shadow-sm hover:drop-shadow-lg transition-[filter] max-sm:last:col-span-2 max-sm:last:w-1/2 max-sm:last:mx-auto max-sm:last:px-1"
+                key={c.key}
+                onClick={() => onOpenCollection(c.key)}
+                className="group relative text-left cursor-pointer drop-shadow-sm hover:drop-shadow-lg transition-[filter]"
               >
                 {/* One arch mask shapes the whole card, so photo top and gold outline always line up */}
                 <div className="relative aspect-[5/7] bg-[#fffaf3] flex flex-col" style={archMaskStyle}>
                   <div className="h-[68%] overflow-hidden">
                     <img
-                      src={card.image}
-                      alt={card.title}
+                      src={c.cardImage}
+                      alt={`${c.title} fabric`}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
-                  <div className="flex-1 flex flex-col items-center justify-center text-center border-t border-gold-500/50">
-                    <h3 className="font-serif text-base sm:text-lg font-semibold tracking-[0.06em] uppercase text-burgundy-950">
-                      {card.title}
+                  <div className="flex-1 flex flex-col items-center justify-center text-center border-t border-gold-500/50 px-2">
+                    <h3 className="font-serif text-[15px] sm:text-lg font-semibold tracking-[0.06em] uppercase text-burgundy-950 leading-tight">
+                      {c.title}
                     </h3>
                     <ArrowRight className="w-4 h-4 mx-auto mt-1.5 text-burgundy-900 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
                 {/* Gold arch outline */}
-                <svg
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  aria-hidden="true"
-                >
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
                   <path d={ARCH_PATH} fill="none" stroke="#b08d46" strokeWidth="4" vectorEffect="non-scaling-stroke" />
                 </svg>
               </button>

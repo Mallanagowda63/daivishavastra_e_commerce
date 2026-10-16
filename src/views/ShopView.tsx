@@ -7,6 +7,9 @@ import { LotusMark } from '../components/layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../components/common/TempleArch';
 
 const CATEGORY_CHIPS: SareeCategory[] = [
+  'Gajji Silks',
+  'Mysore Silk Crepe',
+  'Soft Tissue Silk',
   'Silk Sarees',
   'Kanjivaram Sarees',
   'Banarasi Sarees',

@@ -11,10 +11,11 @@ import { COLLECTIONS } from './ProductsPage';
 const CATEGORIES: SareeCategory[] = [
   'Silk Sarees', 'Kanjivaram Sarees', 'Banarasi Sarees', 'Cotton Sarees', 'Organza Sarees',
   'Georgette Sarees', 'Linen Sarees', 'Designer Sarees', 'Handloom Sarees',
+  'Gajji Silks', 'Mysore Silk Crepe', 'Soft Tissue Silk',
 ];
 const FABRICS: SareeFabric[] = [
   'Pure Silk', 'Kanjivaram Silk', 'Banarasi Katan Silk', 'Cotton Silk', 'Organza',
-  'Chanderi Silk', 'Georgette', 'Pure Linen', 'Tussar Silk',
+  'Chanderi Silk', 'Georgette', 'Pure Linen', 'Tussar Silk', 'Gajji Silk',
 ];
 const OCCASIONS: SareeOccasion[] = ['Wedding', 'Festive', 'Party', 'Office Wear', 'Traditional', 'Daily Elegance'];
 

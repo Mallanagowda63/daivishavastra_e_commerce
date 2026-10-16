@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { COLLECTIONS } from '../../data/collections';
+import { SareeCategory } from '../../types';
 import { scrollToElement } from '../../lib/smoothScroll';
 import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -10,6 +12,8 @@ interface HeaderProps {
   currentView?: string;
   onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'track', category?: string, collection?: string) => void;
   onOpenSearch: () => void;
+  onOpenCollections: () => void;
+  onOpenCollection: (key: SareeCategory) => void;
 }
 
 const navLinkClass = (active: boolean) =>
@@ -17,7 +21,7 @@ const navLinkClass = (active: boolean) =>
     active ? 'text-burgundy-800 after:scale-x-100' : 'text-charcoal hover:text-burgundy-800 after:scale-x-0 hover:after:scale-x-100'
   }`;
 
-export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenSearch }) => {
+export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenSearch, onOpenCollections, onOpenCollection }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -112,7 +116,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
               Sarees
             </button>
 
-            <button onClick={() => onNavigate('shop')} className={navLinkClass(false)}>
+            <button onClick={onOpenCollections} className={navLinkClass(currentView === 'collection')}>
               Collections
             </button>
 
@@ -241,13 +245,16 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                 Collections
               </p>
               <div className="grid grid-cols-2 gap-2 text-sm text-charcoal">
-                {['Wedding Collection', 'Festive Collection', 'Office Wear', 'Party Wear', 'Daily Wear'].map((col) => (
+                {COLLECTIONS.map((c) => (
                   <button
-                    key={col}
-                    onClick={() => handleSelectCollection(col)}
+                    key={c.key}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      onOpenCollection(c.key);
+                    }}
                     className="text-left py-1.5 hover:text-burgundy-800"
                   >
-                    {col}
+                    {c.title}
                   </button>
                 ))}
               </div>

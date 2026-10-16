@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useState } from 'react';
-import { scrollToTop } from './lib/smoothScroll';
+import { scrollToElement, scrollToTop } from './lib/smoothScroll';
 import { ToastProvider } from './context/ToastContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider, useCart } from './context/CartContext';
@@ -18,6 +18,7 @@ import { WishlistView } from './views/WishlistView';
 import { AboutView } from './views/AboutView';
 import { TrackOrderView } from './views/TrackOrderView';
 import { PolicyView } from './views/PolicyView';
+import { CollectionView } from './views/CollectionView';
 import { PolicyId } from './data/policies';
 
 import { CartDrawer } from './components/cart/CartDrawer';
@@ -29,7 +30,7 @@ import { WhatsAppButton } from './components/common/WhatsAppButton';
 import { WhatsAppGate } from './components/common/WhatsAppGate';
 import { ToastContainer } from './components/common/ToastContainer';
 
-import { SareeProduct } from './types';
+import { SareeCategory, SareeProduct } from './types';
 
 // The admin workspace is only downloaded when it is opened, keeping the storefront light.
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
@@ -42,7 +43,8 @@ function MainApp() {
   const { addToCart } = useCart();
 
   // Navigation State
-  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'track' | PolicyId>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'track' | 'collection' | PolicyId>('home');
+  const [collectionKey, setCollectionKey] = useState<SareeCategory>('Gajji Silks');
   const [selectedProduct, setSelectedProduct] = useState<SareeProduct | null>(null);
 
   // Shop filter parameters when navigating from menus
@@ -72,6 +74,22 @@ function MainApp() {
     scrollToTop();
   };
 
+  const openCollection = (key: SareeCategory) => {
+    setCollectionKey(key);
+    setCurrentView('collection');
+    scrollToTop();
+  };
+
+  // Home page "Explore Our Collections" section
+  const goToCollections = () => {
+    if (currentView === 'home') {
+      scrollToElement('#collections');
+      return;
+    }
+    setCurrentView('home');
+    setTimeout(() => scrollToElement('#collections'), 150);
+  };
+
   const handleSelectProduct = (product: SareeProduct) => {
     setSelectedProduct(product);
     setCurrentView('product');
@@ -93,6 +111,8 @@ function MainApp() {
         currentView={currentView}
         onNavigate={(view, cat, col) => handleNavigate(view, cat, col)}
         onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenCollections={goToCollections}
+        onOpenCollection={openCollection}
       />
 
       {/* 3. Main Dynamic Content View */}
@@ -104,6 +124,7 @@ function MainApp() {
             onQuickView={(p) => setQuickViewProduct(p)}
             onNavigateToShop={(cat, col, occ, fab) => handleNavigate('shop', cat, col, occ, fab)}
             onNavigateToAbout={() => handleNavigate('about')}
+            onOpenCollection={openCollection}
           />
         )}
 
@@ -142,6 +163,16 @@ function MainApp() {
         {currentView === 'about' && (
           <AboutView
             onExploreCatalog={() => handleNavigate('shop')}
+          />
+        )}
+
+        {currentView === 'collection' && (
+          <CollectionView
+            collectionKey={collectionKey}
+            products={products}
+            onSelectProduct={handleSelectProduct}
+            onNavigateHome={() => handleNavigate('home')}
+            onNavigateCollections={goToCollections}
           />
         )}
 

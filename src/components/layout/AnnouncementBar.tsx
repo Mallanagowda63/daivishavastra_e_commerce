@@ -1,12 +1,12 @@
 import React from 'react';
-import { Truck, ShieldCheck, Heart, Tag } from 'lucide-react';
+import { Truck, ShieldCheck, Gift, Tag } from 'lucide-react';
 import { couponLabel, isUsable, useCoupons } from '../../data/couponStore';
 import { LotusMark } from './BrandEmblem';
 
 const badges = [
   { icon: Truck, label: 'Pan India Shipping' },
   { icon: ShieldCheck, label: 'Secure Enquiries' },
-  { icon: Heart, label: 'Authentic Collections' },
+  { icon: Gift, label: 'Beautiful Packaging' },
 ];
 
 export const AnnouncementBar: React.FC = () => {

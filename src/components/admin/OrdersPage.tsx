@@ -179,7 +179,7 @@ const AddOrderPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <div className="grid grid-cols-2 gap-3">
           <Field label="Payment method">
             <select className={inputClass} value={method} onChange={(e) => setMethod(e.target.value)}>
-              {['UPI', 'COD', 'Credit Card', 'Debit Card', 'Net Banking', 'Cash (in store)'].map((m) => <option key={m}>{m}</option>)}
+              {['UPI', 'Credit Card', 'Debit Card', 'Net Banking', 'Cash (in store)'].map((m) => <option key={m}>{m}</option>)}
             </select>
           </Field>
           <Field label="Payment status">

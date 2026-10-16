@@ -7,7 +7,10 @@ export type SareeCategory =
   | 'Georgette Sarees'
   | 'Linen Sarees'
   | 'Designer Sarees'
-  | 'Handloom Sarees';
+  | 'Handloom Sarees'
+  | 'Gajji Silks'
+  | 'Mysore Silk Crepe'
+  | 'Soft Tissue Silk';
 
 export type SareeCollection = 
   | 'Wedding Collection'
@@ -35,7 +38,8 @@ export type SareeFabric =
   | 'Chanderi Silk'
   | 'Georgette'
   | 'Pure Linen'
-  | 'Tussar Silk';
+  | 'Tussar Silk'
+  | 'Gajji Silk';
 
 export interface ProductColorVariant {
   name: string;

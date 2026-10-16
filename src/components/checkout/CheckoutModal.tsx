@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, ShieldCheck, CreditCard, Smartphone, Banknote, Building2, Truck, ArrowRight, Lock } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, CreditCard, Smartphone, Building2, Truck, ArrowRight, Lock } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAdmin } from '../../context/AdminContext';
 import { useAuth } from '../../context/AuthContext';
@@ -31,7 +31,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [state, setState] = useState(user?.addresses[0]?.state || 'Maharashtra');
   const [pincode, setPincode] = useState(user?.addresses[0]?.pincode || '400006');
   const [deliveryMethod, setDeliveryMethod] = useState<'express' | 'white-glove'>('express');
-  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking' | 'cod'>('upi');
+  const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
   const [upiId, setUpiId] = useState('patron@okhdfcbank');
 
   const [completedOrderNumber, setCompletedOrderNumber] = useState('');
@@ -64,9 +64,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             ? `UPI (${upiId})`
             : paymentMethod === 'card'
             ? 'Credit Card'
-            : paymentMethod === 'netbanking'
-            ? 'Net Banking (HDFC)'
-            : 'Cash on Delivery',
+            : 'Net Banking (HDFC)',
         shippingAddress: {
           fullName,
           phone,
@@ -377,12 +375,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </div>
 
               {/* Payment Methods Tabs */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-sans">
+              <div className="grid grid-cols-3 gap-2 text-xs font-sans">
                 {[
                   { id: 'upi', label: 'UPI / QR', icon: Smartphone },
                   { id: 'card', label: 'Cards', icon: CreditCard },
                   { id: 'netbanking', label: 'Net Banking', icon: Building2 },
-                  { id: 'cod', label: 'Cash on Delivery', icon: Banknote },
                 ].map((pm) => {
                   const Icon = pm.icon;
                   return (
@@ -461,14 +458,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   </div>
                 )}
 
-                {paymentMethod === 'cod' && (
-                  <div className="space-y-1">
-                    <p className="font-semibold text-charcoal">Cash on Delivery Verification</p>
-                    <p className="text-stone-600">
-                      Pay safely upon delivery. A verification call or SMS OTP will be requested before dispatch.
-                    </p>
-                  </div>
-                )}
               </div>
 
               <div className="pt-4 flex justify-between items-center">

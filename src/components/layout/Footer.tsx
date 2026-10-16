@@ -23,9 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span className="font-serif text-2xl font-bold tracking-tight text-gold-300 block mb-3">
               Daivisha Vastra
             </span>
-            <p className="text-xs text-stone-300 leading-relaxed font-sans mb-4">
-              Traditional Indian elegance combined with modern luxury. Preserving 400 years of handloom mastery across Kanchipuram, Varanasi, and Jaipur.
-            </p>
+            <p className="font-serif text-sm italic text-stone-300 mb-4">Elegant attire rooted in Indian heritage.</p>
             <div className="flex items-center gap-3 text-gold-400">
               <a
                 href="https://instagram.com"
@@ -136,14 +134,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   Contact Us
                 </a>
               </li>
-              <li>
-                <a
-                  href="#trust"
-                  className="hover:text-gold-300 transition-colors"
-                >
-                  Silk Mark Certification
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -162,10 +152,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </li>
               <li>
-                <span className="block text-stone-400">Complimentary Shipping</span>
+                <span className="block text-stone-400">Pan India Shipping</span>
               </li>
               <li>
-                <span className="block text-stone-400">7-Day Easy Returns</span>
+                <span className="block text-stone-400">48-Hour Returns &amp; Exchange</span>
               </li>
               <li>
                 <span className="block text-stone-400">Saree Care & Storage</span>
@@ -185,11 +175,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           {/* LEGAL & NEWSLETTER */}
           <div>
             <h4 className="font-serif text-sm tracking-widest uppercase text-gold-400 font-semibold mb-4">
-              Boutique Promise
+              Policies
             </h4>
-            <p className="text-xs text-stone-300 leading-relaxed mb-4">
-              Every saree arrives packed with authenticity certificates and hand-loomed provenance seals.
-            </p>
             <ul className="space-y-2 text-xs">
               {POLICY_LINKS.map((l) => (
                 <li key={l.id}>
@@ -199,7 +186,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-[11px] text-stone-400">Certified Handloom Mark · Pure Silk Mark</p>
           </div>
         </div>
 
@@ -229,8 +215,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span>Visa / Mastercard / RuPay</span>
             <span className="text-stone-500">·</span>
             <span>Net Banking</span>
-            <span className="text-stone-500">·</span>
-            <span>Cash on Delivery</span>
           </div>
         </div>
       </div>
