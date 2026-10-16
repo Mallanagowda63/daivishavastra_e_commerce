@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import { ArrowUpRight, ChevronLeft, ChevronRight, Download, Info, Plus } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { Order, OrderStatus, PaymentStatus } from '../../types';
@@ -198,6 +199,7 @@ const AddOrderPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
 export const OrdersPage: React.FC = () => {
   const { orders } = useAdmin();
+  const { showToast } = useToast();
   const [tab, setTab] = useState<TabId>('all');
   const [query, setQuery] = useState('');
   const [range, setRange] = useState<DateRange>('all');
@@ -232,7 +234,8 @@ export const OrdersPage: React.FC = () => {
   const payPending = orders.filter((o) => paymentStatusOf(o) === 'Pending').length;
   const viewingOrder = orders.find((o) => o.id === viewing);
 
-  const exportCSV = () =>
+  const exportCSV = () => {
+    showToast({ type: 'success', title: 'Export downloaded', message: `${filtered.length} orders saved to daivisha-orders.csv` });
     downloadCSV('daivisha-orders.csv', [
       ['Order', 'Date', 'Customer', 'Phone', 'City', 'Items', 'Amount (INR)', 'Payment method', 'Payment', 'Fulfilment'],
       ...filtered.map((o) => [
@@ -240,6 +243,7 @@ export const OrdersPage: React.FC = () => {
         o.items.map((i) => `${i.quantity}× ${i.name}`).join('; '), o.total, o.paymentMethod, paymentStatusOf(o), o.status,
       ]),
     ]);
+  };
 
   return (
     <>

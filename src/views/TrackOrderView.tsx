@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '../context/ToastContext';
 import { Search, Package, Truck, CheckCircle2, Clock } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { OrderTimeline } from '../components/account/OrderTimeline';
@@ -6,9 +7,11 @@ import { Order } from '../types';
 import { ImageWithFallback } from '../components/common/ImageWithFallback';
 
 export const TrackOrderView: React.FC = () => {
-  const { getOrderById, orders } = useAdmin();
+  const { getOrderById } = useAdmin();
   const [searchInput, setSearchInput] = useState('');
-  const [foundOrder, setFoundOrder] = useState<Order | null>(orders[0] || null);
+  // Nothing is shown until the customer searches for their own order ID.
+  const [foundOrder, setFoundOrder] = useState<Order | null>(null);
+  const { showToast } = useToast();
   const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -16,6 +19,8 @@ export const TrackOrderView: React.FC = () => {
     setHasSearched(true);
     const res = getOrderById(searchInput);
     setFoundOrder(res || null);
+    if (res) showToast({ type: 'success', title: 'Order found', message: `${res.orderNumber} · ${res.status}` });
+    else showToast({ type: 'error', title: 'Order not found', message: 'Please check the order ID and try again.' });
   };
 
   return (

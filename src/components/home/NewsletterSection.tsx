@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import { ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 
 export const NewsletterSection: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       setIsSubscribed(true);
       setEmail('');
+      showToast({ type: 'success', title: 'You\'re subscribed!', message: 'Thank you for joining the Daivisha Circle.' });
     }
   };
 

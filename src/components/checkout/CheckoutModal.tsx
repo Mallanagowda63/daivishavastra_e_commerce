@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import QRCode from 'qrcode';
 import { X, CheckCircle2, ArrowRight, Lock, Smartphone, Copy, Check, Clock, Info } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -32,6 +33,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
   const { cartItems, subtotal, discountAmount, giftWrapAmount, shippingAmount, total, clearCart } = useCart();
   const { createOrder } = useAdmin();
   const { user } = useAuth();
+  const { showToast } = useToast();
 
   const [step, setStep] = useState<Step>(1);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -100,7 +102,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
     }
     if (s === 4 && upiReady && !/^\d{12}$/.test(utr.trim())) e.utr = 'Enter the 12-digit UPI transaction ID (UTR) from your payment app.';
     setErrors(e);
-    return Object.keys(e).length === 0;
+    const ok = Object.keys(e).length === 0;
+    if (!ok) showToast({ type: 'error', title: 'Please check your details', message: Object.values(e)[0] });
+    return ok;
   };
 
   const next = (to: Step) => {
@@ -137,6 +141,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
     });
     setPlaced({ number: order.orderNumber, total });
     clearCart();
+    showToast({
+      type: 'success',
+      title: 'Order placed successfully!',
+      message: upiReady
+        ? `Order ${order.orderNumber} received. We'll confirm it once your payment is verified.`
+        : `Order ${order.orderNumber} received. We'll message you on WhatsApp with payment details.`,
+    });
     setStep(5);
     onOrderSuccess(order.orderNumber);
   };
@@ -146,6 +157,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
       await navigator.clipboard.writeText(STORE_UPI_ID);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
+      showToast({ type: 'info', title: 'UPI ID copied', message: STORE_UPI_ID });
     } catch {
       // clipboard blocked — the ID is visible to copy manually
     }

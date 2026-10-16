@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import { ChevronLeft, ChevronRight, Download, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { ProductStatus, SareeCollection, SareeProduct } from '../../types';
@@ -26,6 +27,7 @@ const stockLabel = (n: number) =>
 
 export const ProductsPage: React.FC = () => {
   const { products, deleteProduct } = useAdmin();
+  const { showToast } = useToast();
   const [editing, setEditing] = useState<SareeProduct | 'new' | null>(null);
   const [tab, setTab] = useState<TabId>('all');
   const [query, setQuery] = useState('');
@@ -59,11 +61,13 @@ export const ProductsPage: React.FC = () => {
     return <ProductEditor product={editing === 'new' ? undefined : editing} onDone={() => setEditing(null)} />;
   }
 
-  const exportCSV = () =>
+  const exportCSV = () => {
+    showToast({ type: 'success', title: 'Export downloaded', message: `${filtered.length} sarees saved to daivisha-sarees.csv` });
     downloadCSV('daivisha-sarees.csv', [
       ['Name', 'SKU', 'Collection', 'Category', 'Price (INR)', 'MRP (INR)', 'Stock', 'Status'],
       ...filtered.map((p) => [p.name, p.sku, p.collection, p.category, p.sellingPrice, p.originalPrice, p.stock, PRODUCT_STATUS_LABEL[productStatusOf(p)]]),
     ]);
+  };
 
   return (
     <>

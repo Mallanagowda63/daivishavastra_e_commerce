@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import { X, User, Package, MapPin, Heart, LogOut, ArrowRight, ShieldCheck, Phone, Mail, Key } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useAdmin } from '../../context/AdminContext';
@@ -12,6 +13,7 @@ export const AccountModal: React.FC<{
   onNavigateWishlist: () => void;
 }> = ({ isOpen, onClose, onNavigateWishlist }) => {
   const { user, login, signup, logout } = useAuth();
+  const { showToast } = useToast();
   const { orders: allOrders, loginAdmin, setIsAdminOpen } = useAdmin();
   // Customers only see orders placed with their own email.
   const orders = user ? allOrders.filter((o) => o.customerEmail === user.email.trim().toLowerCase()) : [];
@@ -38,6 +40,7 @@ export const AccountModal: React.FC<{
       setEmailInput('');
       onClose();
       setIsAdminOpen(true);
+      showToast({ type: 'success', title: 'Welcome to the admin workspace', message: 'Signed in as store admin.' });
       return;
     }
     login(emailInput);

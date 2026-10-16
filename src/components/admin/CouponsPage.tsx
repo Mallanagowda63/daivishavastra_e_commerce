@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../../context/ToastContext';
 import { Clock, Megaphone, Plus, Tag, Trash2 } from 'lucide-react';
 import { Coupon } from '../../types';
 import { couponActions, couponLabel, isExpired, useCoupons } from '../../data/couponStore';
@@ -20,6 +21,7 @@ const timeLeft = (iso: string, now: number) => {
 };
 
 const CreateCouponPanel: React.FC<{ onClose: () => void; existing: string[] }> = ({ onClose, existing }) => {
+  const { showToast } = useToast();
   const [code, setCode] = useState('');
   const [type, setType] = useState<'percent' | 'flat'>('percent');
   const [value, setValue] = useState(10);
@@ -46,6 +48,7 @@ const CreateCouponPanel: React.FC<{ onClose: () => void; existing: string[] }> =
       active,
       featured: active && featured,
     });
+    showToast({ type: 'success', title: 'Coupon created', message: `${clean} is ${active ? 'live' : 'saved (inactive)'}.` });
     onClose();
   };
 
@@ -99,6 +102,7 @@ const CreateCouponPanel: React.FC<{ onClose: () => void; existing: string[] }> =
 
 export const CouponsPage: React.FC = () => {
   const coupons = useCoupons();
+  const { showToast } = useToast();
   const [creating, setCreating] = useState(false);
   const [now, setNow] = useState(Date.now());
 
@@ -111,10 +115,16 @@ export const CouponsPage: React.FC = () => {
   const featured = coupons.find((c) => c.featured);
 
   const deleteAll = () => {
-    if (window.confirm(`Delete all ${coupons.length} coupons? This cannot be undone.`)) couponActions.removeAll();
+    if (window.confirm(`Delete all ${coupons.length} coupons? This cannot be undone.`)) {
+      couponActions.removeAll();
+      showToast({ type: 'info', title: 'All coupons deleted' });
+    }
   };
   const deleteOne = (c: Coupon) => {
-    if (window.confirm(`Delete coupon ${c.code}?`)) couponActions.remove(c.code);
+    if (window.confirm(`Delete coupon ${c.code}?`)) {
+      couponActions.remove(c.code);
+      showToast({ type: 'info', title: 'Coupon deleted', message: c.code });
+    }
   };
 
   return (
@@ -176,7 +186,10 @@ export const CouponsPage: React.FC = () => {
                 </td>
                 <td className="px-4 py-3.5">
                   <button
-                    onClick={() => couponActions.setFeatured(c.code)}
+                    onClick={() => {
+                      couponActions.setFeatured(c.code);
+                      showToast({ type: 'success', title: c.featured ? 'Removed from top bar' : 'Now showing in top bar', message: c.code });
+                    }}
                     disabled={!active || expired}
                     className={`rounded-full px-3 py-1.5 text-xs font-semibold border whitespace-nowrap transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       c.featured ? 'bg-burgundy-800 border-burgundy-800 text-ivory' : 'bg-white border-[#e3d9ca] text-charcoal hover:border-burgundy-800'
@@ -188,7 +201,10 @@ export const CouponsPage: React.FC = () => {
                 </td>
                 <td className="px-4 py-3.5">
                   <button
-                    onClick={() => couponActions.toggleActive(c.code)}
+                    onClick={() => {
+                      couponActions.toggleActive(c.code);
+                      showToast({ type: 'info', title: active ? 'Coupon deactivated' : 'Coupon activated', message: c.code });
+                    }}
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase ring-1 ring-inset cursor-pointer ${
                       expired
                         ? 'bg-rose-50 text-rose-700 ring-rose-200'

@@ -207,6 +207,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const updateOrder = (orderId: string, patch: Partial<Order>) => {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o)));
+    const num = orders.find((o) => o.id === orderId)?.orderNumber ?? '';
+    if (patch.paymentStatus === 'Paid') showToast({ type: 'success', title: 'Payment marked as received', message: `${num} is now paid.` });
+    else if (patch.paymentStatus === 'Refunded') showToast({ type: 'info', title: 'Marked as refunded', message: num });
   };
 
   const addManualOrder = (orderData: Omit<Order, 'id' | 'orderNumber'>): Order => {
@@ -233,6 +236,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const updateBooking = (bookingId: string, patch: Partial<Booking>) => {
     setBookings((prev) => prev.map((b) => (b.id === bookingId ? { ...b, ...patch } : b)));
+    const b = bookings.find((x) => x.id === bookingId);
+    if (b && patch.status) {
+      showToast({
+        type: patch.status === 'Cancelled' ? 'info' : 'success',
+        title: `Booking ${patch.status.toLowerCase()}`,
+        message: `${b.service} · ${b.customerName}`,
+      });
+    }
   };
 
   const updateProductStock = (productId: string, newStock: number) => {
@@ -300,6 +311,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const logoutAdmin = () => {
     setIsAdminAuthenticated(false);
     setIsAdminOpen(false);
+    showToast({ type: 'info', title: 'Signed out of admin', message: 'See you soon.' });
     try {
       sessionStorage.removeItem(ADMIN_SESSION_KEY);
     } catch {
