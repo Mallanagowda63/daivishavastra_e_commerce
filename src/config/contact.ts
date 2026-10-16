@@ -15,3 +15,4 @@ export const STORE_ADDRESS_LINES = ['CC Swastik, C Block, RK Colony', 'Manjunath
 export const STORE_LANDMARK = 'Opposite SVS PG';
 export const STORE_INSTAGRAM_URL = 'https://www.instagram.com/daivishavastra';
 export const STORE_INSTAGRAM_HANDLE = '@daivishavastra';
+export const STORE_FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61595216711174';

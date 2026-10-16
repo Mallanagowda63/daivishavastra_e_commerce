@@ -1,7 +1,7 @@
 import React from 'react';
 import { openWhatsApp } from '../common/WhatsAppGate';
-import { Instagram, MapPin, Phone, Lock } from 'lucide-react';
-import { STORE_ADDRESS_LINES, STORE_INSTAGRAM_HANDLE, STORE_INSTAGRAM_URL, STORE_LANDMARK, STORE_PHONE_DISPLAY, STORE_PHONE_TEL } from '../../config/contact';
+import { Facebook, Instagram, MapPin, Phone, Lock } from 'lucide-react';
+import { STORE_ADDRESS_LINES, STORE_FACEBOOK_URL, STORE_INSTAGRAM_HANDLE, STORE_INSTAGRAM_URL, STORE_LANDMARK, STORE_PHONE_DISPLAY, STORE_PHONE_TEL } from '../../config/contact';
 import { PolicyId } from '../../data/policies';
 
 const POLICY_LINKS: { id: PolicyId; label: string }[] = [
@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Daivisha Vastra
             </span>
             <p className="font-serif text-sm italic text-stone-300 mb-4">Elegant attire rooted in Indian heritage.</p>
-            <div className="flex items-center gap-3 text-gold-400">
+            <div className="flex flex-wrap items-center gap-2 text-gold-400">
               <a
                 href={STORE_INSTAGRAM_URL}
                 target="_blank"
@@ -35,6 +35,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               >
                 <Instagram className="w-4 h-4" />
                 {STORE_INSTAGRAM_HANDLE}
+              </a>
+              <a
+                href={STORE_FACEBOOK_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 h-8 pl-2 pr-3 rounded-full border border-gold-500/30 hover:bg-gold-500 hover:text-burgundy-950 transition-colors text-xs"
+                aria-label="Follow Daivisha Vastra on Facebook"
+              >
+                <Facebook className="w-4 h-4" />
+                Facebook
               </a>
             </div>
 
