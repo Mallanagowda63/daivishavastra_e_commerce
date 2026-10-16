@@ -95,7 +95,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, 
       </section>
 
       {/* ── Explore Our Collections ── */}
-      <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-28">
+      <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-36">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-serif text-3xl sm:text-4xl font-semibold tracking-[0.04em] uppercase text-burgundy-800">
             Explore Our Collections

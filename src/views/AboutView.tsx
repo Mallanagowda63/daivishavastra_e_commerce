@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { LotusMark } from '../components/layout/BrandEmblem';
-import { ARCH_PATH, archMaskStyle } from '../components/common/TempleArch';
 
 interface AboutViewProps {
   onExploreCatalog: () => void;
@@ -18,64 +17,55 @@ const Divider: React.FC<{ className?: string }> = ({ className = '' }) => (
 export const AboutView: React.FC<AboutViewProps> = ({ onExploreCatalog }) => {
   return (
     <div>
-      {/* Banner */}
-      <section className="bg-gradient-to-r from-[#fbefdf] via-[#fbf1e3] to-[#f6e6cf] border-b border-gold-500/40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
-          <p className="font-serif text-sm sm:text-base uppercase tracking-[0.3em] text-gold-700">About us</p>
-          <h1 className="mt-3 font-serif text-4xl sm:text-6xl font-medium text-burgundy-800 leading-tight">
-            Welcome to Daivisha Vastra
-          </h1>
-          <Divider className="my-5" />
-          <p className="font-serif text-lg sm:text-xl italic text-stone-700">Elegant attire rooted in Indian heritage.</p>
-        </div>
-      </section>
+      {/* Story: portrait in a temple arch beside the brand story. On large screens the artwork is one 16:9 panel
+          (text sized in container units so it scales with it); on small screens the portrait stacks above the text. */}
+      <section className="bg-[#f8ebdb] border-b border-gold-500/40">
+        <div
+          className="relative max-w-[1920px] mx-auto lg:aspect-[16/9] lg:bg-[url('/images/about_banner.jpg?v=4')] lg:bg-cover lg:bg-center"
+          style={{ containerType: 'inline-size' }}
+        >
+          <img
+            src="/images/about_portrait.jpg?v=4"
+            alt="Smiling woman in a mustard silk saree with a pink blouse, framed by a temple arch with brass lamps and jasmine"
+            className="lg:hidden w-full max-w-md mx-auto block"
+          />
 
-      {/* Story */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-12 lg:gap-16 items-center">
-        {/* Photo in a temple arch */}
-        <div className="relative w-full max-w-md mx-auto aspect-[4/5] drop-shadow-xl">
-          <div className="absolute inset-0 bg-[#fffaf3] p-2" style={archMaskStyle}>
-            <img
-              src="/images/about_founder.jpg"
-              alt="Smiling woman in a wine embellished ethnic outfit with a sheer dupatta"
-              className="w-full h-full object-cover object-[center_20%]"
-              style={archMaskStyle}
-            />
+          <div className="px-5 sm:px-8 py-10 lg:p-0 lg:absolute lg:top-[14.5%] lg:left-[51%] lg:right-[5.5%] text-stone-700">
+            <header className="text-center">
+              <p className="font-serif uppercase text-gold-700 tracking-[0.35em] text-lg lg:text-[1.75cqw]">About</p>
+              <Divider className="mt-1 lg:mt-[0.3cqw]" />
+              <h1
+                className="mt-2 lg:mt-[0.6cqw] text-burgundy-800 font-medium leading-none text-4xl sm:text-5xl lg:text-[4.6cqw]"
+                style={{ fontFamily: "'Cinzel', serif", color: '#6b1418' }}
+              >
+                Daivisha Vastra
+              </h1>
+              <p className="mt-3 lg:mt-[1.4cqw] font-serif italic text-[#6b1418] text-xl sm:text-2xl lg:text-[2.15cqw]">
+                More than attire. A legacy in every thread.
+              </p>
+            </header>
+
+            <div className="mt-6 lg:mt-[2.4cqw] space-y-4 lg:space-y-[1.7cqw] lg:pr-[7%] font-serif text-lg leading-relaxed lg:text-[1.34cqw] lg:leading-[1.4] text-[#3d3530]">
+              <p>
+                At Daivisha Vastra, we believe every saree has a story to tell — a story woven with tradition, culture, grace,
+                and timeless beauty.
+              </p>
+              <p>
+                Rooted in the richness of Indian heritage, we bring you sarees that reflect the depth of our traditions while
+                embracing the elegance of today. From cherished handlooms to exquisite silks, distinctive motifs, and intricate
+                borders, every saree holds a charm that goes beyond the fabric itself.
+              </p>
+              <p>
+                We believe a saree is more than something you wear. It becomes a part of your celebrations, your memories, and
+                the moments you treasure forever.
+              </p>
+              <p>
+                Through Daivisha Vastra, we invite you to discover the stories behind every saree, appreciate the beauty in
+                every detail, and find a piece that feels uniquely yours.
+              </p>
+            </div>
           </div>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
-            <path d={ARCH_PATH} fill="none" stroke="#b08d46" strokeWidth="4" vectorEffect="non-scaling-stroke" />
-          </svg>
         </div>
-
-        <div className="space-y-5 font-serif text-lg sm:text-xl leading-relaxed text-stone-700">
-          <p>
-            At Daivisha Vastra, we believe every saree has a story to tell — a story woven with tradition, culture, grace, and
-            timeless beauty.
-          </p>
-          <p>
-            Rooted in the richness of Indian heritage, we bring you sarees that celebrate the beauty of our traditions while
-            embracing the elegance of today. From cherished cultural weaves to exquisite colours, intricate motifs, and
-            distinctive borders, every saree holds a charm that goes beyond the fabric itself.
-          </p>
-          <p>
-            We believe a saree is more than something you wear. It becomes a part of your celebrations, your memories, and the
-            moments you treasure forever.
-          </p>
-          <p>
-            Through Daivisha Vastra, we invite you to discover the stories behind every saree, appreciate the beauty in every
-            detail, and find a piece that feels uniquely yours.
-          </p>
-        </div>
-      </section>
-
-      {/* Pull quote */}
-      <section className="bg-[#4c1012] text-center px-4 py-14 sm:py-16 border-y-2 border-gold-500/60">
-        <LotusMark className="w-8 h-8 mx-auto text-gold-400" />
-        <p className="mt-4 font-serif text-3xl sm:text-5xl text-[#f3dfae] leading-tight">
-          More than attire.
-          <br />
-          <em>A legacy in every thread.</em>
-        </p>
       </section>
 
       {/* Closing */}

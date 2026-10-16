@@ -103,17 +103,17 @@ function MainApp() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf7f2] text-[#1f1b1c] font-sans selection:bg-burgundy-950 selection:text-ivory">
-      {/* 1. Top Announcement Bar */}
-      <AnnouncementBar />
-
-      {/* 2. Sticky Header with 3-Zone Contract & Mega Menus */}
-      <Header
-        currentView={currentView}
-        onNavigate={(view, cat, col) => handleNavigate(view, cat, col)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onOpenCollections={goToCollections}
-        onOpenCollection={openCollection}
-      />
+      {/* 1–2. Announcement bar and header stay pinned together while scrolling */}
+      <div className="sticky top-0 z-40">
+        <AnnouncementBar />
+        <Header
+          currentView={currentView}
+          onNavigate={(view, cat, col) => handleNavigate(view, cat, col)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenCollections={goToCollections}
+          onOpenCollection={openCollection}
+        />
+      </div>
 
       {/* 3. Main Dynamic Content View */}
       <main className="flex-1">
