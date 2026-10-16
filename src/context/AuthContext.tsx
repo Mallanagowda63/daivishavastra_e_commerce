@@ -60,9 +60,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
       const saved = localStorage.getItem('daivisha_user');
-      return saved ? JSON.parse(saved) : DEFAULT_USER; // Default logged in for pleasant UX, or can logout
+      return saved ? JSON.parse(saved) : null; // Visitors start signed out and sign in with their email
     } catch {
-      return DEFAULT_USER;
+      return null;
     }
   });
 
@@ -87,9 +87,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: `usr-${Date.now()}`,
       name: email.split('@')[0].replace('.', ' '),
       email,
-      phone: '+91 98201 54321',
+      phone: '',
       memberTier: 'Privilege Gold',
-      addresses: DEFAULT_USER.addresses,
+      addresses: [],
     };
     setUser(newUser);
     setIsAuthModalOpen(false);
@@ -115,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       email: 'patron@daivishavastra.com',
       phone,
       memberTier: 'Privilege Gold',
-      addresses: DEFAULT_USER.addresses,
+      addresses: [],
     };
     setUser(newUser);
     setIsAuthModalOpen(false);

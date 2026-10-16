@@ -146,6 +146,8 @@ export interface Order {
   total: number;
   status: OrderStatus;
   paymentMethod: string;
+  /** Email of the customer who placed the order on the website. */
+  customerEmail?: string;
   /** Missing means derived: COD orders are pending until delivered, cancelled are refunded. */
   paymentStatus?: PaymentStatus;
   paymentDate?: string;

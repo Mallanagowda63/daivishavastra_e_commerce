@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Clock, Package, Truck, Home } from 'lucide-react';
+import { CheckCircle2, Clock, Package, Truck, Home, Wallet } from 'lucide-react';
 import { OrderStatus } from '../../types';
 
 interface OrderTimelineProps {
@@ -8,6 +8,7 @@ interface OrderTimelineProps {
 
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({ status }) => {
   const steps = [
+    { key: 'Pending', label: 'Payment Verification', icon: Wallet },
     { key: 'Confirmed', label: 'Order Confirmed', icon: CheckCircle2 },
     { key: 'Packed', label: 'Hand-Packed', icon: Package },
     { key: 'Shipped', label: 'Shipped (In Transit)', icon: Truck },
@@ -20,15 +21,15 @@ export const OrderTimeline: React.FC<OrderTimelineProps> = ({ status }) => {
       case 'Pending':
         return 0;
       case 'Confirmed':
-        return 0;
-      case 'Packed':
         return 1;
-      case 'Shipped':
+      case 'Packed':
         return 2;
-      case 'Out for Delivery':
+      case 'Shipped':
         return 3;
-      case 'Delivered':
+      case 'Out for Delivery':
         return 4;
+      case 'Delivered':
+        return 5;
       default:
         return 0;
     }

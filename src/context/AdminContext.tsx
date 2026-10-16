@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SareeProduct, Order, OrderStatus, Booking } from '../types';
 import { SEED_ORDERS, SEED_BOOKINGS } from '../data/adminSeed';
-import { localISO, paymentKind } from '../components/admin/adminUtils';
+import { localISO } from '../components/admin/adminUtils';
 import { INITIAL_PRODUCTS } from '../data/products';
 import { useToast } from './ToastContext';
 import { ADMIN_EMAIL } from '../config/admin';
@@ -14,7 +14,7 @@ interface AdminContextType {
   addProduct: (product: Omit<SareeProduct, 'id' | 'slug'>) => void;
   updateProductStock: (productId: string, newStock: number) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
-  createOrder: (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'>) => Order;
+  createOrder: (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'> & { orderNumber?: string }) => Order;
   getOrderById: (orderIdOrNumber: string) => Order | undefined;
   updateProduct: (productId: string, patch: Partial<SareeProduct>) => void;
   deleteProduct: (productId: string) => void;
@@ -257,15 +257,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
-  const createOrder = (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'>): Order => {
-    const randNum = Math.floor(10000 + Math.random() * 90000);
-    const orderNumber = `DV-${randNum}`;
+  const createOrder = (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'> & { orderNumber?: string }): Order => {
+    const orderNumber = orderData.orderNumber ?? `DV-${Math.floor(10000 + Math.random() * 90000)}`;
     const newOrder: Order = {
       ...orderData,
       id: `ord-${Date.now()}`,
       orderNumber,
       date: today(),
-      ...(paymentKind(orderData.paymentMethod) === 'COD' ? {} : { paymentStatus: 'Paid' as const, paymentDate: new Date().toISOString() }),
+      // Website orders pay by UPI and stay "Pending" until the store confirms the money arrived.
+      ...(orderData.paymentStatus ? {} : { paymentStatus: 'Paid' as const, paymentDate: new Date().toISOString() }),
     };
 
     setOrders((prev) => [newOrder, ...prev]);

@@ -11,20 +11,16 @@ export const AccountModal: React.FC<{
   onClose: () => void;
   onNavigateWishlist: () => void;
 }> = ({ isOpen, onClose, onNavigateWishlist }) => {
-  const { user, login, loginWithPhone, signup, logout } = useAuth();
-  const { orders, loginAdmin, setIsAdminOpen } = useAdmin();
+  const { user, login, signup, logout } = useAuth();
+  const { orders: allOrders, loginAdmin, setIsAdminOpen } = useAdmin();
+  // Customers only see orders placed with their own email.
+  const orders = user ? allOrders.filter((o) => o.customerEmail === user.email.trim().toLowerCase()) : [];
 
   const [activeTab, setActiveTab] = useState<'profile' | 'orders' | 'addresses'>('orders');
-  const [authMode, setAuthMode] = useState<'login' | 'otp' | 'signup'>('login');
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
 
   // Login form state
   const [emailInput, setEmailInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
-
-  // OTP form state
-  const [phoneInput, setPhoneInput] = useState('');
-  const [otpInput, setOtpInput] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
 
   // Signup form state
   const [signupName, setSignupName] = useState('');
@@ -45,17 +41,6 @@ export const AccountModal: React.FC<{
       return;
     }
     login(emailInput);
-  };
-
-  const handleOtpLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!otpSent) {
-      if (phoneInput.length >= 10) {
-        setOtpSent(true);
-      }
-    } else {
-      loginWithPhone(phoneInput, otpInput);
-    }
   };
 
   const handleSignup = (e: React.FormEvent) => {
@@ -277,7 +262,7 @@ export const AccountModal: React.FC<{
             </div>
           </div>
         ) : (
-          /* AUTH FORMS (LOGIN / OTP / SIGNUP) */
+          /* AUTH FORMS (EMAIL SIGN IN / CREATE ACCOUNT) — email only, no password or OTP */
           <div className="p-6 md:p-8 space-y-6">
             {/* Mode Selector */}
             <div className="flex border-b border-sand text-xs font-sans">
@@ -289,17 +274,7 @@ export const AccountModal: React.FC<{
                     : 'border-transparent text-stone-400 hover:text-charcoal'
                 }`}
               >
-                Password Login
-              </button>
-              <button
-                onClick={() => setAuthMode('otp')}
-                className={`flex-1 py-2.5 uppercase tracking-wider font-semibold border-b-2 ${
-                  authMode === 'otp'
-                    ? 'border-burgundy-950 text-burgundy-950'
-                    : 'border-transparent text-stone-400 hover:text-charcoal'
-                }`}
-              >
-                Instant OTP Login
+                Sign In
               </button>
               <button
                 onClick={() => setAuthMode('signup')}
@@ -313,7 +288,7 @@ export const AccountModal: React.FC<{
               </button>
             </div>
 
-            {/* Email Login Form */}
+            {/* Email Sign In */}
             {authMode === 'login' && (
               <form onSubmit={handleEmailLogin} className="space-y-4 text-xs font-sans">
                 <div>
@@ -324,22 +299,9 @@ export const AccountModal: React.FC<{
                     type="email"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="patron@daivishavastra.com"
+                    placeholder="you@example.com"
+                    autoComplete="email"
                     required
-                    className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold uppercase tracking-wider text-charcoal mb-1">
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    value={passwordInput}
-                    onChange={(e) => setPasswordInput(e.target.value)}
-                    placeholder="••••••••"
-                    // The admin email signs in without a password for now
-                    required={emailInput.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()}
                     className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
                   />
                 </div>
@@ -347,50 +309,9 @@ export const AccountModal: React.FC<{
                   type="submit"
                   className="w-full py-3.5 bg-burgundy-950 text-gold-300 font-semibold uppercase tracking-widest hover:bg-burgundy-900 transition-colors shadow-md"
                 >
-                  Sign In to Atelier
+                  Continue with Email
                 </button>
-              </form>
-            )}
-
-            {/* OTP Login Form */}
-            {authMode === 'otp' && (
-              <form onSubmit={handleOtpLogin} className="space-y-4 text-xs font-sans">
-                <div>
-                  <label className="block font-semibold uppercase tracking-wider text-charcoal mb-1">
-                    Mobile Number (India)
-                  </label>
-                  <input
-                    type="tel"
-                    value={phoneInput}
-                    onChange={(e) => setPhoneInput(e.target.value)}
-                    placeholder="+91 98201 54321"
-                    required
-                    className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
-                  />
-                </div>
-
-                {otpSent && (
-                  <div className="space-y-2 animate-in fade-in">
-                    <label className="block font-semibold uppercase tracking-wider text-charcoal">
-                      Enter 4-Digit OTP (Hint: use 1234)
-                    </label>
-                    <input
-                      type="text"
-                      value={otpInput}
-                      onChange={(e) => setOtpInput(e.target.value.slice(0, 4))}
-                      maxLength={4}
-                      placeholder="1234"
-                      className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none text-center tracking-widest text-lg font-bold"
-                    />
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full py-3.5 bg-burgundy-950 text-gold-300 font-semibold uppercase tracking-widest hover:bg-burgundy-900 transition-colors shadow-md"
-                >
-                  {otpSent ? 'Verify OTP & Enter' : 'Send One-Time Passcode'}
-                </button>
+                <p className="text-center text-stone-500">Just enter your email — no password or OTP needed.</p>
               </form>
             )}
 

@@ -1,13 +1,13 @@
 // Store policies shown at /privacy, /terms and /refund (footer links).
-// Fill in the bracketed details below before going live, and have the text reviewed by a legal advisor.
+// Have the text reviewed by a legal advisor before going live.
 
 export const STORE_LEGAL = {
   businessName: 'Daivisha Vastra',
-  email: '[support email]',
-  phone: '[customer care number]',
-  address: '[registered business address]',
-  jurisdictionCity: '[city]',
-  grievanceOfficer: '[grievance officer name]',
+  email: '', // add a support email here to show it in the policies
+  phone: '+91 81470 36004 (call or WhatsApp)',
+  address: 'CC Swastik, C Block, RK Colony, Manjunatha Layout, JP Nagar 2nd Phase, Bengaluru 560078 (opposite SVS PG)',
+  jurisdictionCity: 'Bengaluru',
+  grievanceOfficer: 'the store owner', // replace with the grievance officer's name
 };
 
 export type PolicyId = 'privacy' | 'terms' | 'refund';
@@ -26,7 +26,7 @@ export interface Policy {
 }
 
 const L = STORE_LEGAL;
-const contactLine = `Email ${L.email} · Phone ${L.phone} · ${L.address}`;
+const contactLine = [L.email && `Email ${L.email}`, `Phone ${L.phone}`, L.address].filter(Boolean).join(' · ');
 
 export const POLICIES: Record<PolicyId, Policy> = {
   privacy: {
@@ -91,7 +91,7 @@ export const POLICIES: Record<PolicyId, Policy> = {
       {
         heading: 'Grievance officer & contact',
         paragraphs: [
-          `For any privacy question, request or complaint, contact our Grievance Officer, ${L.grievanceOfficer}. ${contactLine}. We aim to respond within 7 working days.`,
+          `For any privacy question, request or complaint, contact ${L.grievanceOfficer}. ${contactLine}. We aim to respond within 7 working days.`,
         ],
       },
     ],
