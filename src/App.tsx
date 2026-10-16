@@ -15,8 +15,6 @@ import { HomeView } from './views/HomeView';
 import { ShopView } from './views/ShopView';
 import { ProductDetailView } from './views/ProductDetailView';
 import { WishlistView } from './views/WishlistView';
-import { AboutView } from './views/AboutView';
-import { TrackOrderView } from './views/TrackOrderView';
 import { PolicyView } from './views/PolicyView';
 import { CollectionView } from './views/CollectionView';
 import { PolicyId } from './data/policies';
@@ -43,8 +41,8 @@ function MainApp() {
   const { addToCart } = useCart();
 
   // Navigation State
-  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'track' | 'collection' | PolicyId>('home');
-  const [collectionKey, setCollectionKey] = useState<SareeCategory>('Gajji Silks');
+  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'collection' | PolicyId>('home');
+  const [collectionKey, setCollectionKey] = useState<SareeCategory>('Pure Gajji Silk Sarees');
   const [selectedProduct, setSelectedProduct] = useState<SareeProduct | null>(null);
 
   // Shop filter parameters when navigating from menus
@@ -60,12 +58,17 @@ function MainApp() {
 
   // Navigation handler
   const handleNavigate = (
-    view: 'home' | 'shop' | 'wishlist' | 'about' | 'track' | PolicyId,
+    view: 'home' | 'shop' | 'wishlist' | 'about' | PolicyId,
     category?: string,
     collection?: string,
     occasion?: string,
     fabric?: string
   ) => {
+    // Our Story is a section of the home page, not a separate page
+    if (view === 'about') {
+      goToHomeSection('#our-story');
+      return;
+    }
     setShopCategory(category);
     setShopCollection(collection);
     setShopOccasion(occasion);
@@ -80,15 +83,18 @@ function MainApp() {
     scrollToTop();
   };
 
-  // Home page "Explore Our Collections" section
-  const goToCollections = () => {
+  // Scroll to a section of the home page, switching to it first if needed
+  const goToHomeSection = (selector: string) => {
     if (currentView === 'home') {
-      scrollToElement('#collections');
+      scrollToElement(selector);
       return;
     }
     setCurrentView('home');
-    setTimeout(() => scrollToElement('#collections'), 150);
+    setTimeout(() => scrollToElement(selector), 150);
   };
+
+  // Home page "Explore Our Collections" section
+  const goToCollections = () => goToHomeSection('#collections');
 
   const handleSelectProduct = (product: SareeProduct) => {
     setSelectedProduct(product);
@@ -104,7 +110,7 @@ function MainApp() {
   return (
     <div className="min-h-screen flex flex-col bg-[#faf7f2] text-[#1f1b1c] font-sans selection:bg-burgundy-950 selection:text-ivory">
       {/* 1–2. Announcement bar and header stay pinned together while scrolling */}
-      <div className="sticky top-0 z-40">
+      <div id="site-top" className="sticky top-0 z-40">
         <AnnouncementBar />
         <Header
           currentView={currentView}
@@ -160,12 +166,6 @@ function MainApp() {
           />
         )}
 
-        {currentView === 'about' && (
-          <AboutView
-            onExploreCatalog={() => handleNavigate('shop')}
-          />
-        )}
-
         {currentView === 'collection' && (
           <CollectionView
             collectionKey={collectionKey}
@@ -174,10 +174,6 @@ function MainApp() {
             onNavigateHome={() => handleNavigate('home')}
             onNavigateCollections={goToCollections}
           />
-        )}
-
-        {currentView === 'track' && (
-          <TrackOrderView />
         )}
 
         {(currentView === 'privacy' || currentView === 'terms' || currentView === 'refund') && (

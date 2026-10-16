@@ -1,16 +1,14 @@
-export type SareeCategory = 
-  | 'Silk Sarees'
-  | 'Kanjivaram Sarees'
-  | 'Banarasi Sarees'
-  | 'Cotton Sarees'
-  | 'Organza Sarees'
-  | 'Georgette Sarees'
-  | 'Linen Sarees'
-  | 'Designer Sarees'
-  | 'Handloom Sarees'
-  | 'Gajji Silks'
-  | 'Mysore Silk Crepe'
-  | 'Soft Tissue Silk';
+export type SareeCategory =
+  | 'Soft Silk Tissue Sarees'
+  | 'Cotton Boutique Work Sarees'
+  | 'Pure Gajji Silk Sarees'
+  | 'Soft Silk Paithani Sarees'
+  | 'Fancy Sarees'
+  | 'Banarasi Georgette Sarees'
+  | 'Linen Cotton Mirror Work Sarees'
+  | 'Chinnon Sarees'
+  | 'Warm Silk Sarees with Ikat Border'
+  | 'Kalamkari Sarees with Bentex Border';
 
 export type SareeCollection = 
   | 'Wedding Collection'

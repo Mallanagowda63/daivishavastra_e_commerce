@@ -98,7 +98,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onCheckout, onSelectProd
                   Your bag is currently empty
                 </h3>
                 <p className="text-xs text-stone-500 max-w-xs mx-auto font-sans">
-                  Explore our handcrafted Kanjivaram and Banarasi silk sarees to begin your royal collection.
+                  Explore our Gajji silk, Paithani, Kalamkari and more to begin your collection.
                 </p>
                 <button
                   onClick={closeCart}

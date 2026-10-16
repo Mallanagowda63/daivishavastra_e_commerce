@@ -11,7 +11,7 @@ const POLICY_LINKS: { id: PolicyId; label: string }[] = [
 ];
 
 interface FooterProps {
-  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'track' | PolicyId, category?: string, collection?: string) => void;
+  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | PolicyId, category?: string, collection?: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
@@ -82,18 +82,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('shop', 'Silk Sarees')}
+                  onClick={() => onNavigate('shop', 'Pure Gajji Silk Sarees')}
                   className="hover:text-gold-300 transition-colors"
                 >
-                  Silk Sarees
+                  Pure Gajji Silk Sarees
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('shop', 'Designer Sarees')}
+                  onClick={() => onNavigate('shop', 'Soft Silk Paithani Sarees')}
                   className="hover:text-gold-300 transition-colors"
                 >
-                  Designer Sarees
+                  Soft Silk Paithani Sarees
                 </button>
               </li>
               <li>
@@ -143,14 +143,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Help
             </h4>
             <ul className="space-y-2.5 text-xs text-stone-300 font-sans">
-              <li>
-                <button
-                  onClick={() => onNavigate('track')}
-                  className="hover:text-gold-300 transition-colors"
-                >
-                  Track Order
-                </button>
-              </li>
               <li>
                 <span className="block text-stone-400">Pan India Shipping</span>
               </li>

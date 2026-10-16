@@ -3,22 +3,11 @@ import { FilterState, SareeProduct, SareeCategory, SareeCollection, SareeFabric,
 import { SortDropdown } from '../components/shop/SortDropdown';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { ChevronRight } from 'lucide-react';
+import { SAREE_TYPE_NAMES } from '../data/sareeTypes';
 import { LotusMark } from '../components/layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../components/common/TempleArch';
 
-const CATEGORY_CHIPS: SareeCategory[] = [
-  'Gajji Silks',
-  'Mysore Silk Crepe',
-  'Soft Tissue Silk',
-  'Silk Sarees',
-  'Kanjivaram Sarees',
-  'Banarasi Sarees',
-  'Cotton Sarees',
-  'Organza Sarees',
-  'Linen Sarees',
-  'Designer Sarees',
-  'Handloom Sarees',
-];
+const CATEGORY_CHIPS = SAREE_TYPE_NAMES;
 
 interface ShopViewProps {
   products: SareeProduct[];

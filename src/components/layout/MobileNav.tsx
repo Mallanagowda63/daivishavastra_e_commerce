@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 
 interface MobileNavProps {
   currentView: string;
-  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'track') => void;
+  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about') => void;
   onOpenSearch: () => void;
 }
 

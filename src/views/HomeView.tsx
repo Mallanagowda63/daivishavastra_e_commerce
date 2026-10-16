@@ -9,6 +9,7 @@ import { WeddingBannerSection } from '../components/home/WeddingBannerSection';
 import { OccasionsSection } from '../components/home/OccasionsSection';
 import { BestSellersCarousel } from '../components/home/BestSellersCarousel';
 import { HeritageFeatureSection } from '../components/home/HeritageFeatureSection';
+import { OurStorySection } from '../components/home/OurStorySection';
 import { SocialGallerySection } from '../components/home/SocialGallerySection';
 import { ReviewsSection } from '../components/home/ReviewsSection';
 import { TrustFeatures } from '../components/home/TrustFeatures';
@@ -73,16 +74,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
         onShopCollection={() => onNavigateToShop(undefined, 'The Heritage Edit')}
       />
 
-      {/* 10. Social / Worn With Love */}
+      {/* 10. Our Story (the "Our Story" links scroll here) */}
+      <OurStorySection />
+
+      {/* 11. Social / Worn With Love */}
       <SocialGallerySection />
 
-      {/* 11. Customer Reviews */}
+      {/* 12. Customer Reviews */}
       <ReviewsSection />
 
-      {/* 12. Trust Features */}
+      {/* 13. Trust Features */}
       <TrustFeatures />
 
-      {/* 13. Newsletter */}
+      {/* 14. Newsletter */}
       <NewsletterSection />
     </div>
   );

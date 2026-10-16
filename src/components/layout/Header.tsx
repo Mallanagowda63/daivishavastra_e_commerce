@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COLLECTIONS } from '../../data/collections';
+import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 import { SareeCategory } from '../../types';
 import { scrollToElement } from '../../lib/smoothScroll';
 import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
@@ -10,7 +11,7 @@ import { HangingLamp } from './BrandEmblem';
 
 interface HeaderProps {
   currentView?: string;
-  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'track', category?: string, collection?: string) => void;
+  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about', category?: string, collection?: string) => void;
   onOpenSearch: () => void;
   onOpenCollections: () => void;
   onOpenCollection: (key: SareeCategory) => void;
@@ -225,10 +226,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
 
             <div className="border-t border-sand pt-4">
               <p className="text-xs tracking-widest uppercase text-stone-400 font-semibold mb-3">
-                Featured Weaves
+                Saree Types
               </p>
               <div className="grid grid-cols-2 gap-2 text-sm text-charcoal">
-                {['Kanjivaram Sarees', 'Banarasi Sarees', 'Silk Sarees', 'Organza Sarees', 'Cotton Sarees', 'Designer Sarees'].map((cat) => (
+                {SAREE_TYPE_NAMES.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => handleSelectCategory(cat)}
@@ -259,18 +260,6 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                 ))}
               </div>
             </div>
-          </div>
-
-          <div className="border-t border-sand pt-6 mt-6 space-y-3">
-            <button
-              onClick={() => {
-                onNavigate('track');
-                setIsMobileMenuOpen(false);
-              }}
-              className="block w-full text-center py-2 text-xs uppercase tracking-wider text-charcoal border border-sand"
-            >
-              Track Your Order
-            </button>
           </div>
         </div>
       )}

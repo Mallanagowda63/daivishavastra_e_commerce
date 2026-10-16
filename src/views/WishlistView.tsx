@@ -74,7 +74,7 @@ export const WishlistView: React.FC<WishlistViewProps> = ({
             Your Wishlist is Empty
           </h2>
           <p className="text-xs text-stone-500 font-sans leading-relaxed">
-            As you explore our handcrafted Kanjivaram and Banarasi sarees, click the heart icon on any drape to preserve it in your personal curation.
+            As you explore our sarees, click the heart icon on any drape to preserve it in your personal curation.
           </p>
           <div className="pt-2">
             <button

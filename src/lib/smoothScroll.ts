@@ -16,7 +16,19 @@ export const lenis = new Lenis({
 
 export const scrollToTop = () => lenis.scrollTo(0, { duration: 1.1 });
 
+// Height of the pinned announcement bar + header, so sections don't land underneath it.
+const pinnedTopHeight = () => document.querySelector<HTMLElement>('#site-top')?.offsetHeight ?? 0;
+
 export const scrollToElement = (selector: string) => {
   const el = document.querySelector<HTMLElement>(selector);
-  if (el) lenis.scrollTo(el, { duration: 1.4 });
+  if (!el) return;
+  const offset = -pinnedTopHeight();
+  lenis.scrollTo(el, {
+    duration: 1.4,
+    offset,
+    // Images above may finish loading mid-scroll and shift the page; settle on the final position.
+    onComplete: () => {
+      if (Math.abs(el.getBoundingClientRect().top + offset) > 4) lenis.scrollTo(el, { duration: 0.4, offset });
+    },
+  });
 };

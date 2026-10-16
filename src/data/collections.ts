@@ -15,11 +15,11 @@ export interface CollectionInfo {
   heritage: { title: string; text: string; points: { icon: LucideIcon; label: string }[] };
 }
 
-/** The four collections shown on the home page, in display order. */
+/** The collections shown on the home page, in display order. */
 export const COLLECTIONS: CollectionInfo[] = [
   {
-    key: 'Gajji Silks',
-    title: 'Gajji Silks',
+    key: 'Pure Gajji Silk Sarees',
+    title: 'Pure Gajji Silk',
     subtitle: 'A heritage weave of Gujarat & Rajasthan',
     description:
       'Gajji silk is a traditional, high-gloss satin-weave fabric heavily associated with the heritage occasion wear of Gujarat and Rajasthan. Known for its smooth texture, rich sheen and graceful drape, it brings together timeless tradition and royal elegance — perfect for festive celebrations and special occasions.',
@@ -43,8 +43,8 @@ export const COLLECTIONS: CollectionInfo[] = [
     },
   },
   {
-    key: 'Cotton Sarees',
-    title: 'Cotton Sarees',
+    key: 'Cotton Boutique Work Sarees',
+    title: 'Cotton Boutique Work',
     subtitle: 'Everyday elegance in breathable cotton',
     description:
       'Soft, breathable and easy to drape, our cotton sarees bring traditional prints and woven borders to everyday wear — comfortable from morning to evening, and graceful for every occasion.',
@@ -68,33 +68,8 @@ export const COLLECTIONS: CollectionInfo[] = [
     },
   },
   {
-    key: 'Mysore Silk Crepe',
-    title: 'Mysore Silk Crepe',
-    subtitle: 'Soft crepe silk from the looms of Karnataka',
-    description:
-      'Mysore silk crepe is prized for its soft, fluid texture and subtle sheen. Lightweight and elegant, it drapes beautifully and is a graceful choice for festive gatherings, work and celebrations alike.',
-    heroImage: '/images/swatch_mysore_crepe.jpg',
-    cardImage: '/images/swatch_mysore_crepe.jpg',
-    highlights: [
-      { icon: Feather, label: 'Soft Crepe Texture' },
-      { icon: Wind, label: 'Light & Fluid Drape' },
-      { icon: Sparkles, label: 'Subtle Silk Sheen' },
-      { icon: Gem, label: 'Festive & Formal Wear' },
-    ],
-    heritage: {
-      title: 'The Grace of Mysore Silk',
-      text: 'Mysore silk is one of the most loved silks of South India. In crepe, it becomes soft and flowing — easy to wear while keeping the richness of silk.',
-      points: [
-        { icon: MapPin, label: 'Heritage of Karnataka' },
-        { icon: Feather, label: 'Soft & Lightweight' },
-        { icon: Sparkles, label: 'Gentle Lustre' },
-        { icon: Gem, label: 'Versatile Elegance' },
-      ],
-    },
-  },
-  {
-    key: 'Soft Tissue Silk',
-    title: 'Soft Tissue Silk',
+    key: 'Soft Silk Tissue Sarees',
+    title: 'Soft Silk Tissue',
     subtitle: 'Light, luminous and made to shimmer',
     description:
       'Soft tissue silk combines a delicate, airy feel with a luminous metallic sheen. Light to wear and lovely in every light, it is a radiant choice for weddings, receptions and evening celebrations.',

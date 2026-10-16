@@ -45,7 +45,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
           No Sarees Match Your Current Curation
         </h3>
         <p className="text-xs text-stone-500 max-w-md mt-2 font-sans">
-          We handcraft each collection in limited artisanal batches. Try clearing some filters or searching for our signature Kanjivaram or Banarasi silks.
+          We handcraft each collection in limited artisanal batches. Try clearing some filters or searching for our signature Gajji silk sarees.
         </p>
       </div>
     );

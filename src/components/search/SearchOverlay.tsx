@@ -22,10 +22,10 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({
   const trendingKeywords = [
     'Silk Saree',
     'Wedding Saree',
-    'Kanjivaram',
-    'Banarasi',
-    'Organza',
-    'Maheshwari',
+    'Gajji Silk',
+    'Paithani',
+    'Kalamkari',
+    'Mirror Work',
   ];
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by silk, weave, motif, occasion (e.g. Kanjivaram, Bridal Wine)..."
+              placeholder="Search by silk, weave, motif, occasion (e.g. Gajji Silk, Paithani)..."
               className="w-full bg-transparent text-xl sm:text-2xl font-serif text-burgundy-950 placeholder:text-stone-400 focus:outline-none"
             />
             {query && (
@@ -163,7 +163,7 @@ export const SearchOverlay: React.FC<SearchOverlayProps> = ({
             {filteredProducts.length === 0 ? (
               <div className="py-16 text-center text-stone-500">
                 <p className="font-serif text-lg text-charcoal">No sarees found matching &ldquo;{query}&rdquo;</p>
-                <p className="text-xs mt-1">Try searching for &quot;Silk&quot;, &quot;Wedding&quot;, &quot;Banarasi&quot;, or &quot;Kanjivaram&quot;.</p>
+                <p className="text-xs mt-1">Try searching for &quot;Silk&quot;, &quot;Wedding&quot;, &quot;Gajji&quot;, or &quot;Paithani&quot;.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

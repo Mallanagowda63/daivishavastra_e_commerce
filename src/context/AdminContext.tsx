@@ -3,6 +3,7 @@ import { SareeProduct, Order, OrderStatus, Booking } from '../types';
 import { SEED_ORDERS, SEED_BOOKINGS } from '../data/adminSeed';
 import { localISO } from '../components/admin/adminUtils';
 import { INITIAL_PRODUCTS } from '../data/products';
+import { RENAMED_CATEGORIES, RETIRED_PRODUCT_IDS } from '../data/sareeTypes';
 import { useToast } from './ToastContext';
 import { ADMIN_EMAIL } from '../config/admin';
 
@@ -113,7 +114,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         localStorage.setItem(SEEN_SEED_KEY, JSON.stringify(INITIAL_PRODUCTS.map((p) => p.id)));
         return INITIAL_PRODUCTS;
       }
-      const list: SareeProduct[] = JSON.parse(saved);
+      const list: SareeProduct[] = (JSON.parse(saved) as SareeProduct[])
+        .filter((p) => !RETIRED_PRODUCT_IDS.includes(p.id))
+        .map((p) => (RENAMED_CATEGORIES[p.category] ? { ...p, category: RENAMED_CATEGORIES[p.category] } : p));
       // Add catalogue items introduced after this browser saved its list (once per item).
       const seen: string[] = JSON.parse(localStorage.getItem(SEEN_SEED_KEY) || '[]');
       const missing = INITIAL_PRODUCTS.filter((p) => !seen.includes(p.id) && !list.some((x) => x.id === p.id));

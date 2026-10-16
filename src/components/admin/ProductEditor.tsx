@@ -7,12 +7,9 @@ import { Badge, Button, Card, Field, inputClass } from './adminUi';
 import { PRODUCT_STATUS_LABEL, productTone } from './statusTones';
 import { fileToCompressedDataURL, productStatusOf } from './adminUtils';
 import { COLLECTIONS } from './ProductsPage';
+import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 
-const CATEGORIES: SareeCategory[] = [
-  'Silk Sarees', 'Kanjivaram Sarees', 'Banarasi Sarees', 'Cotton Sarees', 'Organza Sarees',
-  'Georgette Sarees', 'Linen Sarees', 'Designer Sarees', 'Handloom Sarees',
-  'Gajji Silks', 'Mysore Silk Crepe', 'Soft Tissue Silk',
-];
+const CATEGORIES = SAREE_TYPE_NAMES;
 const FABRICS: SareeFabric[] = [
   'Pure Silk', 'Kanjivaram Silk', 'Banarasi Katan Silk', 'Cotton Silk', 'Organza',
   'Chanderi Silk', 'Georgette', 'Pure Linen', 'Tussar Silk', 'Gajji Silk',
@@ -28,7 +25,7 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
   const [name, setName] = useState(product?.name ?? '');
   const [sku, setSku] = useState(product?.sku ?? '');
   const [collection, setCollection] = useState<SareeCollection>(product?.collection ?? 'Festive Collection');
-  const [category, setCategory] = useState<SareeCategory>(product?.category ?? 'Silk Sarees');
+  const [category, setCategory] = useState<SareeCategory>(product?.category ?? SAREE_TYPE_NAMES[0]);
   const [fabric, setFabric] = useState<SareeFabric>(product?.fabric ?? 'Pure Silk');
   const [color, setColor] = useState(product?.color ?? '');
   const [description, setDescription] = useState(product?.description ?? '');

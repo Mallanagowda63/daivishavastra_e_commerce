@@ -1,6 +1,7 @@
 import React from 'react';
 import { FilterState, SareeCategory, SareeCollection, SareeFabric, SareeOccasion } from '../../types';
 import { X, Check } from 'lucide-react';
+import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -15,17 +16,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onResetFilters,
   totalResultsCount,
 }) => {
-  const categoriesList: SareeCategory[] = [
-    'Silk Sarees',
-    'Kanjivaram Sarees',
-    'Banarasi Sarees',
-    'Cotton Sarees',
-    'Organza Sarees',
-    'Georgette Sarees',
-    'Linen Sarees',
-    'Designer Sarees',
-    'Handloom Sarees',
-  ];
+  const categoriesList = SAREE_TYPE_NAMES;
 
   const collectionsList: SareeCollection[] = [
     'Wedding Collection',

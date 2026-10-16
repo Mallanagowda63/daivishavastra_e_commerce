@@ -39,8 +39,8 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
       {/* ── Intro ── */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#fbf1e3] via-[#fbefdf] to-[#f3e1c6] border-b border-gold-500/40">
         <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,46%)]">
-          <div className="px-5 sm:px-10 lg:pl-[10%] lg:pr-10 py-10 sm:py-14">
-            <nav aria-label="Breadcrumbs" className="flex items-center gap-2 font-serif text-sm text-stone-600 mb-6">
+          <div className="px-5 sm:px-10 lg:pl-[10%] lg:pr-10 py-6 sm:py-8">
+            <nav aria-label="Breadcrumbs" className="flex items-center gap-2 font-serif text-sm text-stone-600 mb-3">
               <button onClick={onNavigateHome} className="hover:text-burgundy-800 cursor-pointer">Home</button>
               <ChevronRight className="w-3.5 h-3.5 text-stone-400" />
               <button onClick={onNavigateCollections} className="hover:text-burgundy-800 cursor-pointer">Collections</button>
@@ -48,20 +48,20 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
               <span className="text-charcoal">{info.title}</span>
             </nav>
 
-            <h1 className="font-serif text-4xl sm:text-6xl font-semibold uppercase tracking-[0.04em] text-burgundy-800 leading-none">
+            <h1 className="font-serif text-3xl sm:text-5xl font-semibold uppercase tracking-[0.04em] text-burgundy-800 leading-none">
               {info.title}
             </h1>
-            <Divider className="my-5" />
-            <p className="font-serif text-xl sm:text-2xl text-charcoal">{info.subtitle}</p>
-            <p className="mt-3 font-serif text-base sm:text-lg leading-relaxed text-stone-700 max-w-xl">{info.description}</p>
+            <Divider className="my-3" />
+            <p className="font-serif text-lg sm:text-xl text-charcoal">{info.subtitle}</p>
+            <p className="mt-2 font-serif text-base leading-relaxed text-stone-700 max-w-xl">{info.description}</p>
 
-            <ul className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-y-6 max-w-2xl">
+            <ul className="mt-5 hidden sm:grid grid-cols-4 gap-y-4 max-w-2xl">
               {info.highlights.map(({ icon: Icon, label }, i) => (
                 <li key={label} className={`flex flex-col items-center text-center px-2 ${i > 0 ? 'sm:border-l sm:border-gold-500/40' : ''}`}>
-                  <span className="w-14 h-14 rounded-full border border-gold-600/70 text-gold-700 grid place-items-center">
-                    <Icon className="w-6 h-6" strokeWidth={1.4} />
+                  <span className="w-11 h-11 rounded-full border border-gold-600/70 text-gold-700 grid place-items-center">
+                    <Icon className="w-5 h-5" strokeWidth={1.4} />
                   </span>
-                  <span className="mt-2 font-serif text-sm text-stone-700 leading-snug">{label}</span>
+                  <span className="mt-1.5 font-serif text-sm text-stone-700 leading-snug">{label}</span>
                 </li>
               ))}
             </ul>
@@ -70,13 +70,13 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
           <img
             src={info.heroImage}
             alt={`${info.title} saree`}
-            className="w-full h-64 sm:h-96 lg:h-full object-cover lg:[mask-image:linear-gradient(to_right,transparent,black_22%)]"
+            className="w-full h-36 sm:h-56 lg:h-0 lg:min-h-full object-cover lg:[mask-image:linear-gradient(to_right,transparent,black_22%)]"
           />
         </div>
       </section>
 
       {/* ── Sarees ── */}
-      <section className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-10 py-10 sm:py-14">
+      <section className="max-w-[1440px] mx-auto px-3 sm:px-6 lg:px-10 pt-6 pb-10 sm:pt-8 sm:pb-14">
         {items.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-[repeat(auto-fit,minmax(220px,260px))] xl:justify-center gap-3 sm:gap-5">
             {items.map((p) => (
