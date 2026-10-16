@@ -36,9 +36,9 @@ export const AboutView: React.FC<AboutViewProps> = ({ onExploreCatalog }) => {
         <div className="relative w-full max-w-md mx-auto aspect-[4/5] drop-shadow-xl">
           <div className="absolute inset-0 bg-[#fffaf3] p-2" style={archMaskStyle}>
             <img
-              src="/images/hero_temple_clean.jpg"
-              alt="Woman in a maroon and gold silk saree holding jasmine in a temple courtyard"
-              className="w-full h-full object-cover object-[76%_center]"
+              src="/images/about_founder.jpg"
+              alt="Smiling woman in a wine embellished ethnic outfit with a sheer dupatta"
+              className="w-full h-full object-cover object-[center_20%]"
               style={archMaskStyle}
             />
           </div>
