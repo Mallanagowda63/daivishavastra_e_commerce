@@ -1,9 +1,12 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { InfoCard, LotusDivider, Prose, SectionHeading } from '../components/common/ContentBlocks';
+import { SareeHeritage } from '../components/common/SareeHeritage';
+import { SAREE_TYPES } from '../data/sareeTypes';
 
 interface AboutUsViewProps {
   onNavigateHome: () => void;
+  onShopType: (category: string) => void;
 }
 
 const AUDIENCE = [
@@ -28,7 +31,7 @@ const Section: React.FC<{ children: React.ReactNode; tinted?: boolean }> = ({ ch
   </section>
 );
 
-export const AboutUsView: React.FC<AboutUsViewProps> = ({ onNavigateHome }) => (
+export const AboutUsView: React.FC<AboutUsViewProps> = ({ onNavigateHome, onShopType }) => (
   <div>
     {/* About Us */}
     <section className="bg-gradient-to-r from-[#fbefdf] via-[#fbf1e3] to-[#f6e6cf] border-b border-gold-500/40">
@@ -92,8 +95,27 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({ onNavigateHome }) => (
       </div>
     </Section>
 
-    {/* Vision, Mission & Values */}
+    {/* The Saree Collection */}
     <Section>
+      <SectionHeading kicker="The Saree Collection" title="Know Your Drape" subtitle="The stories behind the sarees we curate." />
+      <div className="mt-10 space-y-6">
+        {SAREE_TYPES.map((t, i) => (
+          <article key={t.name}>
+            <p className="font-serif italic text-sm text-gold-700">Product {String(i + 1).padStart(2, '0')}</p>
+            <SareeHeritage type={t} heading={t.title} className="mt-1" />
+            <button
+              onClick={() => onShopType(t.name)}
+              className="mt-2 ml-1 font-serif text-base text-burgundy-800 underline decoration-gold-500/60 underline-offset-4 hover:decoration-burgundy-800 cursor-pointer"
+            >
+              View {t.title} →
+            </button>
+          </article>
+        ))}
+      </div>
+    </Section>
+
+    {/* Vision, Mission & Values */}
+    <Section tinted>
       <SectionHeading kicker="What Guides Us" title="Vision, Mission & Values" />
       <Prose
         className="mt-8"

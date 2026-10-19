@@ -213,7 +213,7 @@ function MainApp() {
           />
         )}
 
-        {currentView === 'aboutus' && <AboutUsView onNavigateHome={() => handleNavigate('home')} />}
+        {currentView === 'aboutus' && <AboutUsView onNavigateHome={() => handleNavigate('home')} onShopType={(cat) => handleNavigate('shop', cat)} />}
 
         {currentView === 'contact' && <ContactView onNavigateHome={() => handleNavigate('home')} />}
 

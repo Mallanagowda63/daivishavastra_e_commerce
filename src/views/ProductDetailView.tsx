@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { findSareeType } from '../data/sareeTypes';
+import { SareeHeritage } from '../components/common/SareeHeritage';
 import { scrollToTop } from '../lib/smoothScroll';
 import { SareeProduct } from '../types';
 import { ProductGallery } from '../components/product/ProductGallery';
@@ -67,6 +69,13 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <ProductInfo product={product} onBuyNow={onBuyNow} />
         </div>
       </div>
+
+      {/* About this saree type */}
+      {findSareeType(product.category) && (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 mt-12">
+          <SareeHeritage type={findSareeType(product.category)!} heading={`About ${findSareeType(product.category)!.title}`} />
+        </div>
+      )}
 
       {/* Styling Suggestions, Complete the Look & Related Sarees */}
       <StylingSuggestions
