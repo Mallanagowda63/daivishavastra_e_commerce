@@ -131,6 +131,7 @@ function emailFrame(string $preheader, string $heading, string $body): string
     $wa = preg_replace('/\D/', '', (string) cfg('owner_whatsapp', '918147036004'));
     $waDisplay = '+91 ' . substr($wa, -10, 5) . ' ' . substr($wa, -5);
     $mail = e((string) cfg('owner_email', 'info@daivishavastra.com'));
+    $logo = e(absUrl('/images/email-logo.png'));
     return <<<HTML
 <!doctype html><html><body style="margin:0;padding:0;background:#f6efe6;">
 <span style="display:none;max-height:0;overflow:hidden;opacity:0;">{$preheader}</span>
@@ -138,6 +139,7 @@ function emailFrame(string $preheader, string $heading, string $body): string
 <tr><td align="center">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fffdf9;border:1px solid #e6d6bf;">
 <tr><td style="background:#4c1012;padding:22px 28px;text-align:center;">
+  <img src="{$logo}" width="72" height="72" alt="Daivisha Vastra" style="display:block;margin:0 auto 10px;width:72px;height:72px;border-radius:50%;border:2px solid #c5a059;">
   <div style="font-family:Georgia,'Times New Roman',serif;font-size:24px;letter-spacing:3px;color:#f3dfae;">DAIVISHA VASTRA</div>
   <div style="font-family:Georgia,serif;font-style:italic;font-size:13px;color:#e5cb6e;margin-top:4px;">Elegant attire rooted in Indian heritage</div>
 </td></tr>
