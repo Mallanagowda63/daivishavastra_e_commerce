@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
-import { HeritageIntro } from './HeritageIntro';
+import { Prose, SectionHeading } from '../common/ContentBlocks';
 import { COLLECTIONS } from '../../data/collections';
 import { SareeCategory } from '../../types';
 
@@ -57,7 +57,19 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, 
       </section>
 
       {/* ── Introduction ── */}
-      <HeritageIntro />
+      <section className="bg-[#fbf6ee] border-y border-gold-500/30">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
+          <SectionHeading kicker="Introduction" title="A Heritage of Elegance" subtitle="Timeless drapes. Stories in every weave." />
+          <Prose
+            className="mt-8 text-center"
+            paragraphs={[
+              'Daivisha Vastra is a saree label inspired by the richness of Indian heritage, the beauty of traditional textiles and the timeless grace of the saree.',
+              'We bring together thoughtfully selected drapes for celebrations, meaningful occasions and everyday moments—helping every woman express her individuality while staying connected to her roots.',
+              'Our philosophy is simple: elegance should feel personal, heritage should feel alive, and every saree should carry a story worth sharing.',
+            ]}
+          />
+        </div>
+      </section>
 
       {/* ── Explore Our Collections ── */}
       <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-36">
