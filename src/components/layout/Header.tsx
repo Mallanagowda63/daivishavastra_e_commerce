@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { COLLECTIONS } from '../../data/collections';
 import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 import { SareeCategory } from '../../types';
-import { scrollToElement } from '../../lib/smoothScroll';
 import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -11,7 +10,7 @@ import { HangingLamp } from './BrandEmblem';
 
 interface HeaderProps {
   currentView?: string;
-  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about', category?: string, collection?: string) => void;
+  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'aboutus' | 'contact', category?: string, collection?: string) => void;
   onOpenSearch: () => void;
   onOpenCollections: () => void;
   onOpenCollection: (key: SareeCategory) => void;
@@ -125,10 +124,11 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
               Our Story
             </button>
 
-            <button
-              onClick={() => scrollToElement('footer')}
-              className={navLinkClass(false)}
-            >
+            <button onClick={() => onNavigate('aboutus')} className={navLinkClass(currentView === 'aboutus')}>
+              About Us
+            </button>
+
+            <button onClick={() => onNavigate('contact')} className={navLinkClass(currentView === 'contact')}>
               Contact
             </button>
           </nav>
@@ -221,6 +221,33 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
                 className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
               >
                 All Sarees
+              </button>
+              <button
+                onClick={() => {
+                  onNavigate('about');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
+              >
+                Our Story
+              </button>
+              <button
+                onClick={() => {
+                  onNavigate('aboutus');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
+              >
+                About Us
+              </button>
+              <button
+                onClick={() => {
+                  onNavigate('contact');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="block w-full text-left font-helvetica font-bold text-xl text-burgundy-950"
+              >
+                Contact
               </button>
             </div>
 

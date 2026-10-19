@@ -2,16 +2,12 @@ import React from 'react';
 import { openWhatsApp } from '../common/WhatsAppGate';
 import { Facebook, Instagram, MapPin, Phone, Lock } from 'lucide-react';
 import { STORE_ADDRESS_LINES, STORE_FACEBOOK_URL, STORE_INSTAGRAM_HANDLE, STORE_INSTAGRAM_URL, STORE_LANDMARK, STORE_PHONE_DISPLAY, STORE_PHONE_TEL } from '../../config/contact';
-import { PolicyId } from '../../data/policies';
+import { POLICY_TABS, PolicyId } from '../../data/policies';
 
-const POLICY_LINKS: { id: PolicyId; label: string }[] = [
-  { id: 'privacy', label: 'Privacy Policy' },
-  { id: 'terms', label: 'Terms & Conditions' },
-  { id: 'refund', label: 'Refund Policy' },
-];
+const POLICY_LINKS = POLICY_TABS;
 
 interface FooterProps {
-  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | PolicyId, category?: string, collection?: string) => void;
+  onNavigate: (view: 'home' | 'shop' | 'wishlist' | 'about' | 'aboutus' | 'contact' | PolicyId, category?: string, collection?: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
@@ -133,14 +129,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <button
-                  onClick={() => onNavigate('about')}
+                  onClick={() => onNavigate('aboutus')}
                   className="hover:text-gold-300 transition-colors"
                 >
-                  Artisanal Craftsmanship
+                  About Us
                 </button>
               </li>
               <li>
-                <button type="button" onClick={() => openWhatsApp()} className="hover:text-gold-300 transition-colors cursor-pointer">
+                <button type="button" onClick={() => onNavigate('contact')} className="hover:text-gold-300 transition-colors cursor-pointer">
                   Contact Us
                 </button>
               </li>
@@ -154,10 +150,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </h4>
             <ul className="space-y-2.5 text-xs text-stone-300 font-sans">
               <li>
-                <span className="block text-stone-400">Pan India Shipping</span>
+                <button onClick={() => onNavigate('shipping')} className="hover:text-gold-300 transition-colors cursor-pointer">
+                  Shipping &amp; Logistics
+                </button>
               </li>
               <li>
-                <span className="block text-stone-400">48-Hour Returns &amp; Exchange</span>
+                <button onClick={() => onNavigate('refund')} className="hover:text-gold-300 transition-colors cursor-pointer">
+                  Returns &amp; Exchange
+                </button>
               </li>
               <li>
                 <span className="block text-stone-400">Saree Care & Storage</span>

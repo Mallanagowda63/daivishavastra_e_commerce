@@ -29,7 +29,7 @@ export const OurStorySection: React.FC = () => (
 
       <div className="px-5 sm:px-8 py-10 lg:p-0 lg:absolute lg:top-[14.5%] lg:left-[51%] lg:right-[5.5%] text-stone-700">
         <header className="text-center">
-          <p className="font-serif uppercase text-gold-700 tracking-[0.35em] text-lg lg:text-[1.75cqw]">About</p>
+          <p className="font-serif uppercase text-gold-700 tracking-[0.35em] text-lg lg:text-[1.75cqw]">Our Story</p>
           <Divider className="mt-1 lg:mt-[0.3cqw]" />
           <h2
             className="mt-2 lg:mt-[0.6cqw] font-medium leading-none text-4xl sm:text-5xl lg:text-[4.6cqw]"
@@ -38,27 +38,22 @@ export const OurStorySection: React.FC = () => (
             Daivisha Vastra
           </h2>
           <p className="mt-3 lg:mt-[1.4cqw] font-serif italic text-[#6b1418] text-xl sm:text-2xl lg:text-[2.15cqw]">
-            More than attire. A legacy in every thread.
+            Elegant attire rooted in Indian heritage.
           </p>
         </header>
 
         <div className="mt-6 lg:mt-[2.4cqw] space-y-4 lg:space-y-[1.7cqw] lg:pr-[7%] font-serif text-lg leading-relaxed lg:text-[1.34cqw] lg:leading-[1.4] text-[#3d3530]">
           <p>
-            At Daivisha Vastra, we believe every saree has a story to tell — a story woven with tradition, culture, grace, and
-            timeless beauty.
+            Some sarees remind us of a celebration; others carry the memory of a person, a place or a moment. Their colours, textures
+            and details can connect generations and make ordinary days feel special.
           </p>
           <p>
-            Rooted in the richness of Indian heritage, we bring you sarees that reflect the depth of our traditions while
-            embracing the elegance of today. From cherished handlooms to exquisite silks, distinctive motifs, and intricate
-            borders, every saree holds a charm that goes beyond the fabric itself.
+            Daivisha Vastra began with the wish to celebrate these connections—to bring heritage-inspired drapes to women who value
+            tradition, beauty and personal style.
           </p>
           <p>
-            We believe a saree is more than something you wear. It becomes a part of your celebrations, your memories, and the
-            moments you treasure forever.
-          </p>
-          <p>
-            Through Daivisha Vastra, we invite you to discover the stories behind every saree, appreciate the beauty in every
-            detail, and find a piece that feels uniquely yours.
+            Our story continues with every collection we curate and every customer who finds a saree that feels like her own. We invite
+            you to discover a drape, make it part of your story and pass its beauty forward.
           </p>
         </div>
       </div>

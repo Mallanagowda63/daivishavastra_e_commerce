@@ -20,8 +20,8 @@ export const TrustFeatures: React.FC = () => {
     },
     {
       icon: RefreshCw,
-      title: '48-Hour Returns',
-      desc: 'Return, refund or exchange requests within 48 hours of delivery.',
+      title: 'Exchange Support',
+      desc: 'Eligible items can be exchanged or replaced. No monetary refunds.',
     },
   ];
 

@@ -288,7 +288,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
             <div className="pt-3 pb-2 space-y-2 text-stone-600">
               <p>• Pan India shipping to all serviceable pin codes.</p>
               <p>• Packed with care in our signature packaging.</p>
-              <p>• Return, refund or exchange requests accepted within 48 hours of delivery.</p>
+              <p>• Eligible items may be exchanged or replaced. No monetary refunds.</p>
               <p>• The saree must be unused, with all tags intact.</p>
             </div>
           )}

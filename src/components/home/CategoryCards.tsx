@@ -1,8 +1,8 @@
 import React from 'react';
-import { ArrowRight, MessageCircle, Sun, Truck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
-import { openWhatsApp } from '../common/WhatsAppGate';
+import { Prose, SectionHeading } from '../common/ContentBlocks';
 import { COLLECTIONS } from '../../data/collections';
 import { SareeCategory } from '../../types';
 
@@ -18,13 +18,6 @@ const OrnamentDivider: React.FC<{ className?: string; align?: 'center' | 'start'
     <span className="h-px w-16 sm:w-24 bg-gradient-to-l from-transparent to-gold-500" />
   </div>
 );
-
-const FEATURES = [
-  { icon: LotusMark, title: 'Handpicked Sarees', text: 'Curated with care' },
-  { icon: Sun, title: 'Authentic Weaves', text: 'Inspired by heritage' },
-  { icon: Truck, title: 'Pan India Shipping', text: 'Safe & reliable' },
-  { icon: MessageCircle, title: 'Order via WhatsApp', text: 'Quick & personal support', whatsapp: true },
-];
 
 export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, onLearnMore }) => {
   return (
@@ -63,35 +56,19 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, 
         </div>
       </section>
 
-      {/* ── Feature strip ── */}
-      <section className="bg-[#fdf7ee] border-y border-gold-500/30">
-        <ul className="max-w-[1440px] mx-auto px-2 sm:px-6 lg:px-16 py-5 sm:py-6 grid grid-cols-2 lg:grid-cols-4 gap-y-5">
-          {FEATURES.map(({ icon: Icon, title, text, whatsapp }, i) => {
-            const body = (
-              <>
-                <Icon className="w-9 h-9 sm:w-10 sm:h-10 text-gold-700 shrink-0" />
-                <span className="text-left">
-                  <span className="block font-serif text-[15px] sm:text-lg text-charcoal leading-tight">{title}</span>
-                  <span className="block font-serif text-xs sm:text-sm text-stone-600">{text}</span>
-                </span>
-              </>
-            );
-            return (
-              <li
-                key={title}
-                className={`flex justify-center ${i > 0 ? 'lg:border-l lg:border-gold-500/40' : ''} ${i % 2 === 1 ? 'max-lg:border-l max-lg:border-gold-500/40' : ''}`}
-              >
-                {whatsapp ? (
-                  <button onClick={() => openWhatsApp()} className="flex items-center gap-3 px-2 cursor-pointer hover:opacity-80 transition-opacity">
-                    {body}
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-3 px-2">{body}</div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
+      {/* ── Introduction ── */}
+      <section className="bg-[#fbf6ee] border-y border-gold-500/30">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
+          <SectionHeading kicker="Introduction" title="A Heritage of Elegance" subtitle="Timeless drapes. Stories in every weave." />
+          <Prose
+            className="mt-8 text-center"
+            paragraphs={[
+              'Daivisha Vastra is a saree label inspired by the richness of Indian heritage, the beauty of traditional textiles and the timeless grace of the saree.',
+              'We bring together thoughtfully selected drapes for celebrations, meaningful occasions and everyday moments—helping every woman express her individuality while staying connected to her roots.',
+              'Our philosophy is simple: elegance should feel personal, heritage should feel alive, and every saree should carry a story worth sharing.',
+            ]}
+          />
+        </div>
       </section>
 
       {/* ── Explore Our Collections ── */}

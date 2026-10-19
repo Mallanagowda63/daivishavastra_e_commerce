@@ -17,7 +17,9 @@ import { ProductDetailView } from './views/ProductDetailView';
 import { WishlistView } from './views/WishlistView';
 import { PolicyView } from './views/PolicyView';
 import { CollectionView } from './views/CollectionView';
-import { PolicyId } from './data/policies';
+import { POLICIES, PolicyId } from './data/policies';
+import { AboutUsView } from './views/AboutUsView';
+import { ContactView } from './views/ContactView';
 
 import { CartDrawer } from './components/cart/CartDrawer';
 import { SearchOverlay } from './components/search/SearchOverlay';
@@ -41,7 +43,7 @@ function MainApp() {
   const { addToCart } = useCart();
 
   // Navigation State
-  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'collection' | PolicyId>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'aboutus' | 'contact' | 'collection' | PolicyId>('home');
   const [collectionKey, setCollectionKey] = useState<SareeCategory>('Pure Gajji Silk Sarees');
   const [selectedProduct, setSelectedProduct] = useState<SareeProduct | null>(null);
 
@@ -58,7 +60,7 @@ function MainApp() {
 
   // Navigation handler
   const handleNavigate = (
-    view: 'home' | 'shop' | 'wishlist' | 'about' | PolicyId,
+    view: 'home' | 'shop' | 'wishlist' | 'about' | 'aboutus' | 'contact' | PolicyId,
     category?: string,
     collection?: string,
     occasion?: string,
@@ -176,9 +178,13 @@ function MainApp() {
           />
         )}
 
-        {(currentView === 'privacy' || currentView === 'terms' || currentView === 'refund') && (
+        {currentView === 'aboutus' && <AboutUsView onNavigateHome={() => handleNavigate('home')} />}
+
+        {currentView === 'contact' && <ContactView onNavigateHome={() => handleNavigate('home')} />}
+
+        {currentView in POLICIES && (
           <PolicyView
-            policy={currentView}
+            policy={currentView as PolicyId}
             onNavigateHome={() => handleNavigate('home')}
             onOpenPolicy={(p) => handleNavigate(p)}
           />
