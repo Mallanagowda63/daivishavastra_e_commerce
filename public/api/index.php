@@ -17,6 +17,7 @@ header('X-Content-Type-Options: nosniff');
 const CONFIG_FILE = __DIR__ . '/config.php';
 if (!is_file(CONFIG_FILE)) fail(500, 'Server is not configured yet.');
 $CONFIG = require CONFIG_FILE;
+require __DIR__ . '/notify.php';
 
 const DB = 'daivishavastra';
 const SESSION_HOURS = 12;
@@ -248,6 +249,7 @@ function buildOrder(array $in, bool $fromAdmin): array
             fail(400, 'Please check the delivery address.');
         }
         if (!preg_match('/^(\+?91)?[6-9]\d{9}$/', preg_replace('/[\s-]/', '', $address['phone']))) fail(400, 'Please check the phone number.');
+        if (!filter_var(str($in['customerEmail'] ?? '', 120), FILTER_VALIDATE_EMAIL)) fail(400, 'Please check the email address.');
     }
 
     return [
@@ -331,7 +333,12 @@ switch ($action) {
         $order = buildOrder(body(), false);
         write('orders', fn(BulkWrite $b) => $b->insert($order));
         reduceStock($order['items']);
-        ok($order);
+        // Reply first, then email the customer and alert the owner (email + WhatsApp).
+        respondNow($order);
+        emailOrderPlaced($order);
+        emailOwnerNewOrder($order);
+        whatsappOwnerNewOrder($order);
+        exit;
     }
 
     case 'login': {
@@ -403,8 +410,15 @@ switch ($action) {
         $in = body();
         $patch = array_intersect_key((array) ($in['patch'] ?? []), array_flip(['status', 'paymentStatus', 'paymentDate', 'trackingNumber', 'carrier', 'estimatedDelivery', 'notes']));
         foreach ($patch as $k => $v) $patch[$k] = str($v, 200);
-        if ($patch) upsert('orders', ['id' => str($in['id'] ?? '', 60)], $patch);
-        ok();
+        $oid = str($in['id'] ?? '', 60);
+        $before = findOne('orders', ['id' => $oid]);
+        if (!$before) fail(404, 'Order not found.');
+        if ($patch) upsert('orders', ['id' => $oid], $patch);
+        respondNow(['ok' => true]);
+        // Tell the customer when the order moves forward (only on a real change).
+        $changed = array_filter($patch, fn($v, $k) => in_array($k, ['status', 'paymentStatus'], true) && ($before[$k] ?? null) !== $v, ARRAY_FILTER_USE_BOTH);
+        if ($changed) emailOrderUpdate(array_merge($before, $patch), $changed);
+        exit;
     }
 
     case 'booking.save': {

@@ -1,7 +1,12 @@
 # Hostinger (LiteSpeed/Apache) settings for the built site.
 
-# Always use https://
 RewriteEngine On
+
+# www.daivishavastra.com → daivishavastra.com (one address for visitors and Google)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+# Always use https://
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
