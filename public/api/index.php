@@ -20,7 +20,7 @@ $CONFIG = require CONFIG_FILE;
 require __DIR__ . '/notify.php';
 
 const DB = 'daivishavastra';
-const SESSION_HOURS = 12;
+const SESSION_HOURS = 24 * 30; // admin stays signed in for 30 days
 const GIFT_WRAP = 250;
 const SHIPPING = 350;
 const FREE_SHIPPING_FROM = 4999;

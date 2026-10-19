@@ -55,12 +55,22 @@ const DEFAULT_USER: UserProfile = {
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const CUSTOMER_SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Customers stay signed in on this device for 30 days, then sign in again.
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
       const saved = localStorage.getItem('daivisha_user');
-      return saved ? JSON.parse(saved) : null; // Visitors start signed out and sign in with their email
+      if (!saved) return null; // Visitors start signed out and sign in with their email
+      const since = Number(localStorage.getItem('daivisha_user_since') || Date.now());
+      if (Date.now() - since > CUSTOMER_SESSION_MS) {
+        localStorage.removeItem('daivisha_user');
+        localStorage.removeItem('daivisha_user_since');
+        return null;
+      }
+      if (!localStorage.getItem('daivisha_user_since')) localStorage.setItem('daivisha_user_since', String(since));
+      return JSON.parse(saved);
     } catch {
       return null;
     }
@@ -74,8 +84,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       if (user) {
         localStorage.setItem('daivisha_user', JSON.stringify(user));
+        if (!localStorage.getItem('daivisha_user_since')) localStorage.setItem('daivisha_user_since', String(Date.now()));
       } else {
         localStorage.removeItem('daivisha_user');
+        localStorage.removeItem('daivisha_user_since');
       }
     } catch {
       // ignore

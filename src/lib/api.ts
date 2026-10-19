@@ -2,13 +2,18 @@
 
 const BASE = '/api/index.php';
 const TOKEN_KEY = 'daivisha_admin_token';
+// Admin stays signed in on this device for 30 days (the server enforces the same limit).
+const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
 
 let token = (() => {
   try {
-    return sessionStorage.getItem(TOKEN_KEY) ?? '';
+    const saved = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null') as { token: string; exp: number } | null;
+    if (saved && saved.exp > Date.now()) return saved.token;
+    localStorage.removeItem(TOKEN_KEY);
   } catch {
-    return '';
+    // storage blocked: admin signs in for this visit only
   }
+  return '';
 })();
 
 const unauthorizedListeners = new Set<() => void>();
@@ -18,10 +23,10 @@ export const getToken = () => token;
 export const setToken = (t: string) => {
   token = t;
   try {
-    if (t) sessionStorage.setItem(TOKEN_KEY, t);
-    else sessionStorage.removeItem(TOKEN_KEY);
+    if (t) localStorage.setItem(TOKEN_KEY, JSON.stringify({ token: t, exp: Date.now() + SESSION_MS }));
+    else localStorage.removeItem(TOKEN_KEY);
   } catch {
-    // session storage blocked: stays signed in for this page only
+    // storage blocked: stays signed in for this page only
   }
 };
 
