@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SareeProduct, Order, OrderStatus, Booking } from '../types';
-import { SEED_ORDERS, SEED_BOOKINGS } from '../data/adminSeed';
 import { localISO } from '../components/admin/adminUtils';
 import { INITIAL_PRODUCTS } from '../data/products';
 import { RENAMED_CATEGORIES, RETIRED_PRODUCT_IDS } from '../data/sareeTypes';
@@ -31,72 +30,18 @@ interface AdminContextType {
   logoutAdmin: () => void;
 }
 
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: 'ord-1001',
-    orderNumber: 'DV-98241',
-    date: '2026-10-04',
-    items: [
-      {
-        id: 'dv-kanjivaram-royal-crimson',
-        name: 'Royal Kanjivaram Pure Mulberry Silk Saree',
-        image: '/images/kanjivaram_silk_saree_1791372743617.jpg',
-        price: 28999,
-        quantity: 1,
-        color: 'Crimson Red',
-      },
-    ],
-    subtotal: 28999,
-    discount: 2500,
-    shipping: 0,
-    total: 26499,
-    status: 'Shipped',
-    paymentMethod: 'UPI (GPay)',
-    shippingAddress: {
-      fullName: 'Priya Sundaram',
-      phone: '+91 98401 23456',
-      addressLine: 'Villa 14, Whispering Palms, Boat Club Road',
-      city: 'Chennai',
-      state: 'Tamil Nadu',
-      pincode: '600028',
-    },
-    trackingNumber: 'BLUEDART-882910394',
-    carrier: 'BlueDart Luxury Express',
-    estimatedDelivery: 'Oct 08, 2026',
-  },
-  {
-    id: 'ord-1002',
-    orderNumber: 'DV-98242',
-    date: '2026-10-06',
-    items: [
-      {
-        id: 'dv-banarasi-emerald-katan',
-        name: 'Imperial Emerald Banarasi Katan Silk Saree',
-        image: '/images/banarasi_heritage_saree_1791372753729.jpg',
-        price: 24500,
-        quantity: 1,
-        color: 'Emerald Green',
-      },
-    ],
-    subtotal: 24500,
-    discount: 0,
-    shipping: 0,
-    total: 24500,
-    status: 'Packed',
-    paymentMethod: 'Credit Card (HDFC Infinia)',
-    shippingAddress: {
-      fullName: 'Aarohi Sen',
-      phone: '+91 98300 87654',
-      addressLine: 'Flat 8B, Queens Mansion, Park Street',
-      city: 'Kolkata',
-      state: 'West Bengal',
-      pincode: '700016',
-    },
-    trackingNumber: 'DELHIVERY-549102948',
-    carrier: 'Delhivery White Glove',
-    estimatedDelivery: 'Oct 10, 2026',
-  },
-];
+// Sample orders and bookings that earlier versions of the admin showed; removed from saved data in every browser.
+const SAMPLE_IDS = new Set([
+  ...Array.from({ length: 18 }, (_, i) => `ord-${1031 + i}`),
+  'ord-1001',
+  'ord-1002',
+  'bk-201',
+  'bk-202',
+  'bk-203',
+  'bk-204',
+  'bk-205',
+]);
+const withoutSamples = <T extends { id: string }>(list: T[]) => list.filter((x) => !SAMPLE_IDS.has(x.id));
 
 const ORDERS_KEY = 'daivisha_orders_v2';
 // Catalogue ids this browser has already received, so deleted seed products don't come back.
@@ -130,18 +75,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [orders, setOrders] = useState<Order[]>(() => {
     try {
       const saved = localStorage.getItem(ORDERS_KEY);
-      return saved ? JSON.parse(saved) : [...SEED_ORDERS, ...INITIAL_ORDERS];
+      return saved ? withoutSamples(JSON.parse(saved)) : [];
     } catch {
-      return [...SEED_ORDERS, ...INITIAL_ORDERS];
+      return [];
     }
   });
 
   const [bookings, setBookings] = useState<Booking[]>(() => {
     try {
       const saved = localStorage.getItem(BOOKINGS_KEY);
-      return saved ? JSON.parse(saved) : SEED_BOOKINGS;
+      return saved ? withoutSamples(JSON.parse(saved)) : [];
     } catch {
-      return SEED_BOOKINGS;
+      return [];
     }
   });
 
