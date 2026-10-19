@@ -17,3 +17,8 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>
+
+# Every page address (/about-us, /saree/..., /sarees?category=...) is served by index.html.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]

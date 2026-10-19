@@ -1,5 +1,7 @@
-import React, { Suspense, lazy, useState } from 'react';
-import { scrollToElement, scrollToTop } from './lib/smoothScroll';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { jumpTo, scrollToElement } from './lib/smoothScroll';
+import { pushUrl, replaceUrl, useBackToClose } from './lib/history';
+import { Route, parseUrl, routeTitle, routeToUrl } from './lib/routes';
 import { ToastProvider } from './context/ToastContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { CartProvider, useCart } from './context/CartContext';
@@ -17,7 +19,7 @@ import { ProductDetailView } from './views/ProductDetailView';
 import { WishlistView } from './views/WishlistView';
 import { PolicyView } from './views/PolicyView';
 import { CollectionView } from './views/CollectionView';
-import { POLICIES, PolicyId } from './data/policies';
+import { PolicyId } from './data/policies';
 import { AboutUsView } from './views/AboutUsView';
 import { ContactView } from './views/ContactView';
 
@@ -42,23 +44,81 @@ function MainApp() {
   const { isAuthModalOpen, closeAuthModal, isAccountDashboardOpen, closeAccountDashboard } = useAuth();
   const { addToCart } = useCart();
 
-  // Navigation State
-  const [currentView, setCurrentView] = useState<'home' | 'shop' | 'product' | 'wishlist' | 'about' | 'aboutus' | 'contact' | 'collection' | PolicyId>('home');
-  const [collectionKey, setCollectionKey] = useState<SareeCategory>('Pure Gajji Silk Sarees');
-  const [selectedProduct, setSelectedProduct] = useState<SareeProduct | null>(null);
+  const { isCartOpen, closeCart } = useCart();
 
-  // Shop filter parameters when navigating from menus
-  const [shopCategory, setShopCategory] = useState<string | undefined>();
-  const [shopCollection, setShopCollection] = useState<string | undefined>();
-  const [shopOccasion, setShopOccasion] = useState<string | undefined>();
-  const [shopFabric, setShopFabric] = useState<string | undefined>();
+  // Navigation: the current page lives in the address bar (see lib/routes), so back/forward and shared links work.
+  const [route, setRoute] = useState<Route>(() => parseUrl(window.location.pathname, window.location.search));
+  const currentView = route.view;
+  // How to scroll once the next page has rendered.
+  const pendingScroll = useRef<{ top: true } | { y: number } | { section: string } | null>(
+    route.view === 'home' && route.section ? { section: `#${route.section}` } : null,
+  );
+
+  const goTo = (next: Route) => {
+    pendingScroll.current = next.view === 'home' && next.section ? { section: `#${next.section}` } : { top: true };
+    const url = routeToUrl(next);
+    if (url !== window.location.pathname + window.location.search) pushUrl(url, window.scrollY);
+    setRoute(next);
+  };
+
+  // Back / forward buttons
+  useEffect(() => {
+    const onPop = (e: PopStateEvent) => {
+      const next = parseUrl(window.location.pathname, window.location.search);
+      // Same address (a drawer or modal entry): nothing to change on the page.
+      if (routeToUrl(next) === routeToUrl(route)) return;
+      pendingScroll.current = { y: e.state?.scrollY ?? 0 };
+      setRoute(next);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [route]);
+
+  // Scroll after the page has rendered.
+  useEffect(() => {
+    const p = pendingScroll.current;
+    if (!p) return;
+    let tries = 0;
+    let t: ReturnType<typeof setTimeout>;
+    const run = () => {
+      pendingScroll.current = null;
+      if ('section' in p) return scrollToElement(p.section);
+      const y = 'y' in p ? p.y : 0;
+      jumpTo(y);
+      // The page may still be growing while images load; keep trying until the position is reachable (max ~2s).
+      if (Math.abs(window.scrollY - y) > 2 && ++tries < 14) t = setTimeout(run, 150);
+    };
+    t = setTimeout(run, 'section' in p ? 120 : 0);
+    return () => clearTimeout(t);
+  }, [route]);
+
+  const selectedProduct = route.view === 'product' ? products.find((p) => p.slug === route.slug) ?? null : null;
+
+  // Tab title, and fix the address if it pointed to a saree that no longer exists.
+  useEffect(() => {
+    document.title = routeTitle(route, selectedProduct?.name);
+    if (route.view === 'product' && !selectedProduct) {
+      replaceUrl('/sarees');
+      setRoute({ view: 'shop' });
+    }
+  }, [route, selectedProduct]);
 
   // Modals
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<SareeProduct | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  // Navigation handler
+  // On phones, the back button closes whatever is open on top of the page first.
+  useBackToClose(isSearchOpen, () => setIsSearchOpen(false));
+  useBackToClose(quickViewProduct !== null, () => setQuickViewProduct(null));
+  useBackToClose(isCheckoutOpen, () => setIsCheckoutOpen(false));
+  useBackToClose(isCartOpen, closeCart);
+  useBackToClose(isAuthModalOpen || isAccountDashboardOpen, () => {
+    closeAuthModal();
+    closeAccountDashboard();
+  });
+
+  // Navigation handler used by menus, footer and buttons
   const handleNavigate = (
     view: 'home' | 'shop' | 'wishlist' | 'about' | 'aboutus' | 'contact' | PolicyId,
     category?: string,
@@ -66,43 +126,17 @@ function MainApp() {
     occasion?: string,
     fabric?: string
   ) => {
-    // Our Story is a section of the home page, not a separate page
-    if (view === 'about') {
-      goToHomeSection('#our-story');
-      return;
-    }
-    setShopCategory(category);
-    setShopCollection(collection);
-    setShopOccasion(occasion);
-    setShopFabric(fabric);
-    setCurrentView(view);
-    scrollToTop();
+    if (view === 'about') return goTo({ view: 'home', section: 'our-story' }); // Our Story is a home page section
+    if (view === 'shop') return goTo({ view: 'shop', category, collection, occasion, fabric });
+    goTo({ view } as Route);
   };
 
-  const openCollection = (key: SareeCategory) => {
-    setCollectionKey(key);
-    setCurrentView('collection');
-    scrollToTop();
-  };
-
-  // Scroll to a section of the home page, switching to it first if needed
-  const goToHomeSection = (selector: string) => {
-    if (currentView === 'home') {
-      scrollToElement(selector);
-      return;
-    }
-    setCurrentView('home');
-    setTimeout(() => scrollToElement(selector), 150);
-  };
+  const openCollection = (key: SareeCategory) => goTo({ view: 'collection', key });
 
   // Home page "Explore Our Collections" section
-  const goToCollections = () => goToHomeSection('#collections');
+  const goToCollections = () => goTo({ view: 'home', section: 'collections' });
 
-  const handleSelectProduct = (product: SareeProduct) => {
-    setSelectedProduct(product);
-    setCurrentView('product');
-    scrollToTop();
-  };
+  const handleSelectProduct = (product: SareeProduct) => goTo({ view: 'product', slug: product.slug });
 
   const handleBuyNow = (product: SareeProduct, quantity: number, color: string) => {
     addToCart(product, quantity, color);
@@ -136,20 +170,21 @@ function MainApp() {
           />
         )}
 
-        {currentView === 'shop' && (
+        {route.view === 'shop' && (
           <ShopView
+            key={routeToUrl(route)}
             products={products}
-            initialCategory={shopCategory}
-            initialCollection={shopCollection}
-            initialOccasion={shopOccasion}
-            initialFabric={shopFabric}
+            initialCategory={route.category}
+            initialCollection={route.collection}
+            initialOccasion={route.occasion}
+            initialFabric={route.fabric}
             onSelectProduct={handleSelectProduct}
             onQuickView={(p) => setQuickViewProduct(p)}
             onNavigateHome={() => handleNavigate('home')}
           />
         )}
 
-        {currentView === 'product' && selectedProduct && (
+        {route.view === 'product' && selectedProduct && (
           <ProductDetailView
             product={selectedProduct}
             allProducts={products}
@@ -168,9 +203,9 @@ function MainApp() {
           />
         )}
 
-        {currentView === 'collection' && (
+        {route.view === 'collection' && (
           <CollectionView
-            collectionKey={collectionKey}
+            collectionKey={route.key}
             products={products}
             onSelectProduct={handleSelectProduct}
             onNavigateHome={() => handleNavigate('home')}
@@ -182,9 +217,9 @@ function MainApp() {
 
         {currentView === 'contact' && <ContactView onNavigateHome={() => handleNavigate('home')} />}
 
-        {currentView in POLICIES && (
+        {(currentView === 'refund' || currentView === 'shipping' || currentView === 'privacy' || currentView === 'terms') && (
           <PolicyView
-            policy={currentView as PolicyId}
+            policy={currentView}
             onNavigateHome={() => handleNavigate('home')}
             onOpenPolicy={(p) => handleNavigate(p)}
           />

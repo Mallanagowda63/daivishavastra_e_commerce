@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { COLLECTIONS } from '../../data/collections';
+import { useBackToClose } from '../../lib/history';
 import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 import { SareeCategory } from '../../types';
 import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
@@ -24,6 +25,10 @@ const navLinkClass = (active: boolean) =>
 export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenSearch, onOpenCollections, onOpenCollection }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // Phone back button closes the menu instead of leaving the page.
+  useBackToClose(isMobileMenuOpen, () => setIsMobileMenuOpen(false));
+  // Close it whenever the page changes.
+  useEffect(() => setIsMobileMenuOpen(false), [currentView]);
 
   const { totalItemsCount, openCart } = useCart();
   const { wishlist } = useWishlist();
