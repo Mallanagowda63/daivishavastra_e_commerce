@@ -43,6 +43,8 @@ interface AdminContextType {
   loginAdmin: (email: string, password: string) => Promise<string | null>;
   logoutAdmin: () => void;
   changeAdminPassword: (current: string, next: string) => Promise<string | null>;
+  /** Fetch the latest status of the customer's own orders (account page). */
+  refreshMyOrders: () => void;
 }
 
 const MY_ORDERS_KEY = 'daivisha_my_orders';
@@ -107,6 +109,27 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }),
     [showToast]
   );
+
+  // Customer's own orders: update status / tracking from the database (the admin may have changed them).
+  const refreshMyOrders = useCallback(async () => {
+    const ids = loadMyOrders().map((o) => o.id);
+    if (!ids.length) return;
+    try {
+      const { orders: live } = await api<{ orders: Partial<Order>[] }>('orders.status', { ids });
+      setMyOrders((prev) =>
+        prev.flatMap((o) => {
+          const l = live.find((x) => x.id === o.id);
+          return l ? [{ ...o, ...l }] : []; // orders no longer in the store are removed
+        })
+      );
+    } catch {
+      // offline: keep showing the last known status
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshMyOrders();
+  }, [refreshMyOrders]);
 
   useEffect(() => {
     try {
@@ -304,6 +327,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         loginAdmin,
         logoutAdmin,
         changeAdminPassword,
+        refreshMyOrders,
       }}
     >
       {children}

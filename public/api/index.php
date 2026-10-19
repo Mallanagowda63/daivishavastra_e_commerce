@@ -341,6 +341,20 @@ switch ($action) {
         exit;
     }
 
+    case 'orders.status': {
+        // Live status for the orders a customer placed from this browser. Order ids are random and only
+        // known to that browser; only status and tracking are returned, never addresses.
+        if (!$post) fail(405, 'Use POST.');
+        $ids = array_values(array_filter(array_slice((array) (body()['ids'] ?? []), 0, 50), fn($id) => is_string($id) && preg_match('/^ord-[a-f0-9]{12}$/', $id)));
+        $out = [];
+        if ($ids) {
+            foreach (find('orders', ['id' => ['$in' => $ids]]) as $o) {
+                $out[] = array_intersect_key($o, array_flip(['id', 'orderNumber', 'status', 'paymentStatus', 'trackingNumber', 'carrier', 'estimatedDelivery']));
+            }
+        }
+        ok(['orders' => $out]);
+    }
+
     case 'login': {
         if (!$post) fail(405, 'Use POST.');
         rateLimit('login', 8, 900);

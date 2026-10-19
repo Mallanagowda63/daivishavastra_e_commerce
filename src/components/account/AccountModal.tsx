@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useToast } from '../../context/ToastContext';
 import { X, User, Package, MapPin, Heart, LogOut, ArrowRight, ShieldCheck, Phone, Mail, Key } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -14,7 +14,11 @@ export const AccountModal: React.FC<{
 }> = ({ isOpen, onClose, onNavigateWishlist }) => {
   const { user, login, signup, logout } = useAuth();
   const { showToast } = useToast();
-  const { orders: allOrders, loginAdmin, setIsAdminOpen } = useAdmin();
+  const { orders: allOrders, loginAdmin, setIsAdminOpen, refreshMyOrders } = useAdmin();
+  // Show the latest order status every time the account opens.
+  useEffect(() => {
+    if (isOpen) refreshMyOrders();
+  }, [isOpen, refreshMyOrders]);
   // Customers only see orders placed with their own email.
   const orders = user ? allOrders.filter((o) => o.customerEmail === user.email.trim().toLowerCase()) : [];
 
