@@ -2,7 +2,8 @@ import React from 'react';
 import { ArrowRight, ChevronRight, MessageCircle } from 'lucide-react';
 import { LotusMark } from '../components/layout/BrandEmblem';
 import { openWhatsApp } from '../components/common/WhatsAppGate';
-import { findCollection } from '../data/collections';
+import { collectionImage, findCollection } from '../data/collections';
+import { useBanners } from '../data/bannerStore';
 import { SareeCategory, SareeProduct } from '../types';
 
 interface CollectionViewProps {
@@ -31,6 +32,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
   onNavigateCollections,
 }) => {
   const info = findCollection(collectionKey);
+  const banners = useBanners();
   const items = products.filter((p) => p.category === collectionKey);
   if (!info) return null;
 
@@ -67,11 +69,17 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
             </ul>
           </div>
 
-          <img
-            src={info.heroImage}
-            alt={`${info.title} saree`}
-            className="w-full h-36 sm:h-56 lg:h-0 lg:min-h-full object-cover lg:[mask-image:linear-gradient(to_right,transparent,black_22%)]"
-          />
+          {collectionImage(info, banners, products, 'hero') ? (
+            <img
+              src={collectionImage(info, banners, products, 'hero')}
+              alt={`${info.title} saree`}
+              className="w-full h-36 sm:h-56 lg:h-0 lg:min-h-full object-cover lg:[mask-image:linear-gradient(to_right,transparent,black_22%)]"
+            />
+          ) : (
+            <div className="hidden lg:grid place-items-center bg-gradient-to-r from-transparent to-[#efd9b8]">
+              <LotusMark className="w-24 h-24 text-gold-600/50" />
+            </div>
+          )}
         </div>
       </section>
 

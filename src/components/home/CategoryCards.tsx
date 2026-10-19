@@ -3,10 +3,12 @@ import { ArrowRight } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
 import { Prose, SectionHeading } from '../common/ContentBlocks';
-import { COLLECTIONS } from '../../data/collections';
-import { SareeCategory } from '../../types';
+import { COLLECTIONS, collectionImage } from '../../data/collections';
+import { useBanners } from '../../data/bannerStore';
+import { SareeCategory, SareeProduct } from '../../types';
 
 interface CategoryCardsProps {
+  products: SareeProduct[];
   onOpenCollection: (key: SareeCategory) => void;
   onLearnMore: () => void;
 }
@@ -19,7 +21,8 @@ const OrnamentDivider: React.FC<{ className?: string; align?: 'center' | 'start'
   </div>
 );
 
-export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, onLearnMore }) => {
+export const CategoryCards: React.FC<CategoryCardsProps> = ({ products, onOpenCollection, onLearnMore }) => {
+  const banners = useBanners();
   return (
     <>
       {/* ── Our Story ── */}
@@ -73,13 +76,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, 
 
       {/* ── Explore Our Collections ── */}
       <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-36">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-serif text-3xl sm:text-4xl font-semibold tracking-[0.04em] uppercase text-burgundy-800">
             Explore Our Collections
           </h2>
           <OrnamentDivider className="mt-3 mb-10" />
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
             {COLLECTIONS.map((c) => (
               <button
                 key={c.key}
@@ -89,14 +92,21 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onOpenCollection, 
                 {/* One arch mask shapes the whole card, so photo top and gold outline always line up */}
                 <div className="relative aspect-[5/7] bg-[#fffaf3] flex flex-col" style={archMaskStyle}>
                   <div className="h-[68%] overflow-hidden">
-                    <img
-                      src={c.cardImage}
-                      alt={`${c.title} fabric`}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+                    {collectionImage(c, banners, products, 'card') ? (
+                      <img
+                        src={collectionImage(c, banners, products, 'card')}
+                        alt={`${c.title} saree`}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full grid place-items-center bg-gradient-to-b from-[#f6e6cf] to-[#efd9b8]">
+                        <LotusMark className="w-12 h-12 text-gold-600/70" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1 flex flex-col items-center justify-center text-center border-t border-gold-500/50 px-2">
-                    <h3 className="font-serif text-[15px] sm:text-lg font-semibold tracking-[0.06em] uppercase text-burgundy-950 leading-tight">
+                    <h3 className="font-serif text-[13px] sm:text-[15px] font-semibold tracking-[0.05em] uppercase text-burgundy-950 leading-tight">
                       {c.title}
                     </h3>
                     <ArrowRight className="w-4 h-4 mx-auto mt-1.5 text-burgundy-900 transition-transform group-hover:translate-x-1" />

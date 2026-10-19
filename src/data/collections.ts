@@ -1,6 +1,7 @@
 import { Feather, Flower2, Gem, Sparkles, MapPin, Scroll, Sun, Wind, Droplets, Palette } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { SareeCategory } from '../types';
+import { SAREE_TYPES } from './sareeTypes';
 
 export interface CollectionInfo {
   key: SareeCategory;
@@ -15,8 +16,8 @@ export interface CollectionInfo {
   heritage: { title: string; text: string; points: { icon: LucideIcon; label: string }[] };
 }
 
-/** The collections shown on the home page, in display order. */
-export const COLLECTIONS: CollectionInfo[] = [
+/** Collections with their own hand-written page copy and fabric photos. */
+const DETAILED: CollectionInfo[] = [
   {
     key: 'Pure Gajji Silk Sarees',
     title: 'Pure Gajji Silk',
@@ -94,4 +95,45 @@ export const COLLECTIONS: CollectionInfo[] = [
   },
 ];
 
+/**
+ * Every saree type is a collection, in menu order. Types without hand-written copy use their heritage note;
+ * their photo comes from the admin banner or the first saree of that type.
+ */
+export const COLLECTIONS: CollectionInfo[] = SAREE_TYPES.map((t) => {
+  const d = DETAILED.find((c) => c.key === t.name);
+  if (d) return { ...d, title: t.title.replace(/ Sarees?$/, '') };
+  return {
+    key: t.name,
+    title: t.title.replace(/ Sarees?$/, ''),
+    subtitle: t.desc,
+    description: t.origin,
+    heroImage: '',
+    cardImage: '',
+    highlights: [
+      { icon: Sparkles, label: 'Curated with Care' },
+      { icon: Flower2, label: 'Graceful Drape' },
+      { icon: Gem, label: 'Festive & Occasion Wear' },
+      { icon: Feather, label: 'Comfortable to Wear' },
+    ],
+    heritage: {
+      title: 'Regional Roots',
+      text: t.roots + '.',
+      points: [
+        { icon: MapPin, label: 'Rooted in Indian Textile Heritage' },
+        { icon: Palette, label: 'Distinctive Colours & Motifs' },
+        { icon: Sparkles, label: 'Thoughtfully Curated' },
+        { icon: Gem, label: 'For Special Moments' },
+      ],
+    },
+  };
+});
+
 export const findCollection = (key: string) => COLLECTIONS.find((c) => c.key === key);
+
+/** Photo for a collection: admin banner, else its own fabric photo, else the first saree of that type. */
+export const collectionImage = (
+  c: CollectionInfo,
+  banners: Record<string, string>,
+  products: { category: string; images: string[] }[],
+  kind: 'card' | 'hero',
+) => banners[c.key] || (kind === 'card' ? c.cardImage : c.heroImage) || products.find((p) => p.category === c.key)?.images[0] || '';

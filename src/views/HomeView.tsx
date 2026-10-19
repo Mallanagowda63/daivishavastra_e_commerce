@@ -38,7 +38,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <HeroSection onExploreCollections={() => scrollToElement('#collections')} />
 
       {/* 2. Our Story, feature strip, Explore Our Collections */}
-      <CategoryCards onOpenCollection={onOpenCollection} onLearnMore={onNavigateToAbout} />
+      <CategoryCards products={products} onOpenCollection={onOpenCollection} onLearnMore={onNavigateToAbout} />
 
       {/* 3. Wear Tradition, Live Elegance */}
       <TraditionBanner onViewNewArrivals={() => onNavigateToShop('New Arrivals')} />
