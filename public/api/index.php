@@ -99,13 +99,23 @@ function remove(string $coll, array $filter): void
     write($coll, fn(BulkWrite $b) => $b->delete($filter, ['limit' => 1]));
 }
 
-/** Atomic counter, used for order numbers. */
+/** Atomic counter for order numbers, kept in the "settings" collection (_id "counter:<name>"). */
 function nextNumber(string $name, int $start): int
 {
+    $key = "counter:$name";
     try {
+        if (!find('settings', ['_id' => $key], ['limit' => 1])) {
+            // First use: continue from the old "counters" collection or the highest existing order,
+            // so order numbers never repeat.
+            $carry = (int) (find('counters', ['_id' => $name], ['limit' => 1])[0]['value'] ?? 0);
+            foreach (find('orders', [], ['projection' => ['orderNumber' => 1]]) as $o) {
+                $carry = max($carry, (int) preg_replace('/\D/', '', (string) ($o['orderNumber'] ?? '')) - $start);
+            }
+            write('settings', fn(BulkWrite $b) => $b->update(['_id' => $key], ['$max' => ['value' => $carry]], ['upsert' => true]));
+        }
         $res = db()->executeCommand(DB, new Command([
-            'findAndModify' => 'counters',
-            'query' => ['_id' => $name],
+            'findAndModify' => 'settings',
+            'query' => ['_id' => $key],
             'update' => ['$inc' => ['value' => 1]],
             'upsert' => true,
             'new' => true,
@@ -172,7 +182,7 @@ function isAdmin(): bool
     if ($cached !== null) return $cached;
     $t = bearer();
     if ($t === '') return $cached = false;
-    $s = findOne('sessions', ['hash' => hash('sha256', $t), 'exp' => ['$gt' => time()]]);
+    $s = findOne('settings', ['kind' => 'session', 'hash' => hash('sha256', $t), 'exp' => ['$gt' => time()]]);
     return $cached = $s !== null;
 }
 
@@ -364,9 +374,9 @@ switch ($action) {
         $passOk = password_verify((string) ($in['password'] ?? ''), adminPasswordHash());
         if (!$emailOk || !$passOk) fail(401, 'Wrong email or password.');
         $token = bin2hex(random_bytes(32));
-        write('sessions', function (BulkWrite $b) use ($token) {
-            $b->insert(['hash' => hash('sha256', $token), 'exp' => time() + SESSION_HOURS * 3600]);
-            $b->delete(['exp' => ['$lt' => time()]]);
+        write('settings', function (BulkWrite $b) use ($token) {
+            $b->insert(['kind' => 'session', 'hash' => hash('sha256', $token), 'exp' => time() + SESSION_HOURS * 3600]);
+            $b->delete(['kind' => 'session', 'exp' => ['$lt' => time()]]);
         });
         ok(['token' => $token, 'expiresInHours' => SESSION_HOURS]);
     }
@@ -374,7 +384,7 @@ switch ($action) {
     // ── admin ──
     case 'logout':
         requireAdmin();
-        remove('sessions', ['hash' => hash('sha256', bearer())]);
+        remove('settings', ['kind' => 'session', 'hash' => hash('sha256', bearer())]);
         ok();
 
     case 'password.change': {
@@ -384,7 +394,7 @@ switch ($action) {
         $new = (string) ($in['next'] ?? '');
         if (strlen($new) < 10) fail(400, 'Use at least 10 characters for the new password.');
         upsert('settings', ['key' => 'admin_password_hash'], ['key' => 'admin_password_hash', 'value' => password_hash($new, PASSWORD_DEFAULT)]);
-        write('sessions', fn(BulkWrite $b) => $b->delete(['hash' => ['$ne' => hash('sha256', bearer())]]));
+        write('settings', fn(BulkWrite $b) => $b->delete(['kind' => 'session', 'hash' => ['$ne' => hash('sha256', bearer())]]));
         ok();
     }
 
