@@ -17,12 +17,12 @@ const Divider: React.FC<{ className?: string }> = ({ className = '' }) => (
 export const OurStorySection: React.FC = () => (
   <section id="our-story" className="bg-[#f8ebdb] border-y border-gold-500/40 scroll-mt-36">
     <div
-      className="relative max-w-[1920px] mx-auto lg:aspect-[16/9] lg:bg-[url('/images/about_banner.jpg?v=4')] lg:bg-cover lg:bg-center"
+      className="relative max-w-[1920px] mx-auto lg:aspect-[16/9] lg:bg-[url('/images/about_banner.jpg?v=5')] lg:bg-cover lg:bg-center"
       style={{ containerType: 'inline-size' }}
     >
       <img
-        src="/images/about_portrait.jpg?v=4"
-        alt="Smiling woman in a mustard silk saree with a pink blouse, framed by a temple arch with brass lamps and jasmine"
+        src="/images/about_portrait.jpg?v=5"
+        alt="Smiling woman in a wine embellished outfit, framed by a temple arch with brass lamps and jasmine"
         loading="lazy"
         className="lg:hidden w-full max-w-md mx-auto block"
       />
