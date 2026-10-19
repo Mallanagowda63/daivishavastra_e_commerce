@@ -415,9 +415,8 @@ switch ($action) {
         if (!$before) fail(404, 'Order not found.');
         if ($patch) upsert('orders', ['id' => $oid], $patch);
         respondNow(['ok' => true]);
-        // Tell the customer when the order moves forward (only on a real change).
-        $changed = array_filter($patch, fn($v, $k) => in_array($k, ['status', 'paymentStatus'], true) && ($before[$k] ?? null) !== $v, ARRAY_FILTER_USE_BOTH);
-        if ($changed) emailOrderUpdate(array_merge($before, $patch), $changed);
+        // Email the customer only when the status really changes (out for delivery, delivered, cancelled).
+        if (isset($patch['status']) && ($before['status'] ?? null) !== $patch['status']) emailOrderUpdate(array_merge($before, $patch), ['status' => $patch['status']]);
         exit;
     }
 

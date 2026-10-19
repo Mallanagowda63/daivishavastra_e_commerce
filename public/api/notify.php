@@ -191,14 +191,14 @@ function emailOrderPlaced(array $order): void
     $name = e(firstName($order));
     $body = "<p style=\"margin:0 0 12px;\">Namaste {$name},</p>"
         . "<p style=\"margin:0 0 12px;\">Thank you for choosing Daivisha Vastra. We have received your order <strong>{$num}</strong> and we are delighted that one of our sarees will soon be part of your story.</p>"
-        . "<p style=\"margin:0 0 16px;\">Our team will verify your payment and confirm the order with you shortly. You will receive another email from us as soon as your saree is on its way.</p>"
+        . "<p style=\"margin:0 0 16px;\">Our team will verify your payment and confirm the order with you shortly. We will email you again when your saree is out for delivery.</p>"
         . itemsTable($order)
         . "<p style=\"margin:18px 0 6px;font-weight:bold;color:#6b1418;\">Delivering to</p>" . addressBlock($order)
         . "<p style=\"margin:18px 0 6px;font-weight:bold;color:#6b1418;\">What happens next</p>"
-        . "<ol style=\"margin:0 0 0 18px;padding:0;color:#3d3530;\"><li>We verify your payment (usually within a few hours).</li><li>Your saree is carefully checked, folded and packed.</li><li>We share the courier and tracking details by email.</li></ol>"
+        . "<ol style=\"margin:0 0 0 18px;padding:0;color:#3d3530;\"><li>We verify your payment (usually within a few hours).</li><li>Your saree is carefully checked, folded and packed.</li><li>We email you on the day your saree is out for delivery.</li></ol>"
         . "<p style=\"margin:16px 0 0;font-size:13px;color:#6f5f5c;\">Please note: payments are non-refundable. Eligible items can be exchanged or replaced as per our Returns &amp; Exchange Policy.</p>"
         . "<p style=\"margin:16px 0 0;\">With warm regards,<br><strong>Team Daivisha Vastra</strong></p>";
-    $text = "Namaste " . firstName($order) . ",\n\nThank you for choosing Daivisha Vastra. We have received your order {$order['orderNumber']} (total " . inr($order['total']) . ").\nOur team will verify your payment and confirm your order shortly. We will email you again when your saree is on its way.\n\nWith warm regards,\nTeam Daivisha Vastra";
+    $text = "Namaste " . firstName($order) . ",\n\nThank you for choosing Daivisha Vastra. We have received your order {$order['orderNumber']} (total " . inr($order['total']) . ").\nOur team will verify your payment and confirm your order shortly. We will email you again when your saree is out for delivery.\n\nWith warm regards,\nTeam Daivisha Vastra";
     sendEmail((string) $order['customerEmail'], "Thank you for your order {$order['orderNumber']} — Daivisha Vastra", emailFrame("We've received your order {$num}.", 'Thank you for your order', $body), $text, 'email:order-placed');
 }
 
@@ -224,22 +224,25 @@ function whatsappOwnerNewOrder(array $order): void
     whatsappOwner($text, 'whatsapp:owner-new-order');
 }
 
-/** Email to the customer when the admin moves the order forward. */
+/**
+ * Email to the customer when the admin changes the order status. Customers get exactly four emails:
+ * order placed (sent at checkout), out for delivery, delivered and cancelled. Other statuses send nothing.
+ */
 function emailOrderUpdate(array $order, array $patch): void
 {
     $num = e($order['orderNumber']);
     $name = e(firstName($order));
     $status = $patch['status'] ?? null;
-    $paid = ($patch['paymentStatus'] ?? null) === 'Paid';
     $tracking = trim((string) ($order['trackingNumber'] ?? ''));
     $carrier = trim((string) ($order['carrier'] ?? ''));
     $hasTracking = $tracking !== '' && $tracking !== '—';
+    $hasCarrier = $carrier !== '' && $carrier !== 'To be assigned';
 
-    if ($status === 'Shipped') {
-        $subject = "Your saree is on its way — order {$order['orderNumber']}";
-        $heading = 'Your saree is on its way';
-        $msg = "<p style=\"margin:0 0 12px;\">Good news! Your order <strong>{$num}</strong> has been packed with care and handed to our courier partner.</p>"
-            . ($hasTracking ? "<p style=\"margin:0 0 12px;\"><strong>Courier:</strong> " . e($carrier) . "<br><strong>Tracking number:</strong> " . e($tracking) . "</p>" : "<p style=\"margin:0 0 12px;\">We will share the tracking details with you shortly.</p>")
+    if ($status === 'Out for Delivery') {
+        $subject = "Your saree is out for delivery today — order {$order['orderNumber']}";
+        $heading = 'Out for delivery today';
+        $msg = "<p style=\"margin:0 0 12px;\">Your order <strong>{$num}</strong> is out for delivery and should reach you today. Please keep your phone close so the delivery partner can reach you.</p>"
+            . ($hasTracking || $hasCarrier ? "<p style=\"margin:0 0 12px;\">" . ($hasCarrier ? "<strong>Courier:</strong> " . e($carrier) . "<br>" : '') . ($hasTracking ? "<strong>Tracking number:</strong> " . e($tracking) : '') . "</p>" : '')
             . "<p style=\"margin:0 0 12px;\">When it arrives, please check the parcel. If anything is not right, message us with your order number and photos and we will help you.</p>";
     } elseif ($status === 'Delivered') {
         $subject = "Delivered — thank you for shopping with Daivisha Vastra";
@@ -250,16 +253,11 @@ function emailOrderUpdate(array $order, array $patch): void
         $subject = "Update on your order {$order['orderNumber']}";
         $heading = 'Your order has been cancelled';
         $msg = "<p style=\"margin:0 0 12px;\">Your order <strong>{$num}</strong> has been cancelled. If you did not expect this, or would like help choosing another saree, please reply to this email or message us on WhatsApp and we will gladly assist you.</p>";
-    } elseif ($status === 'Confirmed' || $paid) {
-        $subject = "Order confirmed — {$order['orderNumber']}";
-        $heading = 'Your order is confirmed';
-        $msg = "<p style=\"margin:0 0 12px;\">" . ($paid ? 'We have received your payment and your' : 'Your') . " order <strong>{$num}</strong> is confirmed. Thank you!</p>"
-            . "<p style=\"margin:0 0 12px;\">We are now preparing your saree for dispatch and will email you the courier details as soon as it ships.</p>";
     } else {
-        return; // other changes (notes, tracking edits) don't email the customer
+        return; // Confirmed, Packed, Shipped, payment changes: no email
     }
     $body = "<p style=\"margin:0 0 12px;\">Namaste {$name},</p>{$msg}" . itemsTable($order)
         . "<p style=\"margin:16px 0 0;\">With warm regards,<br><strong>Team Daivisha Vastra</strong></p>";
     $text = "Namaste " . firstName($order) . ",\n\n" . trim(html_entity_decode(strip_tags(str_replace(['</p>', '<br>'], ["\n\n", "\n"], $msg)))) . "\n\nWith warm regards,\nTeam Daivisha Vastra";
-    sendEmail((string) ($order['customerEmail'] ?? ''), $subject, emailFrame(strip_tags($heading), $heading, $body), $text, 'email:order-' . strtolower($status ?? 'paid'));
+    sendEmail((string) ($order['customerEmail'] ?? ''), $subject, emailFrame(strip_tags($heading), $heading, $body), $text, 'email:order-' . strtolower(str_replace(' ', '-', $status)));
 }
