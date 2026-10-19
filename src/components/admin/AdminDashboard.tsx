@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bell, CalendarDays, ChevronRight, ExternalLink, LayoutGrid, Layers, LogOut, Menu, ShoppingBag, Tag, Wallet, X, Image as ImageIcon, Star, Settings } from 'lucide-react';
+import { Bell, CalendarDays, ChevronRight, ExternalLink, LayoutGrid, Layers, LogOut, Menu, ShoppingBag, Tag, Wallet, X, Image as ImageIcon, Star, Settings, Users } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { OverviewPage } from './OverviewPage';
 import { ProductsPage } from './ProductsPage';
@@ -10,9 +10,10 @@ import { CouponsPage } from './CouponsPage';
 import { BannersPage } from './BannersPage';
 import { ReviewsPage } from './ReviewsPage';
 import { SettingsPage } from './SettingsPage';
+import { CustomersPage } from './CustomersPage';
 import { paymentStatusOf } from './adminUtils';
 
-export type AdminPage = 'overview' | 'products' | 'orders' | 'bookings' | 'payments' | 'coupons' | 'banners' | 'reviews' | 'settings';
+export type AdminPage = 'overview' | 'products' | 'orders' | 'bookings' | 'payments' | 'coupons' | 'banners' | 'reviews' | 'settings' | 'customers';
 
 const NAV: { id: AdminPage; label: string; icon: React.FC<{ className?: string }> }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutGrid },
@@ -20,6 +21,7 @@ const NAV: { id: AdminPage; label: string; icon: React.FC<{ className?: string }
   { id: 'banners', label: 'Collection banners', icon: ImageIcon },
   { id: 'reviews', label: 'Reviews', icon: Star },
   { id: 'orders', label: 'Orders', icon: ShoppingBag },
+  { id: 'customers', label: 'Customers', icon: Users },
   { id: 'bookings', label: 'Bookings', icon: CalendarDays },
   { id: 'payments', label: 'Payments & Collections', icon: Wallet },
   { id: 'coupons', label: 'Coupons', icon: Tag },
@@ -161,6 +163,7 @@ export const AdminDashboard: React.FC = () => {
             {page === 'banners' && <BannersPage />}
             {page === 'reviews' && <ReviewsPage />}
             {page === 'settings' && <SettingsPage />}
+            {page === 'customers' && <CustomersPage />}
           </div>
           <footer className="w-full px-4 sm:px-6 lg:px-8 pb-6 flex justify-between text-[11px] text-stone-400">
             <span>Daivisha Vastra · Admin workspace</span>
