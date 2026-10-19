@@ -1,4 +1,4 @@
-import { SareeProduct, CustomerReview } from '../types';
+import { SareeProduct } from '../types';
 
 export const INITIAL_PRODUCTS: SareeProduct[] = [
   {
@@ -152,48 +152,5 @@ export const INITIAL_PRODUCTS: SareeProduct[] = [
       'Pair with gold-toned temple jewellery for festive occasions.',
       'Complete the look with fresh jasmine in a low bun.',
     ],
-  },
-];
-
-export const INITIAL_REVIEWS: CustomerReview[] = [
-  {
-    id: 'rev-1',
-    customerName: 'Ananya Singhania',
-    rating: 5,
-    verifiedBuyer: true,
-    productName: 'Royal Kanjivaram Pure Mulberry Silk Saree',
-    comment: 'The saree was even more breathtaking than the photos. The pure zari border has a subtle, regal lustre that isn’t flashy at all. It draped like a dream at my sister’s sangeet. Truly royal quality.',
-    city: 'New Delhi',
-    date: 'March 14, 2026',
-  },
-  {
-    id: 'rev-2',
-    customerName: 'Meera Krishnan',
-    rating: 5,
-    verifiedBuyer: true,
-    productName: 'Imperial Emerald Banarasi Katan Silk Saree',
-    comment: 'Having grown up in Chennai surrounded by pure silks, I have very high standards. The weight, the finish of the Kadwa weave, and the buttery soft feel of the Katan silk surpassed high-end boutique stores.',
-    city: 'Chennai',
-    date: 'February 28, 2026',
-  },
-  {
-    id: 'rev-3',
-    customerName: 'Radhika Parekh',
-    rating: 5,
-    verifiedBuyer: true,
-    productName: 'Blush Champagne Handcrafted Organza Silk Saree',
-    comment: 'The organza isn’t stiff like usual commercial sarees! It falls so gracefully and the hand gota patti glistens softly in evening light. Received countless compliments.',
-    city: 'Mumbai',
-    date: 'January 19, 2026',
-  },
-  {
-    id: 'rev-4',
-    customerName: 'Dr. Shalini Bannerjee',
-    rating: 5,
-    verifiedBuyer: true,
-    productName: 'Sultana Heritage Maroon Zardozi Bridal Saree',
-    comment: 'Bought this for my daughter’s wedding pheras. The packaging alone felt like an heirloom presentation. The zardozi work is immaculate with zero loose threads.',
-    city: 'Kolkata',
-    date: 'March 02, 2026',
   },
 ];

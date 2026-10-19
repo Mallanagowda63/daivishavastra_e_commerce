@@ -10,7 +10,6 @@ import { OccasionsSection } from '../components/home/OccasionsSection';
 import { BestSellersCarousel } from '../components/home/BestSellersCarousel';
 import { HeritageFeatureSection } from '../components/home/HeritageFeatureSection';
 import { OurStorySection } from '../components/home/OurStorySection';
-import { SocialGallerySection } from '../components/home/SocialGallerySection';
 import { ReviewsSection } from '../components/home/ReviewsSection';
 import { TrustFeatures } from '../components/home/TrustFeatures';
 import { NewsletterSection } from '../components/home/NewsletterSection';
@@ -77,11 +76,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 10. Our Story (the "Our Story" links scroll here) */}
       <OurStorySection />
 
-      {/* 11. Social / Worn With Love */}
-      <SocialGallerySection />
-
       {/* 12. Customer Reviews */}
-      <ReviewsSection />
+      <ReviewsSection products={products} />
 
       {/* 13. Trust Features */}
       <TrustFeatures />

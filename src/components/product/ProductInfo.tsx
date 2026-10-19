@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useReviews } from '../../data/reviewStore';
 import { Star, Heart, ShoppingBag, Zap, ChevronDown, ChevronUp, ShieldCheck, RefreshCw, Truck } from 'lucide-react';
 import { SareeProduct } from '../../types';
 import { useCart } from '../../context/CartContext';
@@ -12,6 +13,8 @@ interface ProductInfoProps {
 }
 
 export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) => {
+  const myReviews = useReviews().filter((r) => r.status === 'approved' && r.productId === product.id);
+  const avg = myReviews.reduce((t, r) => t + r.rating, 0) / (myReviews.length || 1);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState<string>(product.color);
   const [openAccordion, setOpenAccordion] = useState<string | null>('specifications');
@@ -51,17 +54,19 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
 
       {/* Rating & Reviews */}
       <div className="flex items-center gap-3">
-        <div className="flex items-center text-gold-500">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star key={i} className="w-4 h-4 fill-gold-500" />
-          ))}
-        </div>
-        <span className="text-xs font-semibold text-charcoal font-sans tabular-nums">
-          {product.rating}
-        </span>
-        <span aria-hidden="true" className="text-stone-300">·</span>
-        <a href="#reviews" className="text-xs text-stone-500 hover:text-burgundy-900 underline font-sans">
-          {product.reviewCount} Connoisseur Reviews
+        {myReviews.length > 0 && (
+          <>
+            <div className="flex items-center" aria-label={`${avg.toFixed(1)} out of 5 stars`}>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <Star key={n} className={`w-4 h-4 ${n <= Math.round(avg) ? 'fill-gold-500 text-gold-500' : 'text-stone-300'}`} />
+              ))}
+            </div>
+            <span className="text-xs font-semibold text-charcoal font-sans tabular-nums">{avg.toFixed(1)}</span>
+            <span aria-hidden="true" className="text-stone-300">·</span>
+          </>
+        )}
+        <a href="#product-reviews" className="text-xs text-stone-500 hover:text-burgundy-900 underline font-sans">
+          {myReviews.length ? `${myReviews.length} review${myReviews.length > 1 ? 's' : ''}` : 'Write the first review'}
         </a>
       </div>
 

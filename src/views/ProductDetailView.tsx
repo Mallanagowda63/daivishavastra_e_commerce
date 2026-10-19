@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { ProductReviews } from '../components/product/ProductReviews';
 import { findSareeType } from '../data/sareeTypes';
 import { SareeHeritage } from '../components/common/SareeHeritage';
 import { scrollToTop } from '../lib/smoothScroll';
@@ -76,6 +77,9 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <SareeHeritage type={findSareeType(product.category)!} heading={`About ${findSareeType(product.category)!.title}`} />
         </div>
       )}
+
+      {/* Customer reviews */}
+      <ProductReviews product={product} />
 
       {/* Styling Suggestions, Complete the Look & Related Sarees */}
       <StylingSuggestions
