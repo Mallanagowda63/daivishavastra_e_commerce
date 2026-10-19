@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from 'react';
+import { api } from '../lib/api';
 
-// Customer reviews. New reviews wait for admin approval before they appear on the website.
-// Saved in this browser until the store database is connected; other open tabs stay in sync.
+// Customer reviews, saved in the store database. New reviews wait for admin approval before they appear.
+// Visitors receive only approved reviews; the signed-in admin receives all of them.
 
 export type ReviewStatus = 'pending' | 'approved' | 'hidden';
 
@@ -11,57 +12,43 @@ export interface Review {
   city: string;
   rating: number; // 1–5
   comment: string;
-  productId?: string;
-  productName?: string;
+  productId?: string | null;
+  productName?: string | null;
   date: string; // ISO
   status: ReviewStatus;
 }
 
-const KEY = 'daivisha_reviews';
-
-const load = (): Review[] => {
-  try {
-    return JSON.parse(localStorage.getItem(KEY) || '[]');
-  } catch {
-    return [];
-  }
-};
-
-let reviews: Review[] = load();
+let reviews: Review[] = [];
 const listeners = new Set<() => void>();
-
-const save = (next: Review[]) => {
-  reviews = next;
-  try {
-    localStorage.setItem(KEY, JSON.stringify(next));
-  } catch {
-    // storage blocked: keep for this visit
-  }
-  listeners.forEach((l) => l());
-};
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => {
-    if (e.key === KEY) {
-      reviews = load();
-      listeners.forEach((l) => l());
-    }
-  });
-}
+const emit = () => listeners.forEach((l) => l());
 
 const subscribe = (l: () => void) => {
   listeners.add(l);
   return () => listeners.delete(l);
 };
 
+/** Filled from the catalog when the site loads (and again after the admin signs in). */
+export const hydrateReviews = (next: Review[]) => {
+  reviews = next ?? [];
+  emit();
+};
+
 export const useReviews = () => useSyncExternalStore(subscribe, () => reviews);
 
-export const addReview = (r: Omit<Review, 'id' | 'date' | 'status'>) =>
-  save([{ ...r, id: `rev-${Date.now().toString(36)}`, date: new Date().toISOString(), status: 'pending' }, ...reviews]);
+/** Sends a review for approval. Throws with a readable message if it could not be saved. */
+export const addReview = (r: Omit<Review, 'id' | 'date' | 'status'>) => api('review.add', r);
 
-export const setReviewStatus = (id: string, status: ReviewStatus) => save(reviews.map((r) => (r.id === id ? { ...r, status } : r)));
+export const setReviewStatus = async (id: string, status: ReviewStatus) => {
+  await api('review.status', { id, status });
+  reviews = reviews.map((r) => (r.id === id ? { ...r, status } : r));
+  emit();
+};
 
-export const deleteReview = (id: string) => save(reviews.filter((r) => r.id !== id));
+export const deleteReview = async (id: string) => {
+  await api('review.delete', { id });
+  reviews = reviews.filter((r) => r.id !== id);
+  emit();
+};
 
 export const formatReviewDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });

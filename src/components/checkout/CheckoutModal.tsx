@@ -30,7 +30,7 @@ const newReference = () => `DV-${Date.now().toString().slice(-6)}`;
 const FieldError: React.FC<{ msg?: string }> = ({ msg }) => (msg ? <p className="mt-1 text-[11px] text-rose-700">{msg}</p> : null);
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, onOrderSuccess }) => {
-  const { cartItems, subtotal, discountAmount, giftWrapAmount, shippingAmount, total, clearCart } = useCart();
+  const { cartItems, subtotal, discountAmount, giftWrapAmount, shippingAmount, total, clearCart, appliedCoupon } = useCart();
   const { createOrder } = useAdmin();
   const { user } = useAuth();
   const { showToast } = useToast();
@@ -51,6 +51,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
   const [qr, setQr] = useState('');
   const [copied, setCopied] = useState(false);
   const [placed, setPlaced] = useState<{ number: string; total: number } | null>(null);
+  const [placing, setPlacing] = useState(false);
 
   const upiReady = STORE_UPI_ID.trim() !== '';
   const upiLink = `upi://pay?pa=${encodeURIComponent(STORE_UPI_ID)}&pn=${encodeURIComponent(STORE_UPI_NAME)}&am=${total.toFixed(
@@ -111,12 +112,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
     if (validate(step)) setStep(to);
   };
 
-  const placeOrder = () => {
-    if (!validate(4)) return;
+  const placeOrder = async () => {
+    if (!validate(4) || placing) return;
     const eta = new Date();
     eta.setDate(eta.getDate() + 6);
-    const order = createOrder({
+    setPlacing(true);
+    let order;
+    try {
+    order = await createOrder({
       orderNumber: reference,
+      paymentReference: reference,
+      couponCode: appliedCoupon?.code,
       customerEmail: email.trim().toLowerCase(),
       items: cartItems.map((item) => ({
         id: item.product.id,
@@ -125,6 +131,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
         price: item.product.sellingPrice,
         quantity: item.quantity,
         color: item.selectedColor,
+        includeGiftWrap: item.includeGiftWrap,
       })),
       subtotal,
       discount: discountAmount,
@@ -139,7 +146,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
       carrier: 'To be assigned',
       estimatedDelivery: eta.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
     });
-    setPlaced({ number: order.orderNumber, total });
+    } catch (e) {
+      setPlacing(false);
+      showToast({ type: 'error', title: 'Order not placed', message: e instanceof Error ? e.message : 'Please try again.' });
+      return;
+    }
+    setPlacing(false);
+    setPlaced({ number: order.orderNumber, total: order.total });
     clearCart();
     showToast({
       type: 'success',
@@ -377,7 +390,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose, o
 
               <div className="pt-2 flex justify-between items-center">
                 <button onClick={() => setStep(3)} className={backBtn}>← Back</button>
-                <button onClick={placeOrder} className={primaryBtn}>
+                <button onClick={placeOrder} disabled={placing} className={primaryBtn}>
                   {upiReady ? "I've paid — place order" : 'Place order'} <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

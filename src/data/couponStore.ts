@@ -1,52 +1,44 @@
 import { useSyncExternalStore } from 'react';
 import { Coupon } from '../types';
 
-// Shared coupon list used by the admin, the cart and the top announcement bar.
-// Saved in this browser; other open tabs stay in sync through the storage event.
+import { api, reportError } from '../lib/api';
 
-const KEY = 'daivisha_coupons';
+// Shared coupon list used by the admin, the cart and the top announcement bar, saved in the store database.
+// Visitors receive only usable coupons; the signed-in admin receives all of them. Prices are always
+// re-checked by the server when an order is placed.
 
-const SEED: Coupon[] = [
-  { code: 'WELCOME10', discountPercentage: 10, minimumOrder: 5000, description: '10% off your first saree above ₹5,000', expiresAt: '2028-12-31T23:59', active: true, featured: true },
-  { code: 'FESTIVE2500', discountAmount: 2500, minimumOrder: 20000, description: 'Flat ₹2,500 off festive & bridal orders above ₹20,000', expiresAt: '2028-12-31T23:59', active: true },
-  { code: 'ROYAL15', discountPercentage: 15, minimumOrder: 35000, description: '15% off luxury couture above ₹35,000', expiresAt: '2028-12-31T23:59', active: true },
-  { code: 'SHUBH20', discountPercentage: 20, minimumOrder: 15000, description: '20% off for the wedding season above ₹15,000', expiresAt: '2026-12-31T23:59', active: true },
-];
-
-const load = (): Coupon[] => {
-  try {
-    const saved = localStorage.getItem(KEY);
-    return saved ? JSON.parse(saved) : SEED;
-  } catch {
-    return SEED;
-  }
-};
-
-let coupons: Coupon[] = load();
+let coupons: Coupon[] = [];
 const listeners = new Set<() => void>();
-
-const save = (next: Coupon[]) => {
-  coupons = next;
-  try {
-    localStorage.setItem(KEY, JSON.stringify(next));
-  } catch {
-    // ignore
-  }
-  listeners.forEach((l) => l());
-};
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('storage', (e) => {
-    if (e.key === KEY) {
-      coupons = load();
-      listeners.forEach((l) => l());
-    }
-  });
-}
+const emit = () => listeners.forEach((l) => l());
 
 const subscribe = (l: () => void) => {
   listeners.add(l);
   return () => listeners.delete(l);
+};
+
+/** Filled from the catalog when the site loads. */
+export const hydrateCoupons = (next: Coupon[]) => {
+  coupons = (next ?? []).map((c) => ({
+    ...c,
+    discountPercentage: c.discountPercentage ?? undefined,
+    discountAmount: c.discountAmount ?? undefined,
+    expiresAt: c.expiresAt ?? undefined,
+  }));
+  emit();
+};
+
+/** Saves the whole list; rolls back if the server refuses. */
+const save = async (next: Coupon[]) => {
+  const before = coupons;
+  coupons = next;
+  emit();
+  try {
+    await api('coupons.save', { coupons: next });
+  } catch (e) {
+    coupons = before;
+    emit();
+    reportError(e);
+  }
 };
 
 export const useCoupons = () => useSyncExternalStore(subscribe, () => coupons);

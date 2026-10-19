@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Check, EyeOff, Star, Trash2 } from 'lucide-react';
 import { Review, ReviewStatus, deleteReview, formatReviewDate, setReviewStatus, useReviews } from '../../data/reviewStore';
 import { useToast } from '../../context/ToastContext';
+import { reportError } from '../../lib/api';
 import { Badge, Button, Card, PageHeader, Tabs } from './adminUi';
 
 const TONE: Record<ReviewStatus, 'amber' | 'green' | 'grey'> = { pending: 'amber', approved: 'green', hidden: 'grey' };
@@ -32,12 +33,12 @@ const ReviewCard: React.FC<{ r: Review }> = ({ r }) => {
       <p className="mt-2 text-sm text-stone-700 leading-relaxed whitespace-pre-line">{r.comment}</p>
       <div className="mt-4 flex flex-wrap gap-2">
         {r.status !== 'approved' && (
-          <Button onClick={() => { setReviewStatus(r.id, 'approved'); showToast({ type: 'success', title: 'Review approved', message: 'It now shows on the website.' }); }}>
+          <Button onClick={() => setReviewStatus(r.id, 'approved').then(() => showToast({ type: 'success', title: 'Review approved', message: 'It now shows on the website.' })).catch(reportError)}>
             <Check className="w-4 h-4" /> Approve
           </Button>
         )}
         {r.status !== 'hidden' && (
-          <Button variant="secondary" onClick={() => { setReviewStatus(r.id, 'hidden'); showToast({ type: 'info', title: 'Review hidden', message: 'It no longer shows on the website.' }); }}>
+          <Button variant="secondary" onClick={() => setReviewStatus(r.id, 'hidden').then(() => showToast({ type: 'info', title: 'Review hidden', message: 'It no longer shows on the website.' })).catch(reportError)}>
             <EyeOff className="w-4 h-4" /> Hide
           </Button>
         )}
@@ -45,8 +46,9 @@ const ReviewCard: React.FC<{ r: Review }> = ({ r }) => {
           variant="ghost"
           onClick={() => {
             if (window.confirm(`Delete the review from ${r.name}? This cannot be undone.`)) {
-              deleteReview(r.id);
-              showToast({ type: 'info', title: 'Review deleted', message: r.name });
+              deleteReview(r.id)
+                .then(() => showToast({ type: 'info', title: 'Review deleted', message: r.name }))
+                .catch(reportError);
             }
           }}
         >

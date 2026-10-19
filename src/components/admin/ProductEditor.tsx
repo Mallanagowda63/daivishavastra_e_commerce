@@ -5,7 +5,8 @@ import { useToast } from '../../context/ToastContext';
 import { ProductStatus, SareeCategory, SareeCollection, SareeFabric, SareeOccasion, SareeProduct } from '../../types';
 import { Badge, Button, Card, Field, inputClass } from './adminUi';
 import { PRODUCT_STATUS_LABEL, productTone } from './statusTones';
-import { fileToCompressedDataURL, productStatusOf } from './adminUtils';
+import { productStatusOf } from './adminUtils';
+import { uploadImage } from '../../lib/api';
 import { COLLECTIONS } from './ProductsPage';
 import { SAREE_TYPE_NAMES } from '../../data/sareeTypes';
 
@@ -52,11 +53,11 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
           showToast({ type: 'error', title: 'Photo too large', message: `${f.name} is over 10 MB.` });
           continue;
         }
-        urls.push(await fileToCompressedDataURL(f));
+        urls.push(await uploadImage(f));
       }
       setImages((prev) => [...prev, ...urls]);
     } catch {
-      showToast({ type: 'error', title: 'Upload failed', message: 'That file could not be read as an image.' });
+      showToast({ type: 'error', title: 'Upload failed', message: 'That photo could not be uploaded. Please try again.' });
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = '';
@@ -85,8 +86,10 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
     return Object.keys(e).length === 0;
   };
 
-  const save = (target: ProductStatus) => {
-    if (!validate(target)) return;
+  const [saving, setSaving] = useState(false);
+
+  const save = async (target: ProductStatus) => {
+    if (!validate(target) || saving) return;
     const original = Math.max(mrp, price);
     const data = {
       name: name.trim(),
@@ -107,11 +110,13 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
       isNewArrival,
       isBestSeller,
     };
+    setSaving(true);
+    try {
     if (product) {
-      updateProduct(product.id, data);
+      await updateProduct(product.id, data);
       showToast({ type: 'success', title: 'Saree saved', message: `${data.name} · ${PRODUCT_STATUS_LABEL[target]}` });
     } else {
-      addProduct({
+      await addProduct({
         ...data,
         rating: 5,
         reviewCount: 0,
@@ -129,6 +134,11 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
         stylingTips: [],
       });
     }
+    } catch {
+      setSaving(false);
+      return; // error already shown; keep the form open
+    }
+    setSaving(false);
     onDone();
   };
 

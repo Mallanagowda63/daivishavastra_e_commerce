@@ -13,3 +13,9 @@ dist/
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Private server settings (database + admin passwords)
+public/api/config.php
+# Photos uploaded on the live site
+public/uploads/*
+!public/uploads/.htaccess

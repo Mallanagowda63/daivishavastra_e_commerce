@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { onError } from '../lib/api';
 
 export interface ToastMessage {
   id: string;
@@ -31,6 +32,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       removeToast(id);
     }, 4000);
   }, [removeToast]);
+
+  // Failed saves anywhere in the site show up as an error toast.
+  useEffect(() => onError((message) => showToast({ type: 'error', title: 'Not saved', message })), [showToast]);
 
   return (
     <ToastContext.Provider value={{ toasts, showToast, removeToast }}>

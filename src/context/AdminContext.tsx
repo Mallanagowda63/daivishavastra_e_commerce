@@ -1,284 +1,291 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { SareeProduct, Order, OrderStatus, Booking } from '../types';
-import { localISO } from '../components/admin/adminUtils';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { SareeProduct, Order, OrderStatus, Booking, Coupon } from '../types';
 import { INITIAL_PRODUCTS } from '../data/products';
-import { RENAMED_CATEGORIES, RETIRED_PRODUCT_IDS } from '../data/sareeTypes';
 import { useToast } from './ToastContext';
-import { ADMIN_EMAIL } from '../config/admin';
+import { api, getToken, onUnauthorized, reportError, setToken } from '../lib/api';
+import { hydrateBanners } from '../data/bannerStore';
+import { hydrateCoupons } from '../data/couponStore';
+import { Review, hydrateReviews } from '../data/reviewStore';
 
-const ADMIN_SESSION_KEY = 'daivisha_admin_session';
+// Store data now lives in the MongoDB database behind /api. The website loads the catalog on start;
+// the admin's orders and bookings are loaded once the admin signs in.
+
+type NewOrder = Omit<Order, 'id' | 'orderNumber' | 'date' | 'items'> & {
+  date?: string;
+  orderNumber?: string;
+  couponCode?: string;
+  paymentReference?: string;
+  items: (Order['items'][number] & { includeGiftWrap?: boolean })[];
+};
 
 interface AdminContextType {
   products: SareeProduct[];
+  /** False until the catalog has arrived from the database. */
+  catalogLoaded: boolean;
+  /** Admin: all orders. Customers: orders placed from this browser. */
   orders: Order[];
-  addProduct: (product: Omit<SareeProduct, 'id' | 'slug'>) => void;
+  addProduct: (product: Omit<SareeProduct, 'id' | 'slug'>) => Promise<void>;
   updateProductStock: (productId: string, newStock: number) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
-  createOrder: (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'> & { orderNumber?: string }) => Order;
+  createOrder: (orderData: NewOrder) => Promise<Order>;
   getOrderById: (orderIdOrNumber: string) => Order | undefined;
-  updateProduct: (productId: string, patch: Partial<SareeProduct>) => void;
+  updateProduct: (productId: string, patch: Partial<SareeProduct>) => Promise<void>;
   deleteProduct: (productId: string) => void;
   updateOrder: (orderId: string, patch: Partial<Order>) => void;
-  addManualOrder: (orderData: Omit<Order, 'id' | 'orderNumber'>) => Order;
+  addManualOrder: (orderData: Omit<NewOrder, 'orderNumber'>) => Promise<Order | null>;
   bookings: Booking[];
   addBooking: (booking: Omit<Booking, 'id'>) => void;
   updateBooking: (bookingId: string, patch: Partial<Booking>) => void;
   isAdminOpen: boolean;
   setIsAdminOpen: (open: boolean) => void;
   isAdminAuthenticated: boolean;
-  loginAdmin: (email: string) => boolean;
+  /** Returns an error message, or null when signed in. */
+  loginAdmin: (email: string, password: string) => Promise<string | null>;
   logoutAdmin: () => void;
+  changeAdminPassword: (current: string, next: string) => Promise<string | null>;
 }
 
-// Sample orders and bookings that earlier versions of the admin showed; removed from saved data in every browser.
-const SAMPLE_IDS = new Set([
-  ...Array.from({ length: 18 }, (_, i) => `ord-${1031 + i}`),
-  'ord-1001',
-  'ord-1002',
-  'bk-201',
-  'bk-202',
-  'bk-203',
-  'bk-204',
-  'bk-205',
-]);
-const withoutSamples = <T extends { id: string }>(list: T[]) => list.filter((x) => !SAMPLE_IDS.has(x.id));
+const MY_ORDERS_KEY = 'daivisha_my_orders';
+const loadMyOrders = (): Order[] => {
+  try {
+    return JSON.parse(localStorage.getItem(MY_ORDERS_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
 
-const ORDERS_KEY = 'daivisha_orders_v2';
-// Catalogue ids this browser has already received, so deleted seed products don't come back.
-const SEEN_SEED_KEY = 'daivisha_seen_seed_products';
-const BOOKINGS_KEY = 'daivisha_bookings';
-const today = () => localISO(new Date());
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<SareeProduct[]>(() => {
-    try {
-      const saved = localStorage.getItem('daivisha_products');
-      if (!saved) {
-        localStorage.setItem(SEEN_SEED_KEY, JSON.stringify(INITIAL_PRODUCTS.map((p) => p.id)));
-        return INITIAL_PRODUCTS;
-      }
-      const list: SareeProduct[] = (JSON.parse(saved) as SareeProduct[])
-        .filter((p) => !RETIRED_PRODUCT_IDS.includes(p.id))
-        .map((p) => (RENAMED_CATEGORIES[p.category] ? { ...p, category: RENAMED_CATEGORIES[p.category] } : p));
-      // Add catalogue items introduced after this browser saved its list (once per item).
-      const seen: string[] = JSON.parse(localStorage.getItem(SEEN_SEED_KEY) || '[]');
-      const missing = INITIAL_PRODUCTS.filter((p) => !seen.includes(p.id) && !list.some((x) => x.id === p.id));
-      localStorage.setItem(SEEN_SEED_KEY, JSON.stringify(INITIAL_PRODUCTS.map((p) => p.id)));
-      return missing.length ? [...missing, ...list] : list;
-    } catch {
-      return INITIAL_PRODUCTS;
-    }
-  });
-
-  const [orders, setOrders] = useState<Order[]>(() => {
-    try {
-      const saved = localStorage.getItem(ORDERS_KEY);
-      return saved ? withoutSamples(JSON.parse(saved)) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [bookings, setBookings] = useState<Booking[]>(() => {
-    try {
-      const saved = localStorage.getItem(BOOKINGS_KEY);
-      return saved ? withoutSamples(JSON.parse(saved)) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
-    try {
-      return sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
   const { showToast } = useToast();
+  // Built-in sarees show instantly; the database list replaces them as soon as it loads.
+  const [products, setProducts] = useState<SareeProduct[]>(INITIAL_PRODUCTS);
+  const [catalogLoaded, setCatalogLoaded] = useState(false);
+  const [adminOrders, setAdminOrders] = useState<Order[]>([]);
+  const [myOrders, setMyOrders] = useState<Order[]>(loadMyOrders);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => getToken() !== '');
+
+  const loadCatalog = useCallback(async () => {
+    try {
+      const data = await api<{ products: SareeProduct[]; banners: Record<string, string>; coupons: Coupon[]; reviews: Review[] }>('catalog');
+      setProducts(data.products);
+      hydrateBanners(data.banners);
+      hydrateCoupons(data.coupons);
+      hydrateReviews(data.reviews);
+    } catch {
+      // Store database unreachable: keep showing the built-in sarees.
+    } finally {
+      setCatalogLoaded(true);
+    }
+  }, []);
+
+  const loadAdminData = useCallback(async () => {
+    try {
+      const data = await api<{ orders: Order[]; bookings: Booking[] }>('admin.data');
+      setAdminOrders(data.orders);
+      setBookings(data.bookings);
+    } catch (e) {
+      reportError(e);
+    }
+  }, []);
+
+  // Catalog on start; again (with drafts, hidden reviews, all coupons) whenever the admin signs in or out.
+  useEffect(() => {
+    loadCatalog();
+    if (isAdminAuthenticated) loadAdminData();
+  }, [isAdminAuthenticated, loadCatalog, loadAdminData]);
+
+  useEffect(
+    () =>
+      onUnauthorized(() => {
+        setIsAdminAuthenticated(false);
+        showToast({ type: 'info', title: 'Admin session ended', message: 'Please sign in again.' });
+      }),
+    [showToast]
+  );
 
   useEffect(() => {
     try {
-      localStorage.setItem('daivisha_products', JSON.stringify(products));
+      localStorage.setItem(MY_ORDERS_KEY, JSON.stringify(myOrders.slice(0, 50)));
     } catch {
       // ignore
     }
-  }, [products]);
+  }, [myOrders]);
 
-  useEffect(() => {
+  // ── products ──
+  const saveProduct = async (p: SareeProduct) => {
+    const saved = await api<SareeProduct>('product.save', p);
+    setProducts((prev) => (prev.some((x) => x.id === saved.id) ? prev.map((x) => (x.id === saved.id ? saved : x)) : [saved, ...prev]));
+  };
+
+  const addProduct = async (data: Omit<SareeProduct, 'id' | 'slug'>) => {
+    let slug = slugify(data.name) || 'saree';
+    if (products.some((p) => p.slug === slug)) slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+    const product: SareeProduct = { ...data, id: `dv-${slug}`, slug };
     try {
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-    } catch {
-      // ignore
+      await saveProduct(product);
+      showToast({ type: 'success', title: 'Saree added', message: `${product.name} is saved to your store.` });
+    } catch (e) {
+      reportError(e);
+      throw e;
     }
-  }, [orders]);
+  };
 
-  useEffect(() => {
+  const updateProduct = async (productId: string, patch: Partial<SareeProduct>) => {
+    const current = products.find((p) => p.id === productId);
+    if (!current) return;
     try {
-      localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
-    } catch {
-      // ignore
-    }
-  }, [bookings]);
-
-  const addProduct = (newProdData: Omit<SareeProduct, 'id' | 'slug'>) => {
-    const slug = newProdData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    const id = `dv-${slug}-${Date.now().toString().slice(-4)}`;
-    const product: SareeProduct = {
-      ...newProdData,
-      id,
-      slug,
-      updatedAt: today(),
-    };
-    setProducts((prev) => [product, ...prev]);
-    showToast({
-      type: 'success',
-      title: 'Product Added to Catalog',
-      message: `${product.name} is now live in the boutique.`,
-    });
-  };
-
-  const updateProduct = (productId: string, patch: Partial<SareeProduct>) => {
-    setProducts((prev) => prev.map((p) => (p.id === productId ? { ...p, ...patch, updatedAt: today() } : p)));
-  };
-
-  const deleteProduct = (productId: string) => {
-    const removed = products.find((p) => p.id === productId);
-    setProducts((prev) => prev.filter((p) => p.id !== productId));
-    if (removed) {
-      showToast({ type: 'info', title: 'Saree deleted', message: `${removed.name} was removed from the catalogue.` });
-    }
-  };
-
-  const updateOrder = (orderId: string, patch: Partial<Order>) => {
-    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o)));
-    const num = orders.find((o) => o.id === orderId)?.orderNumber ?? '';
-    if (patch.paymentStatus === 'Paid') showToast({ type: 'success', title: 'Payment marked as received', message: `${num} is now paid.` });
-    else if (patch.paymentStatus === 'Refunded') showToast({ type: 'info', title: 'Marked as refunded', message: num });
-  };
-
-  const addManualOrder = (orderData: Omit<Order, 'id' | 'orderNumber'>): Order => {
-    const highest = orders.reduce((max, o) => {
-      const n = parseInt(o.orderNumber.replace(/\D/g, ''), 10);
-      return n < 90000 && n > max ? n : max;
-    }, 1000);
-    const newOrder: Order = { ...orderData, id: `ord-${Date.now()}`, orderNumber: `DV-${highest + 1}` };
-    setOrders((prev) => [newOrder, ...prev]);
-    setProducts((prev) =>
-      prev.map((p) => {
-        const item = orderData.items.find((i) => i.id === p.id);
-        return item ? { ...p, stock: Math.max(0, p.stock - item.quantity) } : p;
-      })
-    );
-    showToast({ type: 'success', title: 'Order Added', message: `${newOrder.orderNumber} has been recorded.` });
-    return newOrder;
-  };
-
-  const addBooking = (booking: Omit<Booking, 'id'>) => {
-    setBookings((prev) => [{ ...booking, id: `bk-${Date.now()}` }, ...prev]);
-    showToast({ type: 'success', title: 'Booking Added', message: `${booking.service} for ${booking.customerName}.` });
-  };
-
-  const updateBooking = (bookingId: string, patch: Partial<Booking>) => {
-    setBookings((prev) => prev.map((b) => (b.id === bookingId ? { ...b, ...patch } : b)));
-    const b = bookings.find((x) => x.id === bookingId);
-    if (b && patch.status) {
-      showToast({
-        type: patch.status === 'Cancelled' ? 'info' : 'success',
-        title: `Booking ${patch.status.toLowerCase()}`,
-        message: `${b.service} · ${b.customerName}`,
-      });
+      await saveProduct({ ...current, ...patch, id: productId });
+    } catch (e) {
+      reportError(e);
+      throw e;
     }
   };
 
   const updateProductStock = (productId: string, newStock: number) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === productId ? { ...p, stock: Math.max(0, newStock), updatedAt: today() } : p))
-    );
-    showToast({
-      type: 'info',
-      title: 'Inventory Updated',
-      message: `Stock level updated to ${newStock}.`,
-    });
+    updateProduct(productId, { stock: Math.max(0, newStock) })
+      .then(() => showToast({ type: 'info', title: 'Stock updated', message: `Stock is now ${Math.max(0, newStock)}.` }))
+      .catch(() => {});
   };
 
-  const updateOrderStatus = (orderId: string, status: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status } : o))
-    );
-    showToast({
-      type: 'success',
-      title: 'Order Status Changed',
-      message: `Order status transitioned to ${status}.`,
-    });
+  const deleteProduct = (productId: string) => {
+    const removed = products.find((p) => p.id === productId);
+    api('product.delete', { id: productId })
+      .then(() => {
+        setProducts((prev) => prev.filter((p) => p.id !== productId));
+        if (removed) showToast({ type: 'info', title: 'Saree deleted', message: `${removed.name} was removed from the catalogue.` });
+      })
+      .catch(reportError);
   };
 
-  const createOrder = (orderData: Omit<Order, 'id' | 'orderNumber' | 'date'> & { orderNumber?: string }): Order => {
-    const orderNumber = orderData.orderNumber ?? `DV-${Math.floor(10000 + Math.random() * 90000)}`;
-    const newOrder: Order = {
-      ...orderData,
-      id: `ord-${Date.now()}`,
-      orderNumber,
-      date: today(),
-      // Website orders pay by UPI and stay "Pending" until the store confirms the money arrived.
-      ...(orderData.paymentStatus ? {} : { paymentStatus: 'Paid' as const, paymentDate: new Date().toISOString() }),
-    };
-
-    setOrders((prev) => [newOrder, ...prev]);
-
-    // Decrease product stock
+  // ── orders ──
+  const applyStock = (items: { id: string; quantity: number }[]) =>
     setProducts((prev) =>
       prev.map((p) => {
-        const item = orderData.items.find((i) => i.id === p.id);
-        if (item) {
-          return { ...p, stock: Math.max(0, p.stock - item.quantity) };
-        }
-        return p;
+        const it = items.find((i) => i.id === p.id);
+        return it ? { ...p, stock: Math.max(0, p.stock - it.quantity) } : p;
       })
     );
 
-    return newOrder;
+  /** Website checkout. The server re-prices the order from the database and gives it an order number. */
+  const createOrder = async (o: NewOrder): Promise<Order> => {
+    const order = await api<Order>('order.place', {
+      items: o.items.map((i) => ({ id: i.id, quantity: i.quantity, color: i.color, includeGiftWrap: i.includeGiftWrap })),
+      customerEmail: o.customerEmail,
+      shippingAddress: o.shippingAddress,
+      paymentMethod: o.paymentMethod,
+      paymentReference: o.paymentReference ?? o.orderNumber,
+      couponCode: o.couponCode,
+      estimatedDelivery: o.estimatedDelivery,
+    });
+    setMyOrders((prev) => [order, ...prev]);
+    applyStock(order.items);
+    return order;
   };
 
-  const loginAdmin = (email: string) => {
-    const ok = email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
-    if (ok) {
-      setIsAdminAuthenticated(true);
-      try {
-        sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-      } catch {
-        // ignore
-      }
+  const addManualOrder = async (o: Omit<NewOrder, 'orderNumber'>) => {
+    try {
+      const order = await api<Order>('order.add', o);
+      setAdminOrders((prev) => [order, ...prev]);
+      applyStock(order.items);
+      showToast({ type: 'success', title: 'Order added', message: `${order.orderNumber} has been recorded.` });
+      return order;
+    } catch (e) {
+      reportError(e);
+      return null;
     }
-    return ok;
+  };
+
+  const updateOrder = (orderId: string, patch: Partial<Order>) => {
+    const before = adminOrders;
+    setAdminOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o)));
+    const num = adminOrders.find((o) => o.id === orderId)?.orderNumber ?? '';
+    api('order.update', { id: orderId, patch })
+      .then(() => {
+        if (patch.paymentStatus === 'Paid') showToast({ type: 'success', title: 'Payment marked as received', message: `${num} is now paid.` });
+        else if (patch.paymentStatus === 'Refunded') showToast({ type: 'info', title: 'Marked as refunded', message: num });
+        else if (patch.status) showToast({ type: 'success', title: 'Order updated', message: `${num} is now ${patch.status}.` });
+      })
+      .catch((e) => {
+        setAdminOrders(before);
+        reportError(e);
+      });
+  };
+
+  const updateOrderStatus = (orderId: string, status: OrderStatus) => updateOrder(orderId, { status });
+
+  const getOrderById = (q: string) => {
+    const k = q.trim().toUpperCase();
+    return [...adminOrders, ...myOrders].find((o) => o.id.toUpperCase() === k || o.orderNumber.toUpperCase() === k);
+  };
+
+  // ── bookings ──
+  const addBooking = (booking: Omit<Booking, 'id'>) => {
+    api<Booking>('booking.save', booking)
+      .then((saved) => {
+        setBookings((prev) => [saved, ...prev]);
+        showToast({ type: 'success', title: 'Booking added', message: `${saved.service} for ${saved.customerName}.` });
+      })
+      .catch(reportError);
+  };
+
+  const updateBooking = (bookingId: string, patch: Partial<Booking>) => {
+    const current = bookings.find((b) => b.id === bookingId);
+    if (!current) return;
+    const next = { ...current, ...patch };
+    setBookings((prev) => prev.map((b) => (b.id === bookingId ? next : b)));
+    api('booking.save', next)
+      .then(() => {
+        if (patch.status)
+          showToast({ type: patch.status === 'Cancelled' ? 'info' : 'success', title: `Booking ${patch.status.toLowerCase()}`, message: `${next.service} · ${next.customerName}` });
+      })
+      .catch((e) => {
+        setBookings((prev) => prev.map((b) => (b.id === bookingId ? current : b)));
+        reportError(e);
+      });
+  };
+
+  // ── admin session ──
+  const loginAdmin = async (email: string, password: string) => {
+    try {
+      const { token } = await api<{ token: string }>('login', { email, password });
+      setToken(token);
+      setIsAdminAuthenticated(true);
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : 'Could not sign in.';
+    }
   };
 
   const logoutAdmin = () => {
+    api('logout', {}).catch(() => {});
+    setToken('');
     setIsAdminAuthenticated(false);
     setIsAdminOpen(false);
+    setAdminOrders([]);
+    setBookings([]);
     showToast({ type: 'info', title: 'Signed out of admin', message: 'See you soon.' });
-    try {
-      sessionStorage.removeItem(ADMIN_SESSION_KEY);
-    } catch {
-      // ignore
-    }
   };
 
-  const getOrderById = (orderIdOrNumber: string) => {
-    const q = orderIdOrNumber.trim().toUpperCase();
-    return orders.find(
-      (o) => o.id.toUpperCase() === q || o.orderNumber.toUpperCase() === q || o.trackingNumber.toUpperCase() === q
-    );
+  const changeAdminPassword = async (current: string, next: string) => {
+    try {
+      await api('password.change', { current, next });
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : 'Could not change the password.';
+    }
   };
 
   return (
     <AdminContext.Provider
       value={{
         products,
-        orders,
+        catalogLoaded,
+        orders: isAdminAuthenticated ? adminOrders : myOrders,
         addProduct,
         updateProductStock,
         updateOrderStatus,
@@ -296,6 +303,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         isAdminAuthenticated,
         loginAdmin,
         logoutAdmin,
+        changeAdminPassword,
       }}
     >
       {children}

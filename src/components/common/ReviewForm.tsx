@@ -22,13 +22,16 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ product, products = [], 
   const [comment, setComment] = useState('');
   const [productId, setProductId] = useState(product?.id ?? '');
   const [error, setError] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim().length < 2) return setError('Please enter your name.');
     if (comment.trim().length < 10) return setError('Please write a few words about your saree (at least 10 characters).');
     const chosen = product ?? products.find((p) => p.id === productId);
-    addReview({
+    setSending(true);
+    try {
+    await addReview({
       name: name.trim(),
       city: city.trim(),
       rating,
@@ -36,6 +39,11 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ product, products = [], 
       productId: chosen?.id,
       productName: chosen?.name,
     });
+    } catch (err) {
+      setSending(false);
+      return setError(err instanceof Error ? err.message : 'Could not send your review. Please try again.');
+    }
+    setSending(false);
     setName('');
     setCity('');
     setRating(5);
@@ -90,9 +98,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ product, products = [], 
       {error && <p className="text-sm text-rose-700">{error}</p>}
       <button
         type="submit"
-        className="w-full sm:w-auto px-7 py-3 bg-burgundy-800 hover:bg-burgundy-900 text-ivory font-serif text-sm tracking-[0.12em] uppercase cursor-pointer"
+        disabled={sending}
+        className="disabled:opacity-60 w-full sm:w-auto px-7 py-3 bg-burgundy-800 hover:bg-burgundy-900 text-ivory font-serif text-sm tracking-[0.12em] uppercase cursor-pointer"
       >
-        Submit review
+        {sending ? 'Sending…' : 'Submit review'}
       </button>
       <p className="text-xs text-stone-500">Reviews are checked by our team before they appear on the website.</p>
     </form>

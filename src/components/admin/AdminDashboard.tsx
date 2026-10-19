@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Bell, CalendarDays, ChevronRight, ExternalLink, LayoutGrid, Layers, LogOut, Menu, ShoppingBag, Tag, Wallet, X, Image as ImageIcon, Star } from 'lucide-react';
+import { Bell, CalendarDays, ChevronRight, ExternalLink, LayoutGrid, Layers, LogOut, Menu, ShoppingBag, Tag, Wallet, X, Image as ImageIcon, Star, Settings } from 'lucide-react';
 import { useAdmin } from '../../context/AdminContext';
 import { OverviewPage } from './OverviewPage';
 import { ProductsPage } from './ProductsPage';
@@ -9,9 +9,10 @@ import { PaymentsPage } from './PaymentsPage';
 import { CouponsPage } from './CouponsPage';
 import { BannersPage } from './BannersPage';
 import { ReviewsPage } from './ReviewsPage';
+import { SettingsPage } from './SettingsPage';
 import { paymentStatusOf } from './adminUtils';
 
-export type AdminPage = 'overview' | 'products' | 'orders' | 'bookings' | 'payments' | 'coupons' | 'banners' | 'reviews';
+export type AdminPage = 'overview' | 'products' | 'orders' | 'bookings' | 'payments' | 'coupons' | 'banners' | 'reviews' | 'settings';
 
 const NAV: { id: AdminPage; label: string; icon: React.FC<{ className?: string }> }[] = [
   { id: 'overview', label: 'Overview', icon: LayoutGrid },
@@ -22,6 +23,7 @@ const NAV: { id: AdminPage; label: string; icon: React.FC<{ className?: string }
   { id: 'bookings', label: 'Bookings', icon: CalendarDays },
   { id: 'payments', label: 'Payments & Collections', icon: Wallet },
   { id: 'coupons', label: 'Coupons', icon: Tag },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 export const AdminDashboard: React.FC = () => {
@@ -89,8 +91,8 @@ export const AdminDashboard: React.FC = () => {
 
       <div className="mt-auto space-y-4">
         <div className="rounded-lg bg-[#f4ecdf] p-3 text-[11px] text-stone-600 leading-relaxed">
-          <p className="font-semibold text-charcoal uppercase tracking-wider text-[10px] mb-1">Saved in this browser</p>
-          Changes update the website on this device. Connect a database to share them across devices.
+          <p className="font-semibold text-charcoal uppercase tracking-wider text-[10px] mb-1">Saved to your store database</p>
+          Changes go live on the website for every customer.
         </div>
         <button onClick={logoutAdmin} className="flex items-center gap-3 px-3 py-2 text-sm text-stone-600 hover:text-burgundy-800 cursor-pointer">
           <LogOut className="w-4 h-4" /> Sign out
@@ -158,6 +160,7 @@ export const AdminDashboard: React.FC = () => {
             {page === 'coupons' && <CouponsPage />}
             {page === 'banners' && <BannersPage />}
             {page === 'reviews' && <ReviewsPage />}
+            {page === 'settings' && <SettingsPage />}
           </div>
           <footer className="w-full px-4 sm:px-6 lg:px-8 pb-6 flex justify-between text-[11px] text-stone-400">
             <span>Daivisha Vastra · Admin workspace</span>

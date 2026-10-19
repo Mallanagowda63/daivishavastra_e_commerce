@@ -5,7 +5,7 @@ import { useToast } from '../../context/ToastContext';
 import { COLLECTIONS, collectionImage } from '../../data/collections';
 import { removeBanner, setBanner, useBanners } from '../../data/bannerStore';
 import { Button, Card, PageHeader, inputClass } from './adminUi';
-import { fileToCompressedDataURL } from './adminUtils';
+import { uploadImage } from '../../lib/api';
 
 const BannerRow: React.FC<{ index: number; c: (typeof COLLECTIONS)[number] }> = ({ index, c }) => {
   const banners = useBanners();
@@ -13,27 +13,35 @@ const BannerRow: React.FC<{ index: number; c: (typeof COLLECTIONS)[number] }> = 
   const { showToast } = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
   const [link, setLink] = useState('');
+  const [busy, setBusy] = useState(false);
   const custom = banners[c.key];
   const shown = collectionImage(c, banners, products, 'card');
 
   const onFile = async (file?: File) => {
     if (!file) return;
+    setBusy(true);
     try {
-      setBanner(c.key, await fileToCompressedDataURL(file, 1400, 0.82));
+      await setBanner(c.key, await uploadImage(file, 1600));
       showToast({ type: 'success', title: 'Banner updated', message: c.title });
-    } catch {
-      showToast({ type: 'error', title: 'Could not read that image', message: 'Please choose a JPG or PNG photo.' });
+    } catch (e) {
+      showToast({ type: 'error', title: 'Banner not saved', message: e instanceof Error ? e.message : 'Please try another photo.' });
+    } finally {
+      setBusy(false);
     }
   };
 
-  const onLink = () => {
+  const onLink = async () => {
     const url = link.trim();
     if (!/^https?:\/\/\S+$/i.test(url) && !url.startsWith('/')) {
       return showToast({ type: 'error', title: 'Enter a valid image link', message: 'It should start with https://' });
     }
-    setBanner(c.key, url);
-    setLink('');
-    showToast({ type: 'success', title: 'Banner updated', message: c.title });
+    try {
+      await setBanner(c.key, url);
+      setLink('');
+      showToast({ type: 'success', title: 'Banner updated', message: c.title });
+    } catch (e) {
+      showToast({ type: 'error', title: 'Banner not saved', message: e instanceof Error ? e.message : 'Please try again.' });
+    }
   };
 
   return (
@@ -49,11 +57,11 @@ const BannerRow: React.FC<{ index: number; c: (typeof COLLECTIONS)[number] }> = 
         </p>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { onFile(e.target.files?.[0]); e.target.value = ''; }} />
-          <Button onClick={() => fileRef.current?.click()}>
-            <Upload className="w-4 h-4" /> Upload image
+          <Button onClick={() => fileRef.current?.click()} disabled={busy}>
+            <Upload className="w-4 h-4" /> {busy ? 'Uploading…' : 'Upload image'}
           </Button>
           {custom && (
-            <Button variant="secondary" onClick={() => removeBanner(c.key)}>
+            <Button variant="secondary" onClick={() => removeBanner(c.key).catch((e) => showToast({ type: 'error', title: 'Not removed', message: e.message }))}>
               <Trash2 className="w-4 h-4" /> Remove
             </Button>
           )}

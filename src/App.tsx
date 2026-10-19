@@ -38,7 +38,7 @@ import { SareeCategory, SareeProduct } from './types';
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard })));
 
 function MainApp() {
-  const { products: allProducts, isAdminOpen } = useAdmin();
+  const { products: allProducts, isAdminOpen, catalogLoaded } = useAdmin();
   // Only published sarees appear in the storefront; drafts and archived stay in admin.
   const products = allProducts.filter((p) => !p.status || p.status === 'published');
   const { isAuthModalOpen, closeAuthModal, isAccountDashboardOpen, closeAccountDashboard } = useAuth();
@@ -97,11 +97,11 @@ function MainApp() {
   // Tab title, and fix the address if it pointed to a saree that no longer exists.
   useEffect(() => {
     document.title = routeTitle(route, selectedProduct?.name);
-    if (route.view === 'product' && !selectedProduct) {
+    if (route.view === 'product' && !selectedProduct && catalogLoaded) {
       replaceUrl('/sarees');
       setRoute({ view: 'shop' });
     }
-  }, [route, selectedProduct]);
+  }, [route, selectedProduct, catalogLoaded]);
 
   // Modals
   const [isSearchOpen, setIsSearchOpen] = useState(false);

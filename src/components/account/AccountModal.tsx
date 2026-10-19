@@ -23,6 +23,10 @@ export const AccountModal: React.FC<{
 
   // Login form state
   const [emailInput, setEmailInput] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [adminError, setAdminError] = useState('');
+  const [signingIn, setSigningIn] = useState(false);
+  const isAdminEmail = emailInput.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
   // Signup form state
   const [signupName, setSignupName] = useState('');
@@ -31,13 +35,19 @@ export const AccountModal: React.FC<{
 
   if (!isOpen) return null;
 
-  const handleEmailLogin = (e: React.FormEvent) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailInput) return;
-    // The admin email opens the admin portal instead of a customer account.
-    if (emailInput.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-      loginAdmin(emailInput);
+    // The admin email asks for the admin password and opens the admin workspace instead of a customer account.
+    if (isAdminEmail) {
+      if (!adminPassword) return setAdminError('Enter the admin password.');
+      setSigningIn(true);
+      const err = await loginAdmin(emailInput.trim(), adminPassword);
+      setSigningIn(false);
+      if (err) return setAdminError(err);
       setEmailInput('');
+      setAdminPassword('');
+      setAdminError('');
       onClose();
       setIsAdminOpen(true);
       showToast({ type: 'success', title: 'Welcome to the admin workspace', message: 'Signed in as store admin.' });
@@ -308,13 +318,30 @@ export const AccountModal: React.FC<{
                     className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
                   />
                 </div>
+                {isAdminEmail && (
+                  <div>
+                    <label className="block font-semibold uppercase tracking-wider text-charcoal mb-1">Admin Password</label>
+                    <input
+                      type="password"
+                      value={adminPassword}
+                      onChange={(e) => {
+                        setAdminPassword(e.target.value);
+                        setAdminError('');
+                      }}
+                      autoComplete="current-password"
+                      className="w-full px-3 py-2.5 bg-white border border-sand focus:border-burgundy-950 focus:outline-none"
+                    />
+                    {adminError && <p className="mt-1 text-[11px] text-rose-700">{adminError}</p>}
+                  </div>
+                )}
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-burgundy-950 text-gold-300 font-semibold uppercase tracking-widest hover:bg-burgundy-900 transition-colors shadow-md"
+                  disabled={signingIn}
+                  className="w-full py-3.5 bg-burgundy-950 text-gold-300 font-semibold uppercase tracking-widest hover:bg-burgundy-900 transition-colors shadow-md disabled:opacity-60"
                 >
-                  Continue with Email
+                  {isAdminEmail ? (signingIn ? 'Signing in…' : 'Sign in to admin') : 'Continue with Email'}
                 </button>
-                <p className="text-center text-stone-500">Just enter your email — no password or OTP needed.</p>
+                {!isAdminEmail && <p className="text-center text-stone-500">Just enter your email — no password or OTP needed.</p>}
               </form>
             )}
 
