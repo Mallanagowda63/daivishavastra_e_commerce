@@ -6,7 +6,6 @@ import { HeroSection } from '../components/home/HeroSection';
 import { CategoryCards } from '../components/home/CategoryCards';
 import { NewArrivalsSection } from '../components/home/NewArrivalsSection';
 import { WeddingBannerSection } from '../components/home/WeddingBannerSection';
-import { OccasionsSection } from '../components/home/OccasionsSection';
 import { BestSellersCarousel } from '../components/home/BestSellersCarousel';
 import { HeritageFeatureSection } from '../components/home/HeritageFeatureSection';
 import { OurStorySection } from '../components/home/OurStorySection';
@@ -53,11 +52,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* 5. The Wedding Edit Banner */}
       <WeddingBannerSection
         onExploreWedding={() => onNavigateToShop(undefined, 'Wedding Collection')}
-      />
-
-      {/* 6. Shop by Occasion */}
-      <OccasionsSection
-        onSelectOccasion={(occ) => onNavigateToShop(undefined, undefined, occ)}
       />
 
       {/* 7. Best Sellers Carousel */}
