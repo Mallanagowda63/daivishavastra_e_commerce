@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { ProductReviews } from '../components/product/ProductReviews';
+import { ProductSpecs } from '../components/product/ProductSpecs';
 import { findSareeType } from '../data/sareeTypes';
 import { SareeHeritage } from '../components/common/SareeHeritage';
 import { scrollToTop } from '../lib/smoothScroll';
@@ -70,6 +71,9 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <ProductInfo product={product} onBuyNow={onBuyNow} />
         </div>
       </div>
+
+      {/* Details that make it special */}
+      <ProductSpecs product={product} />
 
       {/* About this saree type */}
       {findSareeType(product.category) && (

@@ -14,6 +14,7 @@ const CATEGORIES = SAREE_TYPE_NAMES;
 const FABRICS: SareeFabric[] = [
   'Pure Silk', 'Kanjivaram Silk', 'Banarasi Katan Silk', 'Cotton Silk', 'Organza',
   'Chanderi Silk', 'Georgette', 'Pure Linen', 'Tussar Silk', 'Gajji Silk',
+  'Soft Tissue Silk', 'Paithani Silk', 'Chinnon', 'Linen Cotton', 'Cotton', 'Warm Silk', 'Kalamkari Cotton',
 ];
 const OCCASIONS: SareeOccasion[] = ['Wedding', 'Festive', 'Party', 'Office Wear', 'Traditional', 'Daily Elegance'];
 
@@ -39,6 +40,13 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
   const [status, setStatus] = useState<ProductStatus>(product ? productStatusOf(product) : 'draft');
   const [isNewArrival, setIsNewArrival] = useState(product?.isNewArrival ?? true);
   const [isBestSeller, setIsBestSeller] = useState(product?.isBestSeller ?? false);
+  const [spec, setSpec] = useState({
+    fabric: product?.spec?.fabric ?? '',
+    colours: product?.spec?.colours ?? '',
+    motifs: product?.spec?.motifs ?? '',
+    border: product?.spec?.border ?? '',
+    occasion: product?.spec?.occasion ?? '',
+  });
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -109,6 +117,7 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
       status: target,
       isNewArrival,
       isBestSeller,
+      spec: Object.fromEntries(Object.entries(spec).map(([k, v]) => [k, String(v).trim()])),
     };
     setSaving(true);
     try {
@@ -165,7 +174,7 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
           </div>
           {images.length > 0 ? (
             <div className="aspect-[4/5] rounded-lg overflow-hidden bg-sand">
-              <img src={images[selected] ?? images[0]} alt="" className="w-full h-full object-cover" />
+              <img src={images[selected] ?? images[0]} alt="" className="w-full h-full object-contain" />
             </div>
           ) : (
             <div className="aspect-[4/5] rounded-lg bg-[#f4ecdf] grid place-items-center text-sm text-stone-400">No photos yet</div>
@@ -245,6 +254,25 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
               <Field label="Colour">
                 <input className={inputClass} value={color} onChange={(e) => setColor(e.target.value)} placeholder="e.g. Rani pink" />
               </Field>
+            </div>
+          </Card>
+
+          {/* Details that make it special */}
+          <Card className="p-5">
+            <h2 className="font-sans text-base font-semibold text-charcoal">Details that make it special</h2>
+            <p className="text-xs text-stone-500 mt-1 mb-4">Shown on the saree page. Leave a box empty to hide it. Price is added automatically.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {([
+                ['fabric', 'Fabric', 'e.g. Gajji Silk'],
+                ['colours', 'Colours', 'e.g. Green | Teal | Red'],
+                ['motifs', 'Motifs', 'e.g. Traditional gold buttas'],
+                ['border', 'Border', 'e.g. Gandaberunda zari border'],
+                ['occasion', 'Occasion', 'e.g. Festivals, weddings and family functions'],
+              ] as const).map(([key, label, ph]) => (
+                <Field key={key} label={label} className={key === 'occasion' ? 'sm:col-span-2' : ''}>
+                  <input className={inputClass} value={spec[key]} onChange={(e) => setSpec((p) => ({ ...p, [key]: e.target.value }))} placeholder={ph} />
+                </Field>
+              ))}
             </div>
           </Card>
 

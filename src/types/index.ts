@@ -37,7 +37,14 @@ export type SareeFabric =
   | 'Georgette'
   | 'Pure Linen'
   | 'Tussar Silk'
-  | 'Gajji Silk';
+  | 'Gajji Silk'
+  | 'Soft Tissue Silk'
+  | 'Paithani Silk'
+  | 'Chinnon'
+  | 'Linen Cotton'
+  | 'Cotton'
+  | 'Warm Silk'
+  | 'Kalamkari Cotton';
 
 export interface ProductColorVariant {
   name: string;
@@ -85,6 +92,8 @@ export interface SareeProduct {
     countryOfOrigin: string;
   };
   stylingTips: string[];
+  /** "Details that make it special" on the saree page; empty values fall back to the fields above. */
+  spec?: { fabric?: string; colours?: string; motifs?: string; border?: string; occasion?: string };
   matchingAccessories?: {
     name: string;
     type: string;

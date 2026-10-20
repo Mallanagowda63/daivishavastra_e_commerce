@@ -91,7 +91,7 @@ export const api = async <T = { ok: true }>(action: string, body?: unknown): Pro
 };
 
 /** Upload a photo; returns its link. Photos are shrunk in the browser first so uploads are quick. */
-export const uploadImage = async (file: File, maxSide = 1600): Promise<string> => {
+export const uploadImage = async (file: File, maxSide = 2000): Promise<string> => {
   const blob = await shrink(file, maxSide).catch(() => file);
   const form = new FormData();
   form.append('file', blob, file.name.replace(/\.[^.]+$/, '') + '.jpg');
@@ -117,7 +117,7 @@ const shrink = (file: File, maxSide: number) =>
       ctx.fillStyle = '#ffffff'; // transparent PNGs get a white background as JPG
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Could not process image'))), 'image/jpeg', 0.85);
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Could not process image'))), 'image/jpeg', 0.92);
     };
     img.src = url;
   });

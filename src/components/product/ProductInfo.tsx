@@ -47,10 +47,16 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
         <span>SKU: {product.sku}</span>
       </div>
 
-      {/* Saree Title */}
-      <h1 className="font-serif text-3xl sm:text-4xl font-bold text-burgundy-950 leading-tight">
-        {product.name}
-      </h1>
+      {/* Poster-style title: brand line, large serif name, gold divider */}
+      <div>
+        <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.3em] text-gold-700">Daivisha Vastra · Elegance rooted in Indian heritage</p>
+        <h1 className="mt-3 font-serif text-4xl sm:text-5xl font-semibold text-[#5a1028] leading-[1.05] text-balance">{product.name}</h1>
+        <div className="mt-4 flex items-center gap-2 text-gold-600" aria-hidden="true">
+          <span className="h-px w-16 bg-gold-500/70" />
+          <span className="w-1.5 h-1.5 rotate-45 bg-gold-500" />
+          <span className="h-px w-16 bg-gold-500/70" />
+        </div>
+      </div>
 
       {/* Rating & Reviews */}
       <div className="flex items-center gap-3">

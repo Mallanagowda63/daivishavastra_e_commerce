@@ -1,133 +1,95 @@
 import React, { useState } from 'react';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ImageWithFallback } from '../common/ImageWithFallback';
+import { useBackToClose } from '../../lib/history';
 
 interface ProductGalleryProps {
   images: string[];
   productName: string;
 }
 
+/**
+ * One large photo shown whole (posters keep their text and edges), with thumbnails to switch.
+ * Tap the photo for a full-screen view.
+ */
 export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productName }) => {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [active, setActive] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  useBackToClose(isFullscreen, () => setIsFullscreen(false));
 
   const displayImages = images.length > 0 ? images : ['/images/hero_saree_model_1791372718962.jpg'];
+  const current = Math.min(active, displayImages.length - 1);
+  const many = displayImages.length > 1;
+  const next = () => setActive((current + 1) % displayImages.length);
+  const prev = () => setActive((current - 1 + displayImages.length) % displayImages.length);
 
-  const nextImage = () => {
-    setActiveImageIndex((prev) => (prev + 1) % displayImages.length);
-  };
-
-  const prevImage = () => {
-    setActiveImageIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
-  };
+  const arrow = 'absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white flex items-center justify-center text-charcoal shadow-md cursor-pointer';
 
   return (
-    <div className="space-y-4">
-      {/* Desktop 2-column or stacked high-res editorial presentation */}
-      <div className="hidden lg:grid grid-cols-2 gap-4">
-        {displayImages.map((img, idx) => (
-          <div
-            key={idx}
-            onClick={() => {
-              setActiveImageIndex(idx);
-              setIsFullscreen(true);
-            }}
-            className="group relative aspect-[3/4] overflow-hidden bg-cream/40 cursor-zoom-in"
-          >
-            <ImageWithFallback
-              src={img}
-              alt={`${productName} - View ${idx + 1}`}
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 text-white p-2 rounded-full">
-              <Maximize2 className="w-4 h-4" />
-            </div>
-            <div className="absolute bottom-3 left-3 bg-burgundy-950/80 text-gold-300 text-[10px] tracking-widest uppercase px-2.5 py-1">
-              View {idx + 1} of {displayImages.length}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Mobile Swipe / Carousel View */}
-      <div className="lg:hidden relative aspect-[3/4] overflow-hidden bg-cream/40">
-        <ImageWithFallback
-          src={displayImages[activeImageIndex]}
-          alt={`${productName} view ${activeImageIndex + 1}`}
-          className="w-full h-full object-cover"
-        />
-
-        {displayImages.length > 1 && (
+    <div className="space-y-3">
+      <div className="relative bg-[#f4ece0] border border-sand/70">
+        <button
+          onClick={() => setIsFullscreen(true)}
+          className="group block w-full aspect-[4/5] cursor-zoom-in"
+          aria-label={`Open ${productName} photo ${current + 1} full screen`}
+        >
+          <img
+            key={displayImages[current]}
+            src={displayImages[current]}
+            alt={`${productName} — photo ${current + 1}`}
+            className="w-full h-full object-contain"
+          />
+          <span className="absolute top-3 right-3 bg-black/55 text-white p-2 rounded-full opacity-80 group-hover:opacity-100">
+            <Maximize2 className="w-4 h-4" />
+          </span>
+        </button>
+        {many && (
           <>
-            <button
-              onClick={prevImage}
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-charcoal shadow-md"
-              aria-label="Previous view"
-            >
-              <ChevronLeft className="w-4 h-4" />
+            <button onClick={prev} className={`${arrow} left-3`} aria-label="Previous photo">
+              <ChevronLeft className="w-5 h-5" />
             </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-charcoal shadow-md"
-              aria-label="Next view"
-            >
-              <ChevronRight className="w-4 h-4" />
+            <button onClick={next} className={`${arrow} right-3`} aria-label="Next photo">
+              <ChevronRight className="w-5 h-5" />
             </button>
-            <div className="absolute bottom-3 inset-x-0 flex justify-center gap-1.5">
-              {displayImages.map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    activeImageIndex === idx ? 'bg-burgundy-900 w-4' : 'bg-white/70'
-                  }`}
-                />
-              ))}
-            </div>
           </>
         )}
+        <span className="absolute bottom-3 left-3 bg-burgundy-950/80 text-gold-300 text-[10px] tracking-widest uppercase px-2.5 py-1 pointer-events-none">
+          Photo {current + 1} of {displayImages.length}
+        </span>
       </div>
 
-      {/* Fullscreen Lightbox Modal */}
+      {many && (
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {displayImages.map((img, idx) => (
+            <button
+              key={img + idx}
+              onClick={() => setActive(idx)}
+              aria-label={`Show photo ${idx + 1}`}
+              aria-current={idx === current}
+              className={`shrink-0 w-20 h-24 bg-[#f4ece0] border-2 cursor-pointer ${idx === current ? 'border-burgundy-800' : 'border-transparent hover:border-gold-500'}`}
+            >
+              <img src={img} alt="" loading="lazy" className="w-full h-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+
       {isFullscreen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 animate-in fade-in"
-        >
-          <button
-            onClick={() => setIsFullscreen(false)}
-            className="absolute top-6 right-6 text-white hover:text-gold-400 p-2 z-10"
-            aria-label="Close fullscreen gallery"
-          >
+        <div role="dialog" aria-modal="true" aria-label={`${productName} photos`} className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-3 animate-in fade-in">
+          <button onClick={() => setIsFullscreen(false)} className="absolute top-4 right-4 text-white hover:text-gold-400 p-2 z-10 cursor-pointer" aria-label="Close">
             <X className="w-8 h-8" />
           </button>
-
-          <div className="relative max-w-4xl max-h-[90vh] flex items-center justify-center">
-            <ImageWithFallback
-              src={displayImages[activeImageIndex]}
-              alt={productName}
-              className="max-h-[85vh] w-auto object-contain"
-            />
-
-            {displayImages.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
-                  aria-label="Previous image"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center transition-colors"
-                  aria-label="Next image"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
-              </>
-            )}
-          </div>
+          {/* Shown at its real size at most, so phone photos never look stretched or blurry */}
+          <img src={displayImages[current]} alt={productName} className="max-h-[92vh] max-w-full w-auto h-auto" />
+          {many && (
+            <>
+              <button onClick={prev} className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center cursor-pointer" aria-label="Previous photo">
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button onClick={next} className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 hover:bg-white/40 text-white flex items-center justify-center cursor-pointer" aria-label="Next photo">
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
