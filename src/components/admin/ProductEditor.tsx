@@ -47,6 +47,22 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
     border: product?.spec?.border ?? '',
     occasion: product?.spec?.occasion ?? '',
   });
+  const [posterTitle, setPosterTitle] = useState(product?.posterTitle ?? '');
+  const [highlights, setHighlights] = useState<{ title: string; text: string; image?: string }[]>(product?.highlights ?? []);
+  const [circleBusy, setCircleBusy] = useState<number | null>(null);
+  const setHighlight = (i: number, patch: Partial<{ title: string; text: string; image?: string }>) =>
+    setHighlights((prev) => prev.map((h, idx) => (idx === i ? { ...h, ...patch } : h)));
+  const uploadCircle = async (i: number, file?: File) => {
+    if (!file) return;
+    setCircleBusy(i);
+    try {
+      setHighlight(i, { image: await uploadImage(file, 800) });
+    } catch {
+      showToast({ type: 'error', title: 'Upload failed', message: 'That photo could not be uploaded. Please try again.' });
+    } finally {
+      setCircleBusy(null);
+    }
+  };
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -118,6 +134,8 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
       isNewArrival,
       isBestSeller,
       spec: Object.fromEntries(Object.entries(spec).map(([k, v]) => [k, String(v).trim()])),
+      posterTitle: posterTitle.trim(),
+      highlights: highlights.map((h) => ({ ...h, title: h.title.trim(), text: h.text.trim() })).filter((h) => h.title || h.text),
     };
     setSaving(true);
     try {
@@ -274,6 +292,41 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
                 </Field>
               ))}
             </div>
+          </Card>
+
+          {/* Poster page */}
+          <Card className="p-5">
+            <h2 className="font-sans text-base font-semibold text-charcoal">Poster page</h2>
+            <p className="text-xs text-stone-500 mt-1 mb-4">
+              The big title and the round "Details that make it special" pictures on the saree page. The text under the title is the
+              Description above. Without circles here, close-ups are made from the first photo.
+            </p>
+            <Field label="Big title" hint="e.g. Paithani Silk. Leave empty to use the saree name.">
+              <input className={inputClass} value={posterTitle} onChange={(e) => setPosterTitle(e.target.value)} placeholder={name.replace(/\s+Saree$/i, '')} />
+            </Field>
+            <div className="mt-4 space-y-3">
+              {highlights.map((h, i) => (
+                <div key={i} className="flex gap-3 rounded-lg border border-[#ebe3d6] bg-[#fbf7f0] p-3">
+                  <label className="shrink-0 w-20 h-20 rounded-full overflow-hidden border-2 border-[#c9a45c] bg-white grid place-items-center cursor-pointer" title="Upload close-up photo">
+                    {h.image ? <img src={h.image} alt="" className="w-full h-full object-cover" /> : <Upload className="w-5 h-5 text-gold-700" />}
+                    <input type="file" accept="image/*" hidden onChange={(e) => { uploadCircle(i, e.target.files?.[0]); e.target.value = ''; }} />
+                  </label>
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <input className={inputClass} value={h.title} onChange={(e) => setHighlight(i, { title: e.target.value })} placeholder="Title, e.g. Traditional Zari Buttas" />
+                    <textarea className={`${inputClass} min-h-[60px]`} value={h.text} onChange={(e) => setHighlight(i, { text: e.target.value })} placeholder="Short line, e.g. Classic zari woven buttas that reflect the rich Paithani heritage." />
+                    <div className="flex items-center gap-3 text-xs">
+                      {circleBusy === i && <span className="text-stone-500">Uploading…</span>}
+                      <button type="button" onClick={() => setHighlights((prev) => prev.filter((_, idx) => idx !== i))} className="text-rose-700 hover:underline cursor-pointer">Remove circle</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {highlights.length < 5 && (
+              <Button type="button" variant="secondary" className="mt-3" onClick={() => setHighlights((prev) => [...prev, { title: '', text: '' }])}>
+                + Add circle
+              </Button>
+            )}
           </Card>
 
           {/* Category */}

@@ -94,6 +94,10 @@ export interface SareeProduct {
   stylingTips: string[];
   /** "Details that make it special" on the saree page; empty values fall back to the fields above. */
   spec?: { fabric?: string; colours?: string; motifs?: string; border?: string; occasion?: string };
+  /** Big title on the poster-style page (defaults to the name without "Saree"). */
+  posterTitle?: string;
+  /** "Details that make it special" circles: close-up photo, title and a short line. */
+  highlights?: { title: string; text: string; image?: string }[];
   matchingAccessories?: {
     name: string;
     type: string;

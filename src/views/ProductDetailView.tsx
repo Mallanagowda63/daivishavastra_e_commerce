@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { ProductReviews } from '../components/product/ProductReviews';
-import { ProductSpecs } from '../components/product/ProductSpecs';
+import { PosterShowcase } from '../components/product/PosterShowcase';
 import { findSareeType } from '../data/sareeTypes';
 import { SareeHeritage } from '../components/common/SareeHeritage';
 import { scrollToTop } from '../lib/smoothScroll';
@@ -42,7 +42,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   );
 
   return (
-    <div className="py-6 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28 lg:pb-16">
+    <div className="py-6 sm:py-10 pb-28 lg:pb-16">
+      <div className="max-w-[1880px] mx-auto px-3 sm:px-6 lg:px-8">
       {/* Breadcrumb Navigation */}
       <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-stone-500 font-sans mb-8 overflow-x-auto whitespace-nowrap pb-1">
         <button onClick={onNavigateHome} className="hover:text-burgundy-900 transition-colors">
@@ -59,6 +60,15 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         <span className="text-charcoal font-medium truncate max-w-xs">{product.name}</span>
       </nav>
 
+      {/* Poster-style showcase */}
+      <PosterShowcase product={product} onBuyNow={onBuyNow} />
+      </div>
+
+      {/* Everything below keeps the normal page width */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h2 className="mt-14 mb-6 font-serif text-2xl sm:text-3xl text-burgundy-900">Photos &amp; ordering</h2>
+
       {/* Main 2-Column Product Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
         {/* Left: Gallery (Takes 7 columns on desktop for large editorial presence) */}
@@ -71,9 +81,6 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           <ProductInfo product={product} onBuyNow={onBuyNow} />
         </div>
       </div>
-
-      {/* Details that make it special */}
-      <ProductSpecs product={product} />
 
       {/* About this saree type */}
       {findSareeType(product.category) && (
@@ -92,6 +99,8 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
         onSelectProduct={onSelectProduct}
         onQuickView={onQuickView}
       />
+
+      </div>
 
       {/* Mobile Sticky Bottom Purchase Bar (capped <= 15% viewport height as per frontend-design) */}
       <div className="lg:hidden fixed bottom-14 inset-x-0 bg-[#faf7f2]/95 backdrop-blur-md border-t border-sand p-3 z-30 shadow-2xl flex items-center gap-3">
