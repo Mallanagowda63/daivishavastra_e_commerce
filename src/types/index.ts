@@ -98,6 +98,12 @@ export interface SareeProduct {
   posterTitle?: string;
   /** "Details that make it special" circles: close-up photo, title and a short line. */
   highlights?: { title: string; text: string; image?: string }[];
+  /** Main saree picture on the poster page (a cut-out on a transparent background looks best). */
+  posterImage?: string;
+  /** Background art behind the legacy story. */
+  posterArt?: string;
+  /** Second story block, e.g. 'A Fabric with a Rich Legacy'. */
+  legacy?: { title?: string; text?: string };
   matchingAccessories?: {
     name: string;
     type: string;

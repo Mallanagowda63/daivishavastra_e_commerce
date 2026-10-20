@@ -48,6 +48,10 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
     occasion: product?.spec?.occasion ?? '',
   });
   const [posterTitle, setPosterTitle] = useState(product?.posterTitle ?? '');
+  const [posterImage, setPosterImage] = useState(product?.posterImage ?? '');
+  const [legacyTitle, setLegacyTitle] = useState(product?.legacy?.title ?? '');
+  const [legacyText, setLegacyText] = useState(product?.legacy?.text ?? '');
+  const [posterBusy, setPosterBusy] = useState(false);
   const [highlights, setHighlights] = useState<{ title: string; text: string; image?: string }[]>(product?.highlights ?? []);
   const [circleBusy, setCircleBusy] = useState<number | null>(null);
   const setHighlight = (i: number, patch: Partial<{ title: string; text: string; image?: string }>) =>
@@ -135,6 +139,8 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
       isBestSeller,
       spec: Object.fromEntries(Object.entries(spec).map(([k, v]) => [k, String(v).trim()])),
       posterTitle: posterTitle.trim(),
+      posterImage: posterImage.trim(),
+      legacy: { title: legacyTitle.trim(), text: legacyText.trim() },
       highlights: highlights.map((h) => ({ ...h, title: h.title.trim(), text: h.text.trim() })).filter((h) => h.title || h.text),
     };
     setSaving(true);
@@ -304,6 +310,38 @@ export const ProductEditor: React.FC<{ product?: SareeProduct; onDone: () => voi
             <Field label="Big title" hint="e.g. Paithani Silk. Leave empty to use the saree name.">
               <input className={inputClass} value={posterTitle} onChange={(e) => setPosterTitle(e.target.value)} placeholder={name.replace(/\s+Saree$/i, '')} />
             </Field>
+            <div className="mt-4 flex gap-3 items-start">
+              <label className="shrink-0 w-24 h-28 rounded-lg overflow-hidden border border-dashed border-[#d9ccb8] bg-[#f6f0e6] grid place-items-center cursor-pointer" title="Upload the main saree picture">
+                {posterImage ? <img src={posterImage} alt="" className="w-full h-full object-contain" /> : <Upload className="w-5 h-5 text-gold-700" />}
+                <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={async (e) => {
+                    const f = e.target.files?.[0];
+                    e.target.value = '';
+                    if (!f) return;
+                    setPosterBusy(true);
+                    try { setPosterImage(await uploadImage(f, 2000)); } catch { showToast({ type: 'error', title: 'Upload failed', message: 'Please try another photo.' }); }
+                    setPosterBusy(false);
+                  }}
+                />
+              </label>
+              <div className="text-xs text-stone-500 leading-relaxed">
+                <p className="font-semibold text-charcoal text-sm">Main saree picture</p>
+                <p>The big picture beside the title. A saree photo with the background removed looks best. Leave empty to use the first photo.</p>
+                {posterBusy && <p>Uploading…</p>}
+                {posterImage && <button type="button" onClick={() => setPosterImage('')} className="mt-1 text-rose-700 hover:underline cursor-pointer">Remove picture</button>}
+              </div>
+            </div>
+            <div className="mt-4 grid gap-3">
+              <Field label="Second story title" hint="e.g. A Fabric with a Rich Legacy">
+                <input className={inputClass} value={legacyTitle} onChange={(e) => setLegacyTitle(e.target.value)} placeholder="A Fabric with a Rich Legacy" />
+              </Field>
+              <Field label="Second story text" hint="Leave empty to use the heritage note for this saree type.">
+                <textarea className={`${inputClass} min-h-[80px]`} value={legacyText} onChange={(e) => setLegacyText(e.target.value)} />
+              </Field>
+            </div>
             <div className="mt-4 space-y-3">
               {highlights.map((h, i) => (
                 <div key={i} className="flex gap-3 rounded-lg border border-[#ebe3d6] bg-[#fbf7f0] p-3">
