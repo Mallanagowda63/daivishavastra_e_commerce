@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { LotusMark } from '../layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
 import { Prose, SectionHeading } from '../common/ContentBlocks';
+import { VisionMission } from './VisionMission';
 import { COLLECTIONS, collectionImage } from '../../data/collections';
 import { useBanners } from '../../data/bannerStore';
 import { SareeCategory, SareeProduct } from '../../types';
@@ -73,6 +74,9 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ products, onOpenCo
           />
         </div>
       </section>
+
+      {/* ── Vision & Mission ── */}
+      <VisionMission />
 
       {/* ── Explore Our Collections ── */}
       <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-36">
