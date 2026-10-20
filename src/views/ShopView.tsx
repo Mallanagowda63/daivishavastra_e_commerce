@@ -3,8 +3,7 @@ import { FilterState, SareeProduct, SareeCategory, SareeCollection, SareeFabric,
 import { SortDropdown } from '../components/shop/SortDropdown';
 import { ProductGrid } from '../components/product/ProductGrid';
 import { ChevronRight } from 'lucide-react';
-import { SAREE_TYPE_NAMES, findSareeType } from '../data/sareeTypes';
-import { SareeHeritage } from '../components/common/SareeHeritage';
+import { SAREE_TYPE_NAMES } from '../data/sareeTypes';
 import { LotusMark } from '../components/layout/BrandEmblem';
 import { ARCH_PATH, archMaskStyle } from '../components/common/TempleArch';
 
@@ -235,11 +234,6 @@ export const ShopView: React.FC<ShopViewProps> = ({
       </div>
 
       <div className="py-8 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heritage note for the selected saree type */}
-        {filters.categories.length === 1 && findSareeType(filters.categories[0]) && (
-          <SareeHeritage type={findSareeType(filters.categories[0])!} className="max-w-4xl mx-auto mb-8 sm:mb-10" />
-        )}
-
         {/* Products */}
         <ProductGrid
           products={filteredAndSortedProducts}
