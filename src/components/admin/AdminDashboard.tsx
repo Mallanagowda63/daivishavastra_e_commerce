@@ -60,10 +60,7 @@ export const AdminDashboard: React.FC = () => {
 
   const sidebar = (
     <nav className="flex flex-col h-full px-4 py-6" aria-label="Admin navigation">
-      <div className="mx-auto w-40 rounded-full bg-[#f8f1e6] border border-gold-500/50 aspect-square flex flex-col items-center justify-center p-4 shadow-sm">
-        <img src="/images/daivisha_emblem.png" alt="" className="w-full h-auto" />
-        <p className="font-serif text-lg font-semibold text-burgundy-800 leading-none mt-1 [font-variant:small-caps]">Daivisha Vastra</p>
-      </div>
+      <img src="/images/daivisha-logo.webp" alt="Daivisha Vastra" className="mx-auto w-40 h-40 rounded-full shadow-sm" />
       <p className="mt-3 text-center text-[10px] uppercase tracking-[0.2em] text-gold-700">Admin workspace</p>
 
       <ul className="mt-6 space-y-1">

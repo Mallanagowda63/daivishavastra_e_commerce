@@ -18,11 +18,13 @@ const BrandCard: React.FC<{ onExplore: () => void; className?: string }> = ({ on
       <path d={ARCH_PATH} fill="none" stroke="#c5a059" strokeWidth="2" vectorEffect="non-scaling-stroke" />
     </svg>
     <div className="relative h-full flex flex-col items-center justify-center text-center px-6 sm:px-10 pt-[16%] pb-8">
-      <img src="/images/daivisha_emblem.png" alt="" className="w-[42%] max-w-[190px] h-auto" />
-      <h2 className="mt-2 font-serif text-[clamp(28px,3.1vw,48px)] font-semibold leading-none tracking-wide text-burgundy-800 [font-variant:small-caps]">
-        Daivisha Vastra<sup className="text-[0.35em] font-sans font-medium ml-0.5">™</sup>
-      </h2>
-      <p className="mt-2 font-serif text-[clamp(15px,1.25vw,19px)] text-stone-700">Elegant attire rooted in Indian heritage.</p>
+      {/* The logo carries the name and tagline */}
+      <img
+        src="/images/daivisha-logo.webp"
+        alt="Daivisha Vastra — Elegant attire rooted in Indian heritage"
+        className="w-[62%] max-w-[260px] aspect-square rounded-full drop-shadow-md"
+      />
+      <h2 className="sr-only">Daivisha Vastra — Elegant attire rooted in Indian heritage</h2>
       <div className="flex items-center justify-center gap-2 my-3 text-gold-600" aria-hidden="true">
         <span className="h-px w-14 bg-gradient-to-r from-transparent to-gold-500" />
         <LotusMark className="w-4 h-4" />

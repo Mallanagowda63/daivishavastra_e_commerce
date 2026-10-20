@@ -91,10 +91,10 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             aria-label="Daivisha Vastra Home"
           >
             <img
-              src="/images/daivisha_emblem.png"
+              src="/images/daivisha-logo.webp"
               alt=""
-              className={`shrink-0 w-auto object-contain transition-all duration-300 ${
-                isScrolled ? 'h-7 sm:h-14' : 'h-9 sm:h-20'
+              className={`shrink-0 aspect-square rounded-full object-contain transition-all duration-300 ${
+                isScrolled ? 'h-9 sm:h-14' : 'h-11 sm:h-20'
               }`}
             />
             <span className="flex flex-col items-center min-w-0">
