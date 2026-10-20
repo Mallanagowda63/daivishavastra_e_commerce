@@ -27,7 +27,7 @@ const VALUES = [
 
 const Section: React.FC<{ children: React.ReactNode; tinted?: boolean }> = ({ children, tinted }) => (
   <section className={`${tinted ? 'bg-[#f8efe2]' : 'bg-[#fbf6ee]'} border-b border-gold-500/25`}>
-    <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-16">{children}</div>
+    <div className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-12">{children}</div>
   </section>
 );
 

@@ -9,8 +9,8 @@ export const ReviewsSection: React.FC<{ products: SareeProduct[] }> = ({ product
   const [writing, setWriting] = useState(false);
 
   return (
-    <section id="reviews" className="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-36">
-      <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+    <section id="reviews" className="py-10 lg:py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-36">
+      <div className="text-center max-w-2xl mx-auto mb-7 space-y-2">
         <span className="text-xs uppercase tracking-[0.2em] text-gold-700 font-semibold">Words of Appreciation</span>
         <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-burgundy-950">Customer Reviews</h2>
         <p className="text-sm text-stone-600 font-sans">

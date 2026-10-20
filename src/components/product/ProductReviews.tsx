@@ -10,7 +10,7 @@ export const ProductReviews: React.FC<{ product: SareeProduct }> = ({ product })
   const [writing, setWriting] = useState(false);
 
   return (
-    <section id="product-reviews" className="max-w-4xl mx-auto px-4 sm:px-6 mt-12 scroll-mt-36">
+    <section id="product-reviews" className="max-w-4xl mx-auto px-4 sm:px-6 mt-10 scroll-mt-36">
       <div className="flex flex-wrap items-end justify-between gap-3 border-b border-sand pb-3">
         <h2 className="font-serif text-2xl sm:text-3xl text-burgundy-900">Customer Reviews</h2>
         {!writing && (

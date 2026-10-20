@@ -28,9 +28,9 @@ export const BestSellersCarousel: React.FC<BestSellersCarouselProps> = ({
   };
 
   return (
-    <section className="py-20 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="py-10 lg:py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Section Header with Carousel Arrows */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
         <div>
           <span className="text-xs uppercase tracking-[0.2em] text-gold-700 font-semibold">
             Beloved By Our Patrons

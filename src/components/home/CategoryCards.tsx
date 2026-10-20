@@ -62,7 +62,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ products, onOpenCo
 
       {/* ── Introduction ── */}
       <section className="bg-[#fbf6ee] border-y border-gold-500/30">
-        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
+        <div className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-12">
           <SectionHeading kicker="Introduction" title="A Heritage of Elegance" subtitle="Timeless drapes. Stories in every weave." />
           <Prose
             className="mt-8 text-center"
@@ -79,7 +79,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ products, onOpenCo
       <VisionMission />
 
       {/* ── Explore Our Collections ── */}
-      <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-14 lg:py-16 scroll-mt-36">
+      <section id="collections" className="relative overflow-hidden bg-gradient-to-b from-[#fdf4ea] to-[#fbefe0] py-10 lg:py-12 scroll-mt-36">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-serif text-3xl sm:text-4xl font-semibold tracking-[0.04em] uppercase text-burgundy-800">
             Explore Our Collections

@@ -8,7 +8,7 @@ interface HeritageFeatureSectionProps {
 
 export const HeritageFeatureSection: React.FC<HeritageFeatureSectionProps> = ({ onShopCollection }) => {
   return (
-    <section className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-10 lg:py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
         {/* Left Side: Large Editorial Product Image */}
         <div className="relative aspect-[3/4] overflow-hidden bg-[#e8ded3] shadow-2xl">

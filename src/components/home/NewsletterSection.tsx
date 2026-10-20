@@ -17,7 +17,7 @@ export const NewsletterSection: React.FC = () => {
   };
 
   return (
-    <section className="py-20 lg:py-24 bg-burgundy-950 text-ivory border-t border-gold-500/30">
+    <section className="py-12 lg:py-14 bg-burgundy-950 text-ivory border-t border-gold-500/30">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center space-y-6">
         <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-gold-400 font-semibold">
           <Sparkles className="w-3.5 h-3.5 text-gold-400" />

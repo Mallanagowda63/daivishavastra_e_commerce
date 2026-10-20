@@ -21,10 +21,10 @@ export const NewArrivalsSection: React.FC<NewArrivalsSectionProps> = ({
   const displayItems = newArrivals.length > 0 ? newArrivals : products.slice(0, 4);
 
   return (
-    <section className="py-20 bg-cream/30 border-t border-b border-sand">
+    <section className="py-10 lg:py-12 bg-cream/30 border-t border-b border-sand">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7">
           <div>
             <span className="text-xs uppercase tracking-[0.2em] text-gold-700 font-semibold">
               Fresh Off The Handlooms

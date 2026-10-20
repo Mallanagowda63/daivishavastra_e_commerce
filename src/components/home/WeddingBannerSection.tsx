@@ -8,7 +8,7 @@ interface WeddingBannerSectionProps {
 
 export const WeddingBannerSection: React.FC<WeddingBannerSectionProps> = ({ onExploreWedding }) => {
   return (
-    <section className="relative w-full py-28 lg:py-36 bg-burgundy-950 text-ivory overflow-hidden my-12">
+    <section className="relative w-full py-16 lg:py-20 bg-burgundy-950 text-ivory overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <ImageWithFallback

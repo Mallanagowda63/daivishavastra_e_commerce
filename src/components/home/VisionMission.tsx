@@ -20,7 +20,7 @@ const VALUES = ['Heritage', 'Quality & Care', 'Authenticity', 'Customer Connecti
 /** Home page: vision and mission side by side, with the brand values below. */
 export const VisionMission: React.FC = () => (
   <section className="bg-[#f8efe2] border-b border-gold-500/30">
-    <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
+    <div className="max-w-5xl mx-auto px-5 sm:px-8 py-10 sm:py-12">
       <SectionHeading kicker="What Guides Us" title="Vision & Mission" />
       <div className="mt-10 grid gap-5 md:grid-cols-2">
         {ITEMS.map(({ icon: Icon, title, text }) => (

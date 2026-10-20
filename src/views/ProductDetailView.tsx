@@ -65,7 +65,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       {/* Everything below keeps the normal page width */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <h2 className="mt-14 mb-6 font-serif text-2xl sm:text-3xl text-burgundy-900">Photos &amp; ordering</h2>
+      <h2 className="mt-10 mb-5 font-serif text-2xl sm:text-3xl text-burgundy-900">Photos &amp; ordering</h2>
 
       {/* Main 2-Column Product Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">

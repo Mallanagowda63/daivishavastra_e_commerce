@@ -26,7 +26,7 @@ export const TrustFeatures: React.FC = () => {
   ];
 
   return (
-    <section id="trust" className="py-16 bg-[#f7f2ea] border-t border-b border-sand">
+    <section id="trust" className="py-10 bg-[#f7f2ea] border-t border-b border-sand">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feat) => {
