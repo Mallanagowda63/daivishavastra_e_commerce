@@ -14,7 +14,7 @@ const CATEGORIES = SAREE_TYPE_NAMES;
 const FABRICS: SareeFabric[] = [
   'Pure Silk', 'Kanjivaram Silk', 'Banarasi Katan Silk', 'Cotton Silk', 'Organza',
   'Chanderi Silk', 'Georgette', 'Pure Linen', 'Tussar Silk', 'Gajji Silk',
-  'Soft Tissue Silk', 'Paithani Silk', 'Chinnon', 'Linen Cotton', 'Cotton', 'Warm Silk', 'Kalamkari Cotton',
+  'Soft Tissue Silk', 'Paithani Silk', 'Chinnon', 'Linen Cotton', 'Cotton', 'Warm Silk', 'Kalamkari Cotton', 'Fancy',
 ];
 const OCCASIONS: SareeOccasion[] = ['Wedding', 'Festive', 'Party', 'Office Wear', 'Traditional', 'Daily Elegance'];
 

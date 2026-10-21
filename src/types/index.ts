@@ -44,7 +44,8 @@ export type SareeFabric =
   | 'Linen Cotton'
   | 'Cotton'
   | 'Warm Silk'
-  | 'Kalamkari Cotton';
+  | 'Kalamkari Cotton'
+  | 'Fancy';
 
 export interface ProductColorVariant {
   name: string;

@@ -48,7 +48,7 @@ export const OurStorySection: React.FC = () => (
             and details can connect generations and make ordinary days feel special.
           </p>
           <p>
-            Daivisha Vastra began with the wish to celebrate these connections—to bring heritage-inspired drapes to women who value
+            Daivisha Vastra was founded by Daivisha with the wish to celebrate these connections—to bring heritage-inspired drapes to women who value
             tradition, beauty and personal style.
           </p>
           <p>

@@ -63,7 +63,7 @@ export const PosterShowcase: React.FC<{ product: SareeProduct; onBuyNow: (p: Sar
   const title = product.posterTitle?.trim() || product.name.replace(/\s+Saree$/i, '');
   const photo = product.images.find((src) => !/poster/i.test(src)) ?? product.images[0];
   const heroImage = product.posterImage || photo;
-  const cutout = /cutout|\.png$/i.test(heroImage ?? '');
+  const cutout = /cutout|\.(png|webp)$/i.test(heroImage ?? '');
   const art = product.posterArt || defaultArt(product.category);
   const legacy = {
     title: product.legacy?.title?.trim() || 'A Fabric with a Rich Legacy',

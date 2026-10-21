@@ -65,8 +65,8 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
             <div className="col-span-4 bg-cream/40 p-4 border border-sand flex flex-col justify-between">
               <div className="relative aspect-[4/3] overflow-hidden mb-3">
                 <ImageWithFallback
-                  src="/images/products/gajji-rani-pink.jpg"
-                  alt="Rani pink Gajji silk saree with gold zari buttas"
+                  src="/images/products/gajji/3046.webp"
+                  alt="Red Gajji silk saree with gold zari floral motifs"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <span className="absolute top-2 left-2 bg-burgundy-900/90 text-gold-300 text-[10px] tracking-widest uppercase px-2.5 py-1">
