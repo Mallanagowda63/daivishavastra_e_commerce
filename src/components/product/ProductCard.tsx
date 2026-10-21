@@ -4,6 +4,7 @@ import { SareeProduct } from '../../types';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { ImageWithFallback } from '../common/ImageWithFallback';
+import { SareeOnPaisley } from './SareeOnPaisley';
 
 interface ProductCardProps {
   product: SareeProduct;
@@ -27,7 +28,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const currentDisplayImage =
     isHovered && product.secondaryImage
       ? product.secondaryImage
-      : product.images[0] || '/images/hero_saree_model_1791372718962.jpg';
+      : product.posterImage || product.images[0] || '/images/hero_saree_model_1791372718962.jpg';
 
   const formatPrice = (amount: number) => {
     return `₹${amount.toLocaleString('en-IN')}`;
@@ -40,16 +41,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Visual Image Container with 3:4 aspect ratio */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#f4eee5] cursor-pointer">
+      <div className="relative aspect-square w-full overflow-hidden bg-[#f4eee5] cursor-pointer">
         <div
           onClick={() => onSelect(product)}
           className="w-full h-full"
         >
-          <ImageWithFallback
-            src={currentDisplayImage}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
+          <SareeOnPaisley src={currentDisplayImage} alt={product.name} />
         </div>
 
         {/* Quiet Editorial Badges (Single unboxed text tag as per anti-slop rules) */}

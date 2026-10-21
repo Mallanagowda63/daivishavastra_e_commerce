@@ -5,6 +5,7 @@ import { openWhatsApp } from '../components/common/WhatsAppGate';
 import { collectionImage, findCollection } from '../data/collections';
 import { useBanners } from '../data/bannerStore';
 import { SareeCategory, SareeProduct } from '../types';
+import { SareeOnPaisley } from '../components/product/SareeOnPaisley';
 
 interface CollectionViewProps {
   collectionKey: SareeCategory;
@@ -89,8 +90,8 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-5">
             {items.map((p) => (
               <article key={p.id} className="bg-[#fffaf3] border border-[#ecdcc2] shadow-sm hover:shadow-lg transition-shadow flex flex-col">
-                <button onClick={() => onSelectProduct(p)} className="block overflow-hidden aspect-[3/4] cursor-pointer" aria-label={`View ${p.name}`}>
-                  <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                <button onClick={() => onSelectProduct(p)} className="group block overflow-hidden aspect-square cursor-pointer" aria-label={`View ${p.name}`}>
+                  <SareeOnPaisley src={p.posterImage || p.images[0]} alt={p.name} />
                 </button>
                 <div className="flex-1 flex flex-col items-center text-center px-3 pt-4 pb-4">
                   <h2 className="font-serif text-base sm:text-lg text-charcoal leading-snug">{p.name}</h2>
