@@ -20,7 +20,7 @@ const BrandCard: React.FC<{ onExplore: () => void; className?: string }> = ({ on
     <div className="relative h-full flex flex-col items-center justify-center text-center px-6 sm:px-10 pt-[16%] pb-8">
       {/* The logo carries the name and tagline */}
       <img
-        src="/images/daivisha-logo.webp"
+        src="/images/daivisha-logo.webp?v=2"
         alt="Daivisha Vastra — Elegant attire rooted in Indian heritage"
         className="w-[62%] max-w-[260px] aspect-square rounded-full drop-shadow-md"
       />

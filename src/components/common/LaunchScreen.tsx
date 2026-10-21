@@ -291,7 +291,7 @@ export const LaunchScreen: React.FC = () => {
         {/* Centre stage */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
           <img
-            src="/images/daivisha-logo.webp"
+            src="/images/daivisha-logo.webp?v=2"
             alt="Daivisha Vastra"
             className={`rounded-full shadow-[0_12px_40px_rgba(0,0,0,.5)] ring-2 ring-[#d4af37]/70 transition-all duration-700 ${
               party ? 'w-40 h-40 sm:w-52 sm:h-52' : 'w-24 h-24 sm:w-28 sm:h-28'

@@ -131,7 +131,7 @@ function emailFrame(string $preheader, string $heading, string $body): string
     $wa = preg_replace('/\D/', '', (string) cfg('owner_whatsapp', '918147036004'));
     $waDisplay = '+91 ' . substr($wa, -10, 5) . ' ' . substr($wa, -5);
     $mail = e((string) cfg('owner_email', 'info@daivishavastra.com'));
-    $logo = e(absUrl('/images/email-logo.png'));
+    $logo = e(absUrl('/images/email-logo.png?v=2'));
     return <<<HTML
 <!doctype html><html><body style="margin:0;padding:0;background:#f6efe6;">
 <span style="display:none;max-height:0;overflow:hidden;opacity:0;">{$preheader}</span>

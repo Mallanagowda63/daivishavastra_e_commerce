@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             aria-label="Daivisha Vastra Home"
           >
             <img
-              src="/images/daivisha-logo.webp"
+              src="/images/daivisha-logo.webp?v=2"
               alt=""
               className={`shrink-0 aspect-square rounded-full object-contain transition-all duration-300 ${
                 isScrolled ? 'h-9 sm:h-14' : 'h-11 sm:h-20'
