@@ -191,10 +191,7 @@ export const ShopView: React.FC<ShopViewProps> = ({
               <span className="w-2 h-2 rotate-45 bg-gold-500" />
               <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold-500" />
             </div>
-            <p className="font-serif text-base text-stone-700 leading-snug">
-              Certified authentic handloom drapes with tested gold &amp; silver zari — woven by master karigars across India.
-            </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-burgundy-900 font-semibold">
+            <p className="text-xs uppercase tracking-[0.2em] text-burgundy-900 font-semibold">
               {filteredAndSortedProducts.length} handcrafted {filteredAndSortedProducts.length === 1 ? 'piece' : 'pieces'}
             </p>
           </div>

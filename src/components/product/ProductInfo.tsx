@@ -157,16 +157,11 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ product, onBuyNow }) =
           </div>
         </div>
 
-        <div className="text-xs space-y-0.5 pt-4">
-          <span className="font-semibold text-charcoal block">
-            {product.stock > 0 ? 'Certified Artisan Weave' : 'Out of Stock'}
-          </span>
-          <span className="text-stone-500">
-            {product.stock <= 3 && product.stock > 0
-              ? `Only ${product.stock} pieces remaining in current loom run`
-              : 'Dispatches within 24 hours in velvet box'}
-          </span>
-        </div>
+        {product.stock <= 3 && (
+          <p className="text-xs font-semibold text-charcoal pt-4">
+            {product.stock > 0 ? `Only ${product.stock} left` : 'Out of Stock'}
+          </p>
+        )}
       </div>
 
       {/* Main CTAs: ADD TO BAG & BUY NOW */}
