@@ -1,9 +1,12 @@
 import React from 'react';
 import { SectionHeading } from '../common/ContentBlocks';
 
-const PHOTOS = [3086, 3093, 3094, 3091, 3092, 3095, 3096].map((n) => `/images/catalog/${n}.webp?v=2`);
+const PHOTOS = [3086, 3093, 3094, 3091, 3092, 3096].map((n) => `/images/catalog/${n}.webp?v=2`);
 
-/** Home page: the full collection photographed together. Wide shots fill the row; the two tall ones span two rows. */
+/**
+ * Home page: the full collection photographed together. The first shot is large, the two tall ones span
+ * two rows, and the last wide shot spans two columns so the bottom row is full.
+ */
 export const CatalogGallery: React.FC<{ onShop: () => void }> = ({ onShop }) => (
   <section className="bg-[#fbf6ee] border-b border-gold-500/30">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
@@ -14,7 +17,7 @@ export const CatalogGallery: React.FC<{ onShop: () => void }> = ({ onShop }) => 
             key={src}
             onClick={onShop}
             className={`group relative overflow-hidden border border-gold-500/40 cursor-pointer ${
-              i === 0 ? 'col-span-2 row-span-2' : /3093|3094/.test(src) ? 'row-span-2' : ''
+              i === 0 ? 'col-span-2 row-span-2' : /3093|3094/.test(src) ? 'row-span-2' : i === PHOTOS.length - 1 ? 'col-span-2' : ''
             }`}
           >
             <img
