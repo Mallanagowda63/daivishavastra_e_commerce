@@ -55,9 +55,9 @@ const shouldShow = () => {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** Local preview only: "?launch-demo" on localhost plays the launch with the countdown ending in a few seconds. */
+/** Local preview only: "?launch-demo" on localhost or the home Wi-Fi address plays the launch with the countdown ending in a few seconds. */
 const DEMO =
-  typeof window !== 'undefined' && window.location.hostname === 'localhost' && new URLSearchParams(window.location.search).has('launch-demo');
+  typeof window !== 'undefined' && /^(localhost$|127\.|192\.168\.|10\.)/.test(window.location.hostname) && new URLSearchParams(window.location.search).has('launch-demo');
 const DEMO_LAUNCH_AT = Date.now() + 1000 * (Number(new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '').get('launch-demo')) || 12);
 
 /** Seeded random so balloons look the same on every render. */
