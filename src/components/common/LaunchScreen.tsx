@@ -5,7 +5,7 @@ const PREVIEW_KEY = 'daivisha_preview';
 /** The store opens to the public at this moment (India time). Before it, visitors see the launch countdown. */
 const LAUNCH_AT = new Date('2026-10-21T17:45:00+05:30').getTime();
 /** The countdown screen takes over from this moment; before it the site is open as usual. */
-const COUNTDOWN_FROM = new Date('2026-10-21T17:30:00+05:30').getTime();
+const COUNTDOWN_FROM = new Date('2026-10-21T17:40:00+05:30').getTime();
 const COUNT_FROM = 3;
 const COUNT_START_MS = 900; // after launch: logo and "the wait is almost over" first
 const PARTY_HOLD_MS = 4200; // celebration before the store opens by itself
