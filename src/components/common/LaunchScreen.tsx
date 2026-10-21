@@ -55,6 +55,11 @@ const shouldShow = () => {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** Local preview only: "?launch-demo" on localhost plays the launch with the countdown ending in a few seconds. */
+const DEMO =
+  typeof window !== 'undefined' && window.location.hostname === 'localhost' && new URLSearchParams(window.location.search).has('launch-demo');
+const DEMO_LAUNCH_AT = Date.now() + 12000;
+
 /** Seeded random so balloons look the same on every render. */
 const rand = (seed: number) => {
   const x = Math.sin(seed * 999) * 10000;
@@ -157,15 +162,15 @@ const Balloon: React.FC<{ color: string; size: number }> = ({ color, size }) => 
  * parts like a saree pallu to open the store. Tap "Enter the store" or "Skip" any time.
  */
 export const LaunchScreen: React.FC = () => {
-  const [show, setShow] = useState(shouldShow);
+  const [show, setShow] = useState(() => DEMO || shouldShow());
   const [opening, setOpening] = useState(false);
   // Everything counts down to one moment: the launch time, or (after launch) a few seconds from now.
-  const [target] = useState(() => Math.max(LAUNCH_AT, Date.now() + COUNT_START_MS + COUNT_FROM * 1000));
+  const [target] = useState(() => (DEMO ? DEMO_LAUNCH_AT : Math.max(LAUNCH_AT, Date.now() + COUNT_START_MS + COUNT_FROM * 1000)));
   const [now, setNow] = useState(() => Date.now());
   const left = target - now;
   const party = left <= 0;
   const count = !party && left <= COUNT_FROM * 1000 ? Math.ceil(left / 1000) : null;
-  const waiting = !party && count === null && target === LAUNCH_AT;
+  const waiting = !party && count === null && (DEMO || target === LAUNCH_AT);
 
   const balloons = useMemo(
     () =>
@@ -390,7 +395,7 @@ export const LaunchScreen: React.FC = () => {
 
         <button
           onClick={enter}
-          hidden={target === LAUNCH_AT && !party}
+          hidden={(DEMO || target === LAUNCH_AT) && !party}
           className="absolute top-4 right-4 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-[#e8cf92]/80 hover:text-[#f3dfae] border border-[#e8cf92]/30 rounded-full cursor-pointer"
         >
           Skip
