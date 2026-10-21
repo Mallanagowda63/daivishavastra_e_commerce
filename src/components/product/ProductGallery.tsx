@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useBackToClose } from '../../lib/history';
+import { SareeOnPaisley } from './SareeOnPaisley';
 
 interface ProductGalleryProps {
   images: string[];
@@ -32,12 +33,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
           className="group block w-full aspect-[4/5] cursor-zoom-in"
           aria-label={`Open ${productName} photo ${current + 1} full screen`}
         >
-          <img
-            key={displayImages[current]}
-            src={displayImages[current]}
-            alt={`${productName} — photo ${current + 1}`}
-            className="w-full h-full object-contain"
-          />
+          <SareeOnPaisley key={displayImages[current]} src={displayImages[current]} alt={`${productName} — photo ${current + 1}`} />
           <span className="absolute top-3 right-3 bg-black/55 text-white p-2 rounded-full opacity-80 group-hover:opacity-100">
             <Maximize2 className="w-4 h-4" />
           </span>
