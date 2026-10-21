@@ -1,6 +1,5 @@
 import React from 'react';
 import { SectionHeading } from '../common/ContentBlocks';
-import { SareeOnPaisley } from '../product/SareeOnPaisley';
 
 const PHOTOS = [3086, 3093, 3094, 3091, 3092, 3095, 3096].map((n) => `/images/catalog/${n}.webp`);
 
@@ -18,7 +17,12 @@ export const CatalogGallery: React.FC<{ onShop: () => void }> = ({ onShop }) => 
               i === 0 ? 'col-span-2 row-span-2' : /3093|3094/.test(src) ? 'row-span-2' : ''
             }`}
           >
-            <SareeOnPaisley src={src} alt="Daivisha Vastra sarees arranged together with flowers" />
+            <img
+              src={src}
+              alt="Daivisha Vastra sarees arranged together with flowers"
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
           </button>
         ))}
       </div>
