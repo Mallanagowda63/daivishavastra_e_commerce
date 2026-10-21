@@ -1,27 +1,54 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 const SEEN_KEY = 'daivisha_launch_seen';
+const PREVIEW_KEY = 'daivisha_preview';
+/** The store opens to the public at this moment (India time). Before it, visitors see the launch countdown. */
+const LAUNCH_AT = new Date('2026-10-21T17:45:00+05:30').getTime();
 const COUNT_FROM = 3;
-const COUNT_START_MS = 900; // logo and "the wait is almost over" first
-const PARTY_MS = COUNT_START_MS + COUNT_FROM * 1000;
-const AUTO_OPEN_MS = PARTY_MS + 4200;
+const COUNT_START_MS = 900; // after launch: logo and "the wait is almost over" first
+const PARTY_HOLD_MS = 4200; // celebration before the store opens by itself
 
 const GOLD = ['#f3dfae', '#e8cf92', '#d4af37', '#b8924a'];
 const CONFETTI = [...GOLD, '#8a1538', '#c2185b', '#f48fb1', '#fffaf3', '#2e7d32'];
 const BALLOONS = ['#8a1538', '#d4af37', '#c2185b', '#f3dfae', '#6b1a2b', '#e8cf92', '#f06292', '#b8924a'];
 
-/** Show once per visit, never in admin, and not for people who ask for reduced motion. */
+const session = {
+  get: (k: string) => {
+    try {
+      return sessionStorage.getItem(k);
+    } catch {
+      return null; // storage blocked
+    }
+  },
+  set: (k: string) => {
+    try {
+      sessionStorage.setItem(k, '1');
+    } catch {
+      // storage blocked: the screen simply shows again next visit
+    }
+  },
+};
+
+/** "?preview" lets the owner see the store before launch (remembered for this visit). */
+const isPreview = () => {
+  if (new URLSearchParams(window.location.search).has('preview')) session.set(PREVIEW_KEY);
+  return !!session.get(PREVIEW_KEY);
+};
+
+/**
+ * Before launch: always, for everyone but admin and preview. After launch: once per visit,
+ * and not for people who ask for reduced motion.
+ */
 const shouldShow = () => {
   if (typeof window === 'undefined' || window.location.pathname.startsWith('/admin')) return false;
+  if (Date.now() < LAUNCH_AT) return !isPreview();
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
-  try {
-    if (sessionStorage.getItem(SEEN_KEY)) return false;
-    sessionStorage.setItem(SEEN_KEY, '1');
-  } catch {
-    // storage blocked: show it, it simply plays again next visit
-  }
+  if (session.get(SEEN_KEY)) return false;
+  session.set(SEEN_KEY);
   return true;
 };
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 /** Seeded random so balloons look the same on every render. */
 const rand = (seed: number) => {
@@ -126,9 +153,14 @@ const Balloon: React.FC<{ color: string; size: number }> = ({ color, size }) => 
  */
 export const LaunchScreen: React.FC = () => {
   const [show, setShow] = useState(shouldShow);
-  const [count, setCount] = useState<number | null>(null);
-  const [party, setParty] = useState(false);
   const [opening, setOpening] = useState(false);
+  // Everything counts down to one moment: the launch time, or (after launch) a few seconds from now.
+  const [target] = useState(() => Math.max(LAUNCH_AT, Date.now() + COUNT_START_MS + COUNT_FROM * 1000));
+  const [now, setNow] = useState(() => Date.now());
+  const left = target - now;
+  const party = left <= 0;
+  const count = !party && left <= COUNT_FROM * 1000 ? Math.ceil(left / 1000) : null;
+  const waiting = !party && count === null && target === LAUNCH_AT;
 
   const balloons = useMemo(
     () =>
@@ -146,16 +178,19 @@ export const LaunchScreen: React.FC = () => {
   useEffect(() => {
     if (!show) return;
     document.documentElement.style.overflow = 'hidden';
-    const timers = [
-      ...Array.from({ length: COUNT_FROM }, (_, i) => setTimeout(() => setCount(COUNT_FROM - i), COUNT_START_MS + i * 1000)),
-      setTimeout(() => setParty(true), PARTY_MS),
-      setTimeout(() => setOpening(true), AUTO_OPEN_MS),
-    ];
+    const tick = setInterval(() => setNow(Date.now()), 100);
     return () => {
-      timers.forEach(clearTimeout);
+      clearInterval(tick);
       document.documentElement.style.overflow = '';
     };
   }, [show]);
+
+  useEffect(() => {
+    if (!party) return;
+    session.set(SEEN_KEY);
+    const t = setTimeout(() => setOpening(true), PARTY_HOLD_MS);
+    return () => clearTimeout(t);
+  }, [party]);
 
   useEffect(() => {
     if (!opening) return;
@@ -249,9 +284,37 @@ export const LaunchScreen: React.FC = () => {
                 className="mt-5 font-serif italic text-lg sm:text-2xl text-[#e8cf92]"
                 style={{ animation: 'dvFade .7s .25s ease-out both' }}
               >
-                The wait is almost over…
+                {waiting ? 'Something beautiful is about to begin…' : 'The wait is almost over…'}
               </p>
-              <div className="relative mt-6 w-40 h-40 sm:w-52 sm:h-52 grid place-items-center">
+              {waiting && (
+                <div className="mt-6" style={{ animation: 'dvFade .7s .45s ease-out both' }}>
+                  <p className="font-sans font-semibold uppercase tracking-[0.35em] text-[11px] sm:text-xs text-[#e8cf92]/90">
+                    Grand launch today at 5:45 PM
+                  </p>
+                  <div className="mt-4 flex items-start justify-center gap-3 sm:gap-5" aria-live="polite">
+                    {[
+                      [Math.floor(left / 3600000), 'Hours'],
+                      [Math.floor(left / 60000) % 60, 'Minutes'],
+                      [Math.floor(left / 1000) % 60, 'Seconds'],
+                    ].map(([v, label], i) => (
+                      <React.Fragment key={label}>
+                        {i > 0 && <span className="text-4xl sm:text-6xl leading-none text-[#d4af37]/70" style={{ fontFamily: "'Cinzel', serif" }}>:</span>}
+                        <div className="w-[4.6rem] sm:w-28">
+                          <div
+                            className="py-3 sm:py-4 border border-[#d4af37]/60 bg-[#2a070e]/40 shadow-[inset_0_0_20px_rgba(212,175,55,.15)] text-4xl sm:text-6xl leading-none text-[#f3dfae]"
+                            style={{ fontFamily: "'Cinzel', serif" }}
+                          >
+                            {pad(v as number)}
+                          </div>
+                          <p className="mt-2 font-sans uppercase tracking-[0.25em] text-[10px] sm:text-[11px] text-[#e8cf92]/80">{label}</p>
+                        </div>
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <p className="mt-6 font-serif italic text-base sm:text-lg text-[#e8cf92]/90">Stay on this page — the celebration starts right here.</p>
+                </div>
+              )}
+              <div className={`relative mt-6 w-40 h-40 sm:w-52 sm:h-52 place-items-center ${waiting ? 'hidden' : 'grid'}`}>
                 {count !== null && (
                   <>
                     <span key={`p${count}`} className="absolute inset-0 rounded-full border-2 border-[#d4af37]" style={{ animation: 'dvPulse 1s ease-out both' }} />
@@ -311,6 +374,7 @@ export const LaunchScreen: React.FC = () => {
 
         <button
           onClick={enter}
+          hidden={target === LAUNCH_AT && !party}
           className="absolute top-4 right-4 px-3 py-1.5 text-[11px] uppercase tracking-[0.2em] text-[#e8cf92]/80 hover:text-[#f3dfae] border border-[#e8cf92]/30 rounded-full cursor-pointer"
         >
           Skip
