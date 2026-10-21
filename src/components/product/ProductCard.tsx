@@ -74,7 +74,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             e.stopPropagation();
             toggleWishlist(product);
           }}
-          className={`absolute top-[3.6rem] sm:top-[4.1rem] right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
+          className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 z-10 ${
             isFavorited
               ? 'bg-burgundy-950 text-gold-400'
               : 'bg-white/80 backdrop-blur-sm text-charcoal hover:bg-white hover:text-burgundy-900'

@@ -1,5 +1,4 @@
 import React from 'react';
-import { LogoBadge } from '../common/LogoBadge';
 
 /** A saree photo set on the cream paisley backdrop with a soft glow and shadow, used on saree cards. */
 export const SareeOnPaisley: React.FC<{ src: string; alt: string; className?: string }> = ({ src, alt, className = '' }) => (
@@ -14,6 +13,5 @@ export const SareeOnPaisley: React.FC<{ src: string; alt: string; className?: st
       loading="lazy"
       className="absolute inset-[7%] w-[86%] h-[86%] object-contain drop-shadow-[0_14px_16px_rgba(70,40,10,0.35)] transition-transform duration-700 group-hover:scale-105"
     />
-    <LogoBadge />
   </div>
 );
