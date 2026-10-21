@@ -1,7 +1,8 @@
 import React from 'react';
 import { SectionHeading } from '../common/ContentBlocks';
+import { LogoBadge } from '../common/LogoBadge';
 
-const PHOTOS = [3086, 3093, 3094, 3091, 3092, 3095, 3096].map((n) => `/images/catalog/${n}.webp`);
+const PHOTOS = [3086, 3093, 3094, 3091, 3092, 3095, 3096].map((n) => `/images/catalog/${n}.webp?v=2`);
 
 /** Home page: the full collection photographed together. Wide shots fill the row; the two tall ones span two rows. */
 export const CatalogGallery: React.FC<{ onShop: () => void }> = ({ onShop }) => (
@@ -23,6 +24,7 @@ export const CatalogGallery: React.FC<{ onShop: () => void }> = ({ onShop }) => 
               loading="lazy"
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
+            <LogoBadge />
           </button>
         ))}
       </div>

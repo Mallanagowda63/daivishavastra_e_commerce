@@ -34,7 +34,7 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ images, productN
           aria-label={`Open ${productName} photo ${current + 1} full screen`}
         >
           <SareeOnPaisley key={displayImages[current]} src={displayImages[current]} alt={`${productName} — photo ${current + 1}`} />
-          <span className="absolute top-3 right-3 bg-black/55 text-white p-2 rounded-full opacity-80 group-hover:opacity-100">
+          <span className="absolute bottom-3 right-3 bg-black/55 text-white p-2 rounded-full opacity-80 group-hover:opacity-100">
             <Maximize2 className="w-4 h-4" />
           </span>
         </button>
