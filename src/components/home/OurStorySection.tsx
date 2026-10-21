@@ -17,12 +17,12 @@ const Divider: React.FC<{ className?: string }> = ({ className = '' }) => (
 export const OurStorySection: React.FC = () => (
   <section id="our-story" className="bg-[#f8ebdb] border-y border-gold-500/40 scroll-mt-36">
     <div
-      className="relative max-w-[1920px] mx-auto lg:aspect-[16/9] lg:bg-[url('/images/about_banner.jpg?v=5')] lg:bg-cover lg:bg-center"
+      className="relative max-w-[1920px] mx-auto lg:aspect-[16/9] lg:bg-[url('/images/about_banner.jpg?v=6')] lg:bg-cover lg:bg-center"
       style={{ containerType: 'inline-size' }}
     >
       <img
-        src="/images/about_portrait.jpg?v=5"
-        alt="Smiling woman in a wine embellished outfit, framed by a temple arch with brass lamps and jasmine"
+        src="/images/about_portrait.jpg?v=6"
+        alt="Woman in a green Banarasi silk saree with gold zari work, framed by a temple arch"
         loading="lazy"
         className="lg:hidden w-full max-w-md mx-auto block"
       />
@@ -56,6 +56,11 @@ export const OurStorySection: React.FC = () => (
             you to discover a drape, make it part of your story and pass its beauty forward.
           </p>
         </div>
+
+        <p className="mt-6 lg:mt-[2cqw] text-center lg:text-right lg:pr-[7%]">
+          <span className="block font-serif italic text-[#6b1418] text-2xl lg:text-[2.1cqw]">Daivisha</span>
+          <span className="block font-sans uppercase tracking-[0.3em] text-gold-700 text-xs lg:text-[0.8cqw]">Founder, Daivisha Vastra</span>
+        </p>
       </div>
     </div>
   </section>
