@@ -99,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenS
             />
             <span className="flex flex-col items-center min-w-0">
               <span className="font-serif text-[15px] min-[400px]:text-[17px] sm:text-[32px] font-semibold text-burgundy-800 leading-none tracking-[0.14em] sm:tracking-wide [font-variant:small-caps]">
-                Daivisha Vastra<sup className="hidden sm:inline text-xs font-sans font-medium ml-0.5 align-super">™</sup>
+                Daivisha Vastra
               </span>
               <span className="hidden sm:flex items-center gap-1.5 mt-1 font-serif text-sm text-stone-700">
                 <span className="w-1.5 h-1.5 rotate-45 bg-gold-500" />
