@@ -41,7 +41,7 @@ export const OurStorySection: React.FC = () => (
             Elegant attire rooted in Indian heritage.
           </p>
           <p className="mt-2 lg:mt-[0.6cqw] font-sans uppercase tracking-[0.3em] text-gold-700 text-xs sm:text-sm lg:text-[0.95cqw]">
-            Founded by Daivisha
+            Founded by Divya Anand
           </p>
         </header>
 
@@ -51,7 +51,7 @@ export const OurStorySection: React.FC = () => (
             and details can connect generations and make ordinary days feel special.
           </p>
           <p>
-            Daivisha Vastra was founded by Daivisha with the wish to celebrate these connections—to bring heritage-inspired drapes to women who value
+            Daivisha Vastra was founded by Divya Anand with the wish to celebrate these connections—to bring heritage-inspired drapes to women who value
             tradition, beauty and personal style.
           </p>
           <p>
