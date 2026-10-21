@@ -4,6 +4,7 @@ import { TraditionBanner } from '../components/home/TraditionBanner';
 import { scrollToElement } from '../lib/smoothScroll';
 import { HeroSection } from '../components/home/HeroSection';
 import { CategoryCards } from '../components/home/CategoryCards';
+import { CatalogGallery } from '../components/home/CatalogGallery';
 import { NewArrivalsSection } from '../components/home/NewArrivalsSection';
 import { WeddingBannerSection } from '../components/home/WeddingBannerSection';
 import { BestSellersCarousel } from '../components/home/BestSellersCarousel';
@@ -37,6 +38,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
       {/* 2. Our Story, feature strip, Explore Our Collections */}
       <CategoryCards products={products} onOpenCollection={onOpenCollection} onLearnMore={onNavigateToAbout} />
+
+      {/* Catalog photos of the whole collection */}
+      <CatalogGallery onShop={() => onNavigateToShop()} />
 
       {/* 3. Wear Tradition, Live Elegance */}
       <TraditionBanner onViewNewArrivals={() => onNavigateToShop('New Arrivals')} />
