@@ -144,7 +144,7 @@ export const ShopView: React.FC<ShopViewProps> = ({
       {/* Heritage banner */}
       <section className="relative overflow-hidden bg-gradient-to-r from-[#fbefdf] via-[#fbf1e3] to-[#f6e6cf]">
         {/* Model in a temple arch — pinned to the right edge, full banner height */}
-        <div className="hidden md:block absolute right-4 lg:right-[5%] top-5 h-[calc(100%-1.25rem)] aspect-[4/5]">
+        <div className="hidden md:block absolute right-4 lg:right-[5%] top-3 h-[calc(100%-0.75rem)] aspect-[4/5]">
           <img
             src="/images/story_temple.jpg"
             alt=""
@@ -162,15 +162,15 @@ export const ShopView: React.FC<ShopViewProps> = ({
             <path d={ARCH_PATH} fill="none" stroke="#b08d46" strokeWidth="4" vectorEffect="non-scaling-stroke" />
           </svg>
           {/* Floating caption */}
-          <div className="absolute -left-6 bottom-6 bg-burgundy-800 text-ivory px-3.5 py-2.5 shadow-lg border border-gold-500/50">
+          <div className="absolute -left-6 bottom-4 bg-burgundy-800 text-ivory px-3 py-2 shadow-lg border border-gold-500/50">
             <p className="font-serif text-base leading-none">Handwoven</p>
             <p className="text-[9px] uppercase tracking-[0.2em] text-gold-300 mt-1">Kanjivaram Silk</p>
           </div>
         </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-          <div className="md:pr-[340px] lg:pr-[400px]">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+          <div className="md:pr-[240px] lg:pr-[280px]">
           {/* Breadcrumbs */}
-          <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-stone-500 font-sans mb-6">
+          <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs text-stone-500 font-sans mb-3">
             <button onClick={onNavigateHome} className="hover:text-burgundy-900 transition-colors">
               Home
             </button>
@@ -183,18 +183,18 @@ export const ShopView: React.FC<ShopViewProps> = ({
               <LotusMark className="w-5 h-5" />
               The Atelier Catalog
             </span>
-            <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium text-burgundy-800 mt-2 leading-tight">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-burgundy-800 mt-1 leading-tight">
               {pageTitle}
             </h1>
-            <div className="flex items-center justify-center lg:justify-start gap-2 my-4 text-gold-600" aria-hidden="true">
+            <div className="flex items-center justify-center lg:justify-start gap-2 my-2 text-gold-600" aria-hidden="true">
               <span className="h-px w-20 bg-gradient-to-r from-transparent to-gold-500 lg:from-gold-500 lg:to-gold-500" />
               <span className="w-2 h-2 rotate-45 bg-gold-500" />
               <span className="h-px w-20 bg-gradient-to-l from-transparent to-gold-500" />
             </div>
-            <p className="font-serif text-base sm:text-lg text-stone-700 leading-relaxed">
+            <p className="font-serif text-base text-stone-700 leading-snug">
               Certified authentic handloom drapes with tested gold &amp; silver zari — woven by master karigars across India.
             </p>
-            <p className="mt-4 text-xs uppercase tracking-[0.2em] text-burgundy-900 font-semibold">
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-burgundy-900 font-semibold">
               {filteredAndSortedProducts.length} handcrafted {filteredAndSortedProducts.length === 1 ? 'piece' : 'pieces'}
             </p>
           </div>
