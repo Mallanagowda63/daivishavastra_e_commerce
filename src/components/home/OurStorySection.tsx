@@ -40,6 +40,9 @@ export const OurStorySection: React.FC = () => (
           <p className="mt-3 lg:mt-[1.4cqw] font-serif italic text-[#6b1418] text-xl sm:text-2xl lg:text-[2.15cqw]">
             Elegant attire rooted in Indian heritage.
           </p>
+          <p className="mt-2 lg:mt-[0.6cqw] font-sans uppercase tracking-[0.3em] text-gold-700 text-xs sm:text-sm lg:text-[0.95cqw]">
+            Founded by Daivisha
+          </p>
         </header>
 
         <div className="mt-6 lg:mt-[2.4cqw] space-y-4 lg:space-y-[1.7cqw] lg:pr-[7%] font-serif text-lg leading-relaxed lg:text-[1.34cqw] lg:leading-[1.4] text-[#3d3530]">
