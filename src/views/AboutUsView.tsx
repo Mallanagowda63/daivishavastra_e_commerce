@@ -43,11 +43,11 @@ export const AboutUsView: React.FC<AboutUsViewProps> = ({ onNavigateHome, onShop
           <ChevronRight className="w-3.5 h-3.5 text-stone-400" />
           <span className="text-charcoal font-medium">About Us</span>
         </nav>
-        <SectionHeading as="h1" kicker="Meet the brand" title="About Us" />
+        <SectionHeading as="h1" kicker="Meet the brand" title="About Us" subtitle="Founded by Daivisha" />
         <Prose
           className="mt-8"
           paragraphs={[
-            'Daivisha Vastra was born from a love for Indian attire and the belief that traditional elegance belongs in every generation.',
+            'Daivisha Vastra was founded by Daivisha with a love for Indian attire and the belief that traditional elegance belongs in every generation.',
             'The brand brings together a personal appreciation for sarees, a respect for cultural detail and a desire to make discovering beautiful drapes a more thoughtful experience.',
             'As a growing label, Daivisha Vastra is committed to learning, curating with care and building relationships with customers through clear information and attentive service.',
           ]}
