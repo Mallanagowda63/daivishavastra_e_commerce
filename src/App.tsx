@@ -31,6 +31,7 @@ import { AccountModal } from './components/account/AccountModal';
 import { WhatsAppButton } from './components/common/WhatsAppButton';
 import { WhatsAppGate } from './components/common/WhatsAppGate';
 import { ToastContainer } from './components/common/ToastContainer';
+import { LaunchScreen } from './components/common/LaunchScreen';
 
 import { SareeCategory, SareeProduct } from './types';
 
@@ -290,6 +291,9 @@ function MainApp() {
 
       {/* 9. Global Luxury Toasts */}
       <ToastContainer />
+
+      {/* Launch screen, first visit in a session */}
+      <LaunchScreen />
     </div>
   );
 }
