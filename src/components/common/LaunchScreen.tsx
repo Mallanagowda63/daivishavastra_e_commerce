@@ -395,6 +395,19 @@ export const LaunchScreen: React.FC = () => {
         >
           Skip
         </button>
+
+        {/* Developer credit */}
+        <div
+          className="absolute bottom-4 sm:bottom-6 inset-x-0 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 px-6 text-center pointer-events-none"
+          style={{ animation: 'dvFade .7s .9s ease-out both' }}
+        >
+          <p className="font-sans uppercase tracking-[0.22em] text-[10px] sm:text-[11px] text-[#e8cf92]/80">
+            Website, server &amp; secure hosting crafted with care by
+          </p>
+          <span className="inline-flex items-center bg-[#f7f7f7] rounded-md px-2.5 py-1 shadow-md">
+            <img src="/images/trustifyx.webp" alt="TrustifyX" className="h-6 sm:h-7 w-auto" />
+          </span>
+        </div>
       </div>
     </div>
   );
