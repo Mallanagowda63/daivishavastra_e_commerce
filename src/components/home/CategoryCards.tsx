@@ -5,6 +5,7 @@ import { ARCH_PATH, archMaskStyle } from '../common/TempleArch';
 import { Prose, SectionHeading } from '../common/ContentBlocks';
 import { VisionMission } from './VisionMission';
 import { COLLECTIONS, collectionImage } from '../../data/collections';
+import { SareeOnPaisley } from '../product/SareeOnPaisley';
 import { useBanners } from '../../data/bannerStore';
 import { SareeCategory, SareeProduct } from '../../types';
 
@@ -97,12 +98,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ products, onOpenCo
                 <div className="relative aspect-[5/7] bg-[#fffaf3] flex flex-col" style={archMaskStyle}>
                   <div className="h-[68%] overflow-hidden">
                     {collectionImage(c, banners, products, 'card') ? (
-                      <img
-                        src={collectionImage(c, banners, products, 'card')}
-                        alt={`${c.title} saree`}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
+                      <SareeOnPaisley src={collectionImage(c, banners, products, 'card')!} alt={`${c.title} saree`} />
                     ) : (
                       <div className="w-full h-full grid place-items-center bg-gradient-to-b from-[#f6e6cf] to-[#efd9b8]">
                         <LotusMark className="w-12 h-12 text-gold-600/70" />
