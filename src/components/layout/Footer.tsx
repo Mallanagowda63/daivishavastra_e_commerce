@@ -215,6 +215,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span>UPI payments (GPay · PhonePe · Paytm)</span>
           </div>
         </div>
+
+        {/* Developer credit */}
+        <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-center gap-3 text-center">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-stone-400">Website, server &amp; secure hosting crafted with care by</p>
+          <span className="inline-flex items-center bg-[#f7f7f7] rounded-md px-3 py-1.5 shadow-sm">
+            <img src="/images/trustifyx.webp" alt="TrustifyX" loading="lazy" className="h-7 w-auto" />
+          </span>
+        </div>
       </div>
     </footer>
   );
