@@ -10,8 +10,10 @@ export interface CollectionInfo {
   description: string;
   /** Large photo beside the intro on the collection page. */
   heroImage: string;
-  /** Fabric close-up used on the home page arch card. */
+  /** Fabric close-up used on the home page arch card when no saree photo is available. */
   cardImage: string;
+  /** The saree whose cut-out photo shows on the home page arch card (else the collection's first saree). */
+  cardProduct?: string;
   highlights: { icon: LucideIcon; label: string }[];
   heritage: { title: string; text: string; points: { icon: LucideIcon; label: string }[] };
 }
@@ -26,6 +28,7 @@ const DETAILED: CollectionInfo[] = [
       'Gajji silk is a traditional, high-gloss satin-weave fabric heavily associated with the heritage occasion wear of Gujarat and Rajasthan. Known for its smooth texture, rich sheen and graceful drape, it brings together timeless tradition and royal elegance — perfect for festive celebrations and special occasions.',
     heroImage: '/images/collection_gajji_hero.jpg',
     cardImage: '/images/swatch_gajji.jpg',
+    cardProduct: 'dv-gajji-sindoor-red',
     highlights: [
       { icon: Feather, label: 'Rich Satin Weave' },
       { icon: Flower2, label: 'Lightweight & Graceful Drape' },
@@ -134,6 +137,13 @@ export const findCollection = (key: string) => COLLECTIONS.find((c) => c.key ===
 export const collectionImage = (
   c: CollectionInfo,
   banners: Record<string, string>,
-  products: { category: string; images: string[] }[],
+  products: { id: string; category: string; images: string[]; posterImage?: string }[],
   kind: 'card' | 'hero',
-) => banners[c.key] || (kind === 'card' ? c.cardImage : c.heroImage) || products.find((p) => p.category === c.key)?.images[0] || '';
+) => {
+  if (banners[c.key]) return banners[c.key];
+  const first =
+    (kind === 'card' && c.cardProduct && products.find((p) => p.id === c.cardProduct)) || products.find((p) => p.category === c.key);
+  // Cards show a real saree from the collection (its cut-out); the banner keeps its wide picture.
+  if (kind === 'card') return first?.posterImage || c.cardImage || first?.images[0] || '';
+  return c.heroImage || first?.images[0] || '';
+};
