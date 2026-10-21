@@ -4,6 +4,8 @@ const SEEN_KEY = 'daivisha_launch_seen';
 const PREVIEW_KEY = 'daivisha_preview';
 /** The store opens to the public at this moment (India time). Before it, visitors see the launch countdown. */
 const LAUNCH_AT = new Date('2026-10-21T17:45:00+05:30').getTime();
+/** The countdown screen takes over from this moment; before it the site is open as usual. */
+const COUNTDOWN_FROM = new Date('2026-10-21T17:00:00+05:30').getTime();
 const COUNT_FROM = 3;
 const COUNT_START_MS = 900; // after launch: logo and "the wait is almost over" first
 const PARTY_HOLD_MS = 4200; // celebration before the store opens by itself
@@ -35,12 +37,15 @@ const isPreview = () => {
   return !!session.get(PREVIEW_KEY);
 };
 
+const inCountdown = () => Date.now() >= COUNTDOWN_FROM && Date.now() < LAUNCH_AT;
+
 /**
- * Before launch: always, for everyone but admin and preview. After launch: once per visit,
- * and not for people who ask for reduced motion.
+ * Before the countdown starts: never. During the countdown: always, for everyone but admin and
+ * preview. After launch: once per visit, and not for people who ask for reduced motion.
  */
 const shouldShow = () => {
   if (typeof window === 'undefined' || window.location.pathname.startsWith('/admin')) return false;
+  if (Date.now() < COUNTDOWN_FROM) return false;
   if (Date.now() < LAUNCH_AT) return !isPreview();
   if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return false;
   if (session.get(SEEN_KEY)) return false;
@@ -183,6 +188,17 @@ export const LaunchScreen: React.FC = () => {
       clearInterval(tick);
       document.documentElement.style.overflow = '';
     };
+  }, [show]);
+
+  // Someone browsing before the countdown starts gets the countdown screen the moment it begins.
+  useEffect(() => {
+    if (show || Date.now() >= LAUNCH_AT || window.location.pathname.startsWith('/admin')) return;
+    const watch = setInterval(() => {
+      if (!inCountdown()) return;
+      clearInterval(watch);
+      if (!isPreview()) setShow(true);
+    }, 1000);
+    return () => clearInterval(watch);
   }, [show]);
 
   useEffect(() => {
